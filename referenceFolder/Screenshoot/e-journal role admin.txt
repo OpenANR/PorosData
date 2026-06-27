@@ -1,0 +1,29 @@
+Oke untuk halaman e-journal udah berfungsi, nah sekarang berikan akses 2 role yaitu admin dan guru. Admin bisa melihat rekapan journal yang telah guru kirim di role guru. Di halaman Data Journal Masuk itu terdiri kolom waktu submit, Nama Guru, Kelas yang di ampu, Mapel yang di ajarkan, Materi yang dibahas, dan laporan absensi.
+
+Penjelasan ringkas di bawah ini untuk tiap role nya:
+
+-> Role : Admin
+   - Halaman 1 = Data Journal Masuk
+     Isi : -> Tabel rekapapan data journal yang terdiri dari kolom
+              1. Timestamp tanggal dan jam submit journal
+              2. Nama Guru sesuai role yang login
+              3. Kelas yang di ampu
+              4. Mata Pelajaran yang di ampu guru
+              5. Materi yang dibahas di hari itu juga
+              6. Laporan absensi siswa
+              
+   - Halaman 2 = Kelola Guru
+     Isi : -> Tabel kelola guru Read Only, karena admin yang berhak merubah di poros data dan kolom terdiri dari 
+              1. Nomor urut
+              2. Nama Lengkap
+              3. Kode DUK (Username)
+              4. Aksi ini kamu beri label aja "Hubungi admin".
+              
+   - Halaman 3 = Kelola Siswa
+     Isi : -> Tabel kelola siswa juga sama read only dan terdapat filter kelas yang akan memicu tampilnya nama siswa
+              1. Nomor urut
+              2. Nama siswa
+              3. Kelas
+              4. Aksi ini kamu beri label aja "Hubungi administrator".
+
+Untuk tombol Tambah siswa itu kamu hapus aja di projek ku ini. Soalnya pusat nya ada di Poros Data. Oke hanya itu saja untuk yang halaman admin.
