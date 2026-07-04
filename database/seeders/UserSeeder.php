@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'Super Administrator',
             'username' => 'superadmin',
             'password' => Hash::make('superadmin123'),
+            'password_plain' => 'superadmin123',
             'role' => 'superadmin',
             'instansi_id' => null
         ]);
@@ -32,7 +33,42 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'username' => 'admin',
             'password' => Hash::make('admin123'),
+            'password_plain' => 'admin123',
             'role' => 'admin',
+            'instansi_id' => $sekolah->id
+        ]);
+
+        // Dummy Class for SMK
+        $kelas = \App\Models\Kelas::create([
+            'instansi_id' => $sekolah->id,
+            'nama_kelas' => 'XII TKJ 1',
+            'user_id' => null
+        ]);
+
+        // Dummy Siswa
+        $siswaUser = User::create([
+            'name' => 'Siswa PKL Dummy',
+            'username' => 'siswa',
+            'password' => Hash::make('siswa123'),
+            'password_plain' => 'siswa123',
+            'role' => 'siswa',
+            'instansi_id' => $sekolah->id
+        ]);
+
+        \App\Models\Siswa::create([
+            'user_id' => $siswaUser->id,
+            'kelas_id' => $kelas->id,
+            'nisn' => '1234567890',
+            'status' => 'aktif'
+        ]);
+
+        // Dummy Pembimbing
+        User::create([
+            'name' => 'Pembimbing PKL Dummy',
+            'username' => 'pembimbing',
+            'password' => Hash::make('pembimbing123'),
+            'password_plain' => 'pembimbing123',
+            'role' => 'pembimbing',
             'instansi_id' => $sekolah->id
         ]);
     }

@@ -141,7 +141,7 @@
                             </svg>
                             Portal Nilai
                         </a>
-                        <a href="{{ route('portalpkl.index') }}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all">
+                        <a href="{{ route('portalpkl.dashboard') }}" target="_blank" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4 text-slate-400 dark:text-slate-500">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 .621-.504 1.125-1.125 1.125H4.875A1.125 1.125 0 0 1 3.75 19.4v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.453.254-.718.254H4.875a1.03 1.03 0 0 1-.718-.254m16.5-3.658v-.294a2.238 2.238 0 0 0-2.25-2.25h-1.5a2.238 2.238 0 0 0-2.25 2.25v.294m3.5-2.285a4.9 4.9 0 0 1-3.036-1.508m0 0a4.9 4.9 0 0 1-3.036 1.508m0 0a4.9 4.9 0 0 0-3.036-1.508m0 0a4.9 4.9 0 0 0-3.036 1.508m0 0a4.9 4.9 0 0 0-3.036-1.508m0 0A4.9 4.9 0 0 0 4.686 6.03m6.549 3.508v-.294a2.238 2.238 0 0 0-2.25-2.25h-1.5a2.238 2.238 0 0 0-2.25 2.25v.294m-3.5-2.285a4.9 4.9 0 0 1 3.036-1.508M12 12.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5Z" />
                             </svg>

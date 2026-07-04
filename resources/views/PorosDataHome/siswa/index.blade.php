@@ -67,6 +67,7 @@
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-16 text-center">No</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Siswa</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">NISN</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Password</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Kelas</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Status</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-32 text-center">Aksi</th>
@@ -81,6 +82,7 @@
                                 <div class="text-xs text-slate-400">@ {{ $siswa->user->username }}</div>
                             </td>
                             <td class="py-4 px-6 text-sm font-mono text-slate-600 dark:text-slate-300">{{ $siswa->nisn }}</td>
+                            <td class="py-4 px-6 text-sm font-mono text-slate-600 dark:text-slate-300">{{ $siswa->user->password_plain ?? '-' }}</td>
                             <td class="py-4 px-6 text-center">
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                                     {{ $siswa->kelas ? $siswa->kelas->nama_kelas : 'Tanpa Kelas' }}
@@ -97,7 +99,7 @@
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <div class="inline-flex items-center gap-2">
-                                    <button onclick="bukaEditModal('{{ $siswa->id }}', '{{ addslashes($siswa->user->name) }}', '{{ $siswa->user->username }}', '{{ $siswa->nisn }}', '{{ $siswa->kelas_id }}', '{{ $siswa->status }}')"
+                                    <button onclick="bukaEditModal('{{ $siswa->id }}', '{{ addslashes($siswa->user->name) }}', '{{ $siswa->user->username }}', '{{ $siswa->nisn }}', '{{ $siswa->kelas_id }}', '{{ $siswa->status }}', '{{ addslashes($siswa->user->password_plain) }}')"
                                         class="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
@@ -118,7 +120,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-16 text-center text-slate-400">
+                            <td colspan="7" class="py-16 text-center text-slate-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mx-auto mb-3 text-slate-300">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                                 </svg>
@@ -240,8 +242,8 @@
                                     class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi Baru (Opsional)</label>
-                                <input type="password" name="password" id="edit-password" placeholder="Kosongkan jika tidak diubah"
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                                <input type="text" name="password" id="edit-password" required placeholder="Minimal 6 karakter"
                                     class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
                             </div>
                         </div>
@@ -297,14 +299,14 @@
     document.getElementById('btn-batal-edit').addEventListener('click', () => tutupModal('modal-edit'));
     document.getElementById('backdrop-edit').addEventListener('click', () => tutupModal('modal-edit'));
 
-    function bukaEditModal(id, name, username, nisn, kelasId, status) {
+    function bukaEditModal(id, name, username, nisn, kelasId, status, passwordPlain) {
         document.getElementById('form-edit').action = '/porosdata/siswa/' + id;
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-username').value = username;
         document.getElementById('edit-nisn').value = nisn;
         document.getElementById('edit-kelas-id').value = kelasId;
         document.getElementById('edit-status').value = status;
-        document.getElementById('edit-password').value = '';
+        document.getElementById('edit-password').value = passwordPlain || '';
         bukaModal('modal-edit');
     }
 

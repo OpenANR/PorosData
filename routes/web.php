@@ -39,7 +39,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     })->name('portalnilai.index');
 
     Route::get('/portalpkl', function () {
-        return view('PorosDataHome.SubMenuApplication.PortalPKL.index');
+        return redirect()->route('portalpkl.dashboard');
     })->name('portalpkl.index');
 
     Route::get('/portalsiswa', function () {
@@ -66,5 +66,39 @@ Route::prefix('/porosdata/e-journal')->group(function () {
         Route::get('/admin', [App\Http\Controllers\ControllerSubMenuApps\EJournal\AdminController::class, 'index'])->name('ejournal.admin.index');
         Route::get('/admin/guru', [App\Http\Controllers\ControllerSubMenuApps\EJournal\AdminController::class, 'kelolaGuru'])->name('ejournal.admin.guru');
         Route::get('/admin/siswa', [App\Http\Controllers\ControllerSubMenuApps\EJournal\AdminController::class, 'kelolaSiswa'])->name('ejournal.admin.siswa');
+    });
+});
+
+// Standalone Portal PKL Routes (independent login/session)
+Route::prefix('/porosdata/portal-pkl')->group(function () {
+    Route::get('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\LoginController::class, 'showLoginForm'])->name('portalpkl.login');
+    Route::post('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\LoginController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\LoginController::class, 'logout'])->name('portalpkl.logout');
+
+    Route::middleware(['auth.portalpkl'])->group(function () {
+        Route::get('/', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\DashboardController::class, 'index'])->name('portalpkl.dashboard');
+        
+        Route::get('/superadmin', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\SuperAdminController::class, 'index'])->name('portalpkl.superadmin');
+        Route::get('/admin', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminController::class, 'index'])->name('portalpkl.admin');
+        
+        // Mitra DUDI CRUD Routes
+        Route::get('/admin/mitra', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\MitraDudiController::class, 'index'])->name('portalpkl.admin.mitra.index');
+        Route::post('/admin/mitra', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\MitraDudiController::class, 'store'])->name('portalpkl.admin.mitra.store');
+        Route::put('/admin/mitra/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\MitraDudiController::class, 'update'])->name('portalpkl.admin.mitra.update');
+        Route::delete('/admin/mitra/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\MitraDudiController::class, 'destroy'])->name('portalpkl.admin.mitra.destroy');
+
+        // Pembimbing CRUD Routes
+        Route::get('/admin/pembimbing', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminPembimbingController::class, 'index'])->name('portalpkl.admin.pembimbing.index');
+        Route::post('/admin/pembimbing', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminPembimbingController::class, 'store'])->name('portalpkl.admin.pembimbing.store');
+        Route::put('/admin/pembimbing/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminPembimbingController::class, 'update'])->name('portalpkl.admin.pembimbing.update');
+        Route::delete('/admin/pembimbing/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminPembimbingController::class, 'destroy'])->name('portalpkl.admin.pembimbing.destroy');
+
+        // Siswa PKL CRUD Routes
+        Route::get('/admin/siswa-pkl', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'index'])->name('portalpkl.admin.siswa.index');
+        Route::put('/admin/siswa-pkl/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'update'])->name('portalpkl.admin.siswa.update');
+        Route::delete('/admin/siswa-pkl/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'destroy'])->name('portalpkl.admin.siswa.destroy');
+
+        Route::get('/pembimbing', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\PembimbingController::class, 'index'])->name('portalpkl.pembimbing');
+        Route::get('/siswa', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\SiswaController::class, 'index'])->name('portalpkl.siswa');
     });
 });

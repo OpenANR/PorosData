@@ -14,6 +14,7 @@ class Siswa extends Model
     protected $fillable = [
         'user_id',
         'kelas_id',
+        'mitra_dudi_id',
         'nisn',
         'status',
     ];
@@ -26,5 +27,10 @@ class Siswa extends Model
     public function kelas()
     {
         return $this->belongsTo(Kelas::class);
+    }
+
+    public function mitra()
+    {
+        return $this->belongsTo(MitraDudi::class, 'mitra_dudi_id');
     }
 }

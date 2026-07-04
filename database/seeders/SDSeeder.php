@@ -60,6 +60,7 @@ class SDSeeder extends Seeder
 
         $teachers = [];
         foreach ($teachersData as $data) {
+            $data['password_plain'] = 'password123';
             $teachers[] = User::create($data);
         }
 
@@ -104,6 +105,7 @@ class SDSeeder extends Seeder
                 'name' => $data['name'],
                 'username' => $data['username'],
                 'password' => Hash::make('password123'),
+                'password_plain' => 'password123',
                 'role' => 'siswa',
                 'instansi_id' => $sd->id
             ]);

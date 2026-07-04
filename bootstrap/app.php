@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureIsAdminOrSuperadmin::class,
             'auth.ejournal' => \App\Http\Middleware\EnsureEJournalAuthenticated::class,
+            'auth.portalpkl' => \App\Http\Middleware\EnsurePortalPKLAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

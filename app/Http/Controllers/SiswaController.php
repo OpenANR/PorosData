@@ -80,6 +80,7 @@ class SiswaController extends Controller
                 'name' => $request->name,
                 'username' => $request->username,
                 'password' => Hash::make($request->password),
+                'password_plain' => $request->password,
                 'role' => 'siswa',
                 'instansi_id' => $instansiId,
             ]);
@@ -120,6 +121,7 @@ class SiswaController extends Controller
 
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
+                $userData['password_plain'] = $request->password;
             }
 
             $user->update($userData);
