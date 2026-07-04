@@ -33,4 +33,9 @@ class Siswa extends Model
     {
         return $this->belongsTo(MitraDudi::class, 'mitra_dudi_id');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(PklAttendance::class, 'siswa_id');
+    }
 }

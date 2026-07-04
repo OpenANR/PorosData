@@ -101,7 +101,7 @@
                             <i class="fa-solid fa-user-graduate text-base w-5 text-center"></i>
                             Siswa PKL
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
+                        <a href="{{ route('portalpkl.admin.kehadiran') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.admin.kehadiran*') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
                             <i class="fa-solid fa-calendar-check text-base w-5 text-center"></i>
                             Kehadiran Siswa
                         </a>
@@ -133,17 +133,13 @@
                             <i class="fa-solid fa-house text-base w-5 text-center"></i>
                             Dashboard Siswa
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
+                        <a href="{{ route('portalpkl.siswa.kehadiran') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.siswa.kehadiran*') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
                             <i class="fa-solid fa-user-clock text-base w-5 text-center"></i>
                             Kehadiran PKL
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
-                            <i class="fa-solid fa-pen-to-square text-base w-5 text-center"></i>
-                            Jurnal Kegiatan
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
-                            <i class="fa-solid fa-file-shield text-base w-5 text-center"></i>
-                            Laporan PKL
+                        <a href="{{ route('portalpkl.siswa.riwayat') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.siswa.riwayat*') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
+                            <i class="fa-solid fa-clock-rotate-left text-base w-5 text-center"></i>
+                            Riwayat Absensi
                         </a>
                     @endif
                 </nav>

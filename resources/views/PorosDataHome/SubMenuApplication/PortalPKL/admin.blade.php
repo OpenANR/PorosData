@@ -80,15 +80,21 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider">Kehadiran Hari Ini</p>
-                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">96%</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">
+                            @if($siswaCount > 0)
+                                {{ round(($todayHadir / $siswaCount) * 100) }}%
+                            @else
+                                0%
+                            @endif
+                        </h3>
                     </div>
                     <div class="h-9 w-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                         <i class="fa-solid fa-calendar-check text-sm"></i>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-xs text-slate-400">
-                    <span class="text-emerald-500 font-semibold mr-1">43 Hadir</span>
-                    2 Izin/Sakit
+                    <span class="text-emerald-500 font-semibold mr-1">{{ $todayHadir }} Hadir</span>
+                    {{ $todaySakit + $todayIzin }} Sakit/Izin
                 </div>
             </div>
         </div>

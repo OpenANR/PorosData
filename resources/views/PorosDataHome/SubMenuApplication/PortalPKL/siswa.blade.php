@@ -30,14 +30,18 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-wider">Lokasi PKL</p>
-                        <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-1">CV. Creative Media</h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-1">
+                            {{ $user->siswa->mitra->nama_perusahaan ?? 'Belum Ditempatkan' }}
+                        </h3>
                     </div>
                     <div class="h-10 w-10 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 flex items-center justify-center">
                         <i class="fa-solid fa-building text-lg"></i>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-xs text-slate-400">
-                    <span class="text-slate-500 font-semibold mr-1">Kota Balung</span>
+                    <span class="text-slate-500 font-semibold mr-1">
+                        {{ $user->siswa->mitra->alamat ?? 'Silakan hubungi pembimbing atau admin.' }}
+                    </span>
                 </div>
             </div>
 
@@ -46,14 +50,16 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-wider">Total Kehadiran</p>
-                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">22 Hari</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">{{ $totalPresensi }} Hari</h3>
                     </div>
                     <div class="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                         <i class="fa-solid fa-calendar-check text-lg"></i>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-xs text-slate-400">
-                    <span class="text-emerald-500 font-semibold mr-1"><i class="fa-solid fa-check mr-0.5"></i> 100% Kehadiran</span>
+                    <span class="text-emerald-500 font-semibold mr-1">
+                        <i class="fa-solid fa-check mr-0.5"></i> {{ $totalHadir }} Hadir, {{ $totalSakit }} Sakit, {{ $totalIzin }} Izin
+                    </span>
                 </div>
             </div>
 
@@ -62,7 +68,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-wider">Jurnal Terkirim</p>
-                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">22 Laporan</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">{{ $totalHadir }} Laporan</h3>
                     </div>
                     <div class="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                         <i class="fa-solid fa-book text-lg"></i>
@@ -70,7 +76,7 @@
                 </div>
                 <div class="mt-4 flex items-center text-xs text-slate-400">
                     <span class="text-emerald-500 font-semibold mr-1">Terkirim</span>
-                    Semua jurnal harian lengkap
+                    Semua jurnal harian tersimpan
                 </div>
             </div>
         </div>
