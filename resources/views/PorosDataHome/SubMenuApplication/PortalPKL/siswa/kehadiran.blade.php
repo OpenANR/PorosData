@@ -163,7 +163,7 @@
 
                                     <!-- Camera View Container -->
                                     <div id="container-camera" class="space-y-3">
-                                        <div class="relative w-full max-w-sm mx-auto aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner flex items-center justify-center">
+                                        <div class="relative w-full max-w-sm mx-auto aspect-video min-h-[220px] rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner flex items-center justify-center">
                                             <!-- Video stream -->
                                             <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
                                             <!-- Snapshot Preview -->
@@ -172,7 +172,10 @@
                                             <!-- Fallback Message -->
                                             <div id="webcam-fallback" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-400 hidden">
                                                 <i class="fa-solid fa-video-slash text-2xl mb-2 text-rose-500"></i>
-                                                <p class="text-xs font-semibold">Gagal memuat kamera. Pastikan Anda memberikan izin akses kamera.</p>
+                                                <p id="webcam-fallback-text" class="text-xs font-semibold mb-3">Gagal memuat kamera. Pastikan Anda memberikan izin akses kamera.</p>
+                                                <button type="button" onclick="simulateCamera()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+                                                    <i class="fa-solid fa-laptop-code"></i> Gunakan Kamera Simulasi (Dev Mode)
+                                                </button>
                                             </div>
                                         </div>
 
@@ -417,6 +420,9 @@
             async function initCamera() {
                 stopCamera();
                 try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        throw new Error("Kamera tidak didukung di lingkungan ini (Pastikan menggunakan HTTPS atau gunakan tab Galeri).");
+                    }
                     const constraints = {
                         video: {
                             facingMode: currentFacingMode,
@@ -433,12 +439,88 @@
                     webcamFallback.classList.add('hidden');
                     btnCapture.classList.remove('hidden');
                     btnRetake.classList.add('hidden');
+                    btnSwitchCam.classList.remove('hidden');
                 } catch (err) {
                     console.error("Camera access error:", err);
                     video.classList.add('hidden');
+                    
+                    const fallbackMsg = document.getElementById('webcam-fallback-text');
+                    if (fallbackMsg) {
+                        if (!window.isSecureContext) {
+                            fallbackMsg.innerText = "Kamera tidak dapat diakses di koneksi HTTP biasa. Silakan beralih ke tab Galeri atau gunakan tombol kamera simulasi di bawah.";
+                        } else {
+                            fallbackMsg.innerText = err.message || "Gagal memuat kamera. Pastikan Anda memberikan izin akses kamera.";
+                        }
+                    }
+                    
                     webcamFallback.classList.remove('hidden');
                     btnCapture.classList.add('hidden');
                     btnSwitchCam.classList.add('hidden');
+                }
+            }
+
+            // Simulate Camera capture (for development over HTTP)
+            function simulateCamera() {
+                const ctx = canvas.getContext('2d');
+                canvas.width = 640;
+                canvas.height = 480;
+                
+                // Draw a nice gradient background
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#f97316'); // orange-500
+                gradient.addColorStop(1, '#f59e0b'); // amber-500
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 30px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('SIMULASI PRESENSI PKL (DEV MODE)', canvas.width / 2, canvas.height / 2 - 40);
+                
+                ctx.font = '20px sans-serif';
+                ctx.fillText('Nama Siswa: {{ $user->name }}', canvas.width / 2, canvas.height / 2 + 10);
+                ctx.fillText('Waktu: ' + new Date().toLocaleString('id-ID'), canvas.width / 2, canvas.height / 2 + 45);
+                ctx.fillText('Koneksi: HTTP (Insecure Context)', canvas.width / 2, canvas.height / 2 + 80);
+                
+                // Convert to base64
+                const dataUri = canvas.toDataURL('image/jpeg', 0.85);
+                inputFotoUri.value = dataUri;
+
+                // Display Preview
+                preview.src = dataUri;
+                preview.classList.remove('hidden');
+                video.classList.add('hidden');
+
+                btnCapture.classList.add('hidden');
+                btnRetake.classList.remove('hidden');
+                btnSwitchCam.classList.add('hidden');
+                webcamFallback.classList.add('hidden');
+                
+                // If GPS is empty, simulate GPS too
+                const coordInput = document.getElementById('koordinat');
+                if (!coordInput.value || coordInput.value.includes('ditolak') || coordInput.value.includes('tidak')) {
+                    simulateGPS();
+                }
+            }
+
+            function simulateGPS() {
+                const coordInput = document.getElementById('koordinat');
+                if (targetCoordsStr) {
+                    coordInput.value = targetCoordsStr;
+                    coordInput.removeAttribute('readonly');
+                    
+                    // Trigger distance check
+                    const targetParts = targetCoordsStr.split(',');
+                    if (targetParts.length === 2) {
+                        const targetLat = parseFloat(targetParts[0].trim());
+                        const targetLon = parseFloat(targetParts[1].trim());
+                        const distanceMeters = 0; // Exactly at location
+                        displayDistance(distanceMeters);
+                    }
+                } else {
+                    coordInput.value = "-8.18448, 113.62166";
+                    coordInput.removeAttribute('readonly');
                 }
             }
 
@@ -628,7 +710,9 @@
                         maximumAge: 0
                     });
                 } else {
-                    coordInput.value = "Geolocation tidak didukung oleh browser ini.";
+                    coordInput.value = "";
+                    coordInput.placeholder = "Geolocation tidak didukung. Ketik koordinat secara manual...";
+                    coordInput.removeAttribute('readonly');
                 }
             }
 
@@ -653,21 +737,53 @@
 
             function showError(error) {
                 const coordInput = document.getElementById('koordinat');
+                coordInput.removeAttribute('readonly');
                 switch(error.code) {
                     case error.PERMISSION_DENIED:
-                        coordInput.value = "Izin lokasi ditolak oleh pengguna.";
+                        if (!window.isSecureContext) {
+                            coordInput.value = "";
+                            coordInput.placeholder = "Akses lokasi ditolak karena koneksi HTTP tidak aman. Masukkan koordinat manual...";
+                        } else {
+                            coordInput.value = "";
+                            coordInput.placeholder = "Izin lokasi ditolak. Silakan masukkan koordinat secara manual...";
+                        }
                         break;
                     case error.POSITION_UNAVAILABLE:
-                        coordInput.value = "Informasi lokasi tidak tersedia.";
+                        coordInput.value = "";
+                        coordInput.placeholder = "Informasi lokasi tidak tersedia. Masukkan koordinat manual...";
                         break;
                     case error.TIMEOUT:
-                        coordInput.value = "Waktu permintaan lokasi habis.";
+                        coordInput.value = "";
+                        coordInput.placeholder = "Waktu permintaan habis. Masukkan koordinat manual...";
                         break;
                     case error.UNKNOWN_ERROR:
-                        coordInput.value = "Terjadi kesalahan yang tidak diketahui.";
+                        coordInput.value = "";
+                        coordInput.placeholder = "Terjadi kesalahan. Masukkan koordinat manual...";
                         break;
                 }
             }
+
+            // Listen for manual coordinate changes
+            document.getElementById('koordinat').addEventListener('input', function() {
+                const val = this.value;
+                if (val && targetCoordsStr) {
+                    const parts = val.split(',');
+                    if (parts.length === 2) {
+                        const lat = parseFloat(parts[0].trim());
+                        const lon = parseFloat(parts[1].trim());
+                        if (!isNaN(lat) && !isNaN(lon)) {
+                            const targetParts = targetCoordsStr.split(',');
+                            if (targetParts.length === 2) {
+                                const targetLat = parseFloat(targetParts[0].trim());
+                                const targetLon = parseFloat(targetParts[1].trim());
+                                
+                                const distanceMeters = calculateDistance(lat, lon, targetLat, targetLon);
+                                displayDistance(distanceMeters);
+                            }
+                        }
+                    }
+                }
+            });
 
             // Haversine formula to calculate distance in meters
             function calculateDistance(lat1, lon1, lat2, lon2) {

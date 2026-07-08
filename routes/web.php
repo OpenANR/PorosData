@@ -37,7 +37,7 @@ Route::get('/datasiswa', function () {
 })->name('datasiswa.index');
 
 Route::get('/portalnilai', function () {
-    return view('PorosDataHome.SubMenuApplication.PortalNilai.index');
+    return redirect()->route('portalnilai.dashboard');
 })->name('portalnilai.index');
 
 Route::get('/portalsiswa', function () {
@@ -114,5 +114,16 @@ Route::prefix('/porosdata/portal-pkl')->group(function () {
         // Admin Kehadiran Routes
         Route::get('/admin/kehadiran', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminController::class, 'kehadiran'])->name('portalpkl.admin.kehadiran');
         Route::delete('/admin/kehadiran/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminController::class, 'destroyKehadiran'])->name('portalpkl.admin.kehadiran.destroy');
+    });
+});
+
+// Standalone Portal Nilai Routes (independent login/session)
+Route::prefix('/porosdata/portalnilai')->group(function () {
+    Route::get('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\LoginController::class, 'showLoginForm'])->name('portalnilai.login');
+    Route::post('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\LoginController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\LoginController::class, 'logout'])->name('portalnilai.logout');
+
+    Route::middleware(['auth.portalnilai'])->group(function () {
+        Route::get('/', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'index'])->name('portalnilai.dashboard');
     });
 });
