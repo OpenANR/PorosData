@@ -28,7 +28,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/porosdata/walikelas', WaliKelasController::class)->names('walikelas');
     Route::resource('/porosdata/kelas', KelasController::class)->names('kelas');
     Route::resource('/porosdata/siswa', SiswaController::class)->names('siswa');
-
+    
+    // Mapel and Category Routes
+    Route::resource('/porosdata/mapel', App\Http\Controllers\MapelController::class)->names('mapel');
+    Route::post('/porosdata/mapel/kategori', [App\Http\Controllers\MapelController::class, 'storeKategori'])->name('mapel.kategori.store');
+    Route::put('/porosdata/mapel/kategori/{id}', [App\Http\Controllers\MapelController::class, 'updateKategori'])->name('mapel.kategori.update');
+    Route::delete('/porosdata/mapel/kategori/{id}', [App\Http\Controllers\MapelController::class, 'destroyKategori'])->name('mapel.kategori.destroy');
 });
 
 // Standalone Shortcut entry points (accessible directly)
@@ -125,5 +130,11 @@ Route::prefix('/porosdata/portalnilai')->group(function () {
 
     Route::middleware(['auth.portalnilai'])->group(function () {
         Route::get('/', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'index'])->name('portalnilai.dashboard');
+        
+        // AJAX Endpoints
+        Route::get('/settings-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'getSettings'])->name('portalnilai.settings.get');
+        Route::post('/settings-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'saveSettings'])->name('portalnilai.settings.save');
+        Route::get('/students-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'getStudentsData'])->name('portalnilai.students.get');
+        Route::post('/save-grades', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'saveGrades'])->name('portalnilai.grades.save');
     });
 });
