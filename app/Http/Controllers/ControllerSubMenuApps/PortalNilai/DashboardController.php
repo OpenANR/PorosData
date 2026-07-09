@@ -25,14 +25,22 @@ class DashboardController extends Controller
         if ($isAdmin) {
             $classes = Kelas::orderBy('nama_kelas', 'asc')->get();
             $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+            $totalStudents = Siswa::where('status', 'aktif')->count();
+            
+            $sd = Instansi::where('tingkat', 'SD')->first();
+            $instansiId = $sd ? $sd->id : null;
         } else {
             $sd = Instansi::where('tingkat', 'SD')->first();
             $instansiId = ($user && $user->instansi_id) ? $user->instansi_id : ($sd ? $sd->id : null);
 
             // Fetch classrooms
-            $classes = Kelas::where('instansi_id', $instansiId)
-                ->orderBy('nama_kelas', 'asc')
-                ->get();
+            if ($user && $user->role === 'wali_kelas') {
+                $classes = Kelas::where('user_id', $user->id)->get();
+            } else {
+                $classes = Kelas::where('instansi_id', $instansiId)
+                    ->orderBy('nama_kelas', 'asc')
+                    ->get();
+            }
 
             // Fetch subjects
             $mapels = Mapel::where(function($q) use ($instansiId) {
@@ -41,9 +49,23 @@ class DashboardController extends Controller
                 })
                 ->orderBy('nama_mapel', 'asc')
                 ->get();
+            if ($mapels->isEmpty()) {
+                $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+            }
+
+            $totalStudents = Siswa::where('status', 'aktif')
+                ->whereHas('kelas', function($q) use ($instansiId) {
+                    $q->where('instansi_id', $instansiId);
+                })
+                ->count();
         }
 
-        return view('PorosDataHome.SubMenuApplication.PortalNilai.dashboard', compact('user', 'classes', 'mapels'));
+        $accessSettings = PortalNilaiSetting::where('instansi_id', $instansiId)->first();
+        if (!$accessSettings) {
+            $accessSettings = PortalNilaiSetting::whereNull('instansi_id')->first();
+        }
+
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.dashboard', compact('user', 'classes', 'mapels', 'totalStudents', 'accessSettings'));
     }
 
     /**
@@ -236,6 +258,72 @@ class DashboardController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Seluruh Data Nilai Berhasil Disimpan!'
+        ]);
+    }
+
+    /**
+     * Get class summary grades for Wali Kelas (all students, all subjects).
+     */
+    public function getWaliKelasData(Request $request)
+    {
+        $request->validate([
+            'kelas_id' => 'required|exists:kelas,id',
+        ]);
+
+        $user = $request->get('portalnilaiUser');
+        $kelas = Kelas::findOrFail($request->kelas_id);
+        $instansiId = $kelas->instansi_id;
+
+        // Fetch students in this class
+        $students = Siswa::where('kelas_id', $request->kelas_id)
+            ->with('user')
+            ->get();
+
+        // Fetch all subjects (mapels) in this school
+        $mapels = Mapel::where(function($q) use ($instansiId) {
+                $q->where('instansi_id', $instansiId)
+                  ->orWhereNull('instansi_id');
+            })
+            ->orderBy('nama_mapel', 'asc')
+            ->get();
+        if ($mapels->isEmpty()) {
+            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+        }
+
+        // Compile student grades for each mapel
+        $data = [];
+        foreach ($students as $siswa) {
+            $grades = [];
+            foreach ($mapels as $mapel) {
+                $nilai = PortalNilaiNilai::where('kelas_id', $request->kelas_id)
+                    ->where('mapel_id', $mapel->id)
+                    ->where('siswa_id', $siswa->id)
+                    ->first();
+                
+                $grades[$mapel->id] = $nilai ? $nilai->nilai_akhir : null;
+            }
+
+            $data[] = [
+                'nisn' => $siswa->nisn,
+                'nama' => $siswa->user->name,
+                'siswa_id' => $siswa->id,
+                'grades' => $grades
+            ];
+        }
+
+        // Format mapels for header construction
+        $mapelList = [];
+        foreach ($mapels as $m) {
+            $mapelList[] = [
+                'id' => $m->id,
+                'nama' => strtoupper($m->nama_mapel)
+            ];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'students' => $data,
+            'mapels' => $mapelList
         ]);
     }
 }

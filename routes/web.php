@@ -135,6 +135,7 @@ Route::prefix('/porosdata/portalnilai')->group(function () {
         Route::get('/settings-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'getSettings'])->name('portalnilai.settings.get');
         Route::post('/settings-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'saveSettings'])->name('portalnilai.settings.save');
         Route::get('/students-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'getStudentsData'])->name('portalnilai.students.get');
+        Route::get('/walikelas-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'getWaliKelasData'])->name('portalnilai.walikelas.get');
         Route::post('/save-grades', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'saveGrades'])->name('portalnilai.grades.save');
     });
 });
