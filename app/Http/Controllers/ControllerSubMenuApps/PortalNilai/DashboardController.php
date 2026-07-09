@@ -20,52 +20,151 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = $request->get('portalnilaiUser');
-        $isAdmin = ($user && in_array($user->role, ['admin', 'superadmin'])) || ($user && $user->id === 999999);
-
-        if ($isAdmin) {
-            $classes = Kelas::orderBy('nama_kelas', 'asc')->get();
-            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
-            $totalStudents = Siswa::where('status', 'aktif')->count();
-            
-            $sd = Instansi::where('tingkat', 'SD')->first();
-            $instansiId = $sd ? $sd->id : null;
-        } else {
-            $sd = Instansi::where('tingkat', 'SD')->first();
-            $instansiId = ($user && $user->instansi_id) ? $user->instansi_id : ($sd ? $sd->id : null);
-
-            // Fetch classrooms
-            if ($user && $user->role === 'wali_kelas') {
-                $classes = Kelas::where('user_id', $user->id)->get();
-            } else {
-                $classes = Kelas::where('instansi_id', $instansiId)
-                    ->orderBy('nama_kelas', 'asc')
-                    ->get();
-            }
-
-            // Fetch subjects
-            $mapels = Mapel::where(function($q) use ($instansiId) {
-                    $q->where('instansi_id', $instansiId)
-                      ->orWhereNull('instansi_id');
-                })
-                ->orderBy('nama_mapel', 'asc')
-                ->get();
-            if ($mapels->isEmpty()) {
-                $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
-            }
-
-            $totalStudents = Siswa::where('status', 'aktif')
-                ->whereHas('kelas', function($q) use ($instansiId) {
-                    $q->where('instansi_id', $instansiId);
-                })
-                ->count();
+        if (!$user) {
+            return redirect()->route('portalnilai.login');
         }
+
+        $isAdmin = in_array($user->role, ['admin', 'superadmin']) || $user->id === 999999;
+        if ($isAdmin) {
+            return redirect()->route('portalnilai.admin.dashboard');
+        } elseif ($user->role === 'wali_kelas') {
+            return redirect()->route('portalnilai.walikelas.dashboard');
+        } elseif ($user->role === 'guru') {
+            return redirect()->route('portalnilai.guru.dashboard');
+        }
+
+        return redirect()->route('portalnilai.login');
+    }
+
+    public function adminDashboard(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        $classes = Kelas::orderBy('nama_kelas', 'asc')->get();
+        $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+        $totalStudents = Siswa::where('status', 'aktif')->count();
+        
+        $sd = Instansi::where('tingkat', 'SD')->first();
+        $instansiId = $sd ? $sd->id : null;
+        $accessSettings = PortalNilaiSetting::where('instansi_id', $instansiId)->first();
+        if (!$accessSettings) {
+            $accessSettings = PortalNilaiSetting::whereNull('instansi_id')->first();
+        }
+
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.admin.dashboard', compact('user', 'classes', 'mapels', 'totalStudents', 'accessSettings'));
+    }
+
+    public function adminInputNilai(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        $classes = Kelas::orderBy('nama_kelas', 'asc')->get();
+        $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.admin.inputNilai', compact('user', 'classes', 'mapels'));
+    }
+
+    public function adminJadwal(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.admin.jadwal', compact('user'));
+    }
+
+    public function walikelasDashboard(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        $classes = Kelas::where('user_id', $user->id)->get();
+        
+        $sd = Instansi::where('tingkat', 'SD')->first();
+        $instansiId = $user->instansi_id ?? ($sd ? $sd->id : null);
+        
+        $mapels = Mapel::where(function($q) use ($instansiId) {
+                $q->where('instansi_id', $instansiId)
+                  ->orWhereNull('instansi_id');
+            })
+            ->orderBy('nama_mapel', 'asc')
+            ->get();
+        if ($mapels->isEmpty()) {
+            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+        }
+
+        $totalStudents = Siswa::where('status', 'aktif')
+            ->whereHas('kelas', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->count();
 
         $accessSettings = PortalNilaiSetting::where('instansi_id', $instansiId)->first();
         if (!$accessSettings) {
             $accessSettings = PortalNilaiSetting::whereNull('instansi_id')->first();
         }
 
-        return view('PorosDataHome.SubMenuApplication.PortalNilai.dashboard', compact('user', 'classes', 'mapels', 'totalStudents', 'accessSettings'));
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.wali_kelas.dashboard', compact('user', 'classes', 'mapels', 'totalStudents', 'accessSettings'));
+    }
+
+    public function walikelasViewNilai(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        $classes = Kelas::where('user_id', $user->id)->get();
+
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.wali_kelas.viewNilai', compact('user', 'classes'));
+    }
+
+    public function guruDashboard(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        
+        $sd = Instansi::where('tingkat', 'SD')->first();
+        $instansiId = $user->instansi_id ?? ($sd ? $sd->id : null);
+        
+        $classes = Kelas::where('instansi_id', $instansiId)
+            ->orderBy('nama_kelas', 'asc')
+            ->get();
+
+        $mapels = Mapel::where(function($q) use ($instansiId) {
+                $q->where('instansi_id', $instansiId)
+                  ->orWhereNull('instansi_id');
+            })
+            ->orderBy('nama_mapel', 'asc')
+            ->get();
+        if ($mapels->isEmpty()) {
+            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+        }
+
+        $totalStudents = Siswa::where('status', 'aktif')
+            ->whereHas('kelas', function($q) use ($instansiId) {
+                $q->where('instansi_id', $instansiId);
+            })
+            ->count();
+
+        $accessSettings = PortalNilaiSetting::where('instansi_id', $instansiId)->first();
+        if (!$accessSettings) {
+            $accessSettings = PortalNilaiSetting::whereNull('instansi_id')->first();
+        }
+
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.guru.dashboard', compact('user', 'classes', 'mapels', 'totalStudents', 'accessSettings'));
+    }
+
+    public function guruInputNilai(Request $request)
+    {
+        $user = $request->get('portalnilaiUser');
+        
+        $sd = Instansi::where('tingkat', 'SD')->first();
+        $instansiId = $user->instansi_id ?? ($sd ? $sd->id : null);
+        
+        $classes = Kelas::where('instansi_id', $instansiId)
+            ->orderBy('nama_kelas', 'asc')
+            ->get();
+
+        $mapels = Mapel::where(function($q) use ($instansiId) {
+                $q->where('instansi_id', $instansiId)
+                  ->orWhereNull('instansi_id');
+            })
+            ->orderBy('nama_mapel', 'asc')
+            ->get();
+        if ($mapels->isEmpty()) {
+            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
+        }
+
+        return view('PorosDataHome.SubMenuApplication.PortalNilai.guru.inputNilai', compact('user', 'classes', 'mapels'));
     }
 
     /**

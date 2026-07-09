@@ -130,6 +130,19 @@ Route::prefix('/porosdata/portalnilai')->group(function () {
 
     Route::middleware(['auth.portalnilai'])->group(function () {
         Route::get('/', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'index'])->name('portalnilai.dashboard');
+
+        // Admin Routes
+        Route::get('/admin/dashboard', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'adminDashboard'])->name('portalnilai.admin.dashboard');
+        Route::get('/admin/inputnilai', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'adminInputNilai'])->name('portalnilai.admin.inputnilai');
+        Route::get('/admin/jadwal', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'adminJadwal'])->name('portalnilai.admin.jadwal');
+
+        // Wali Kelas Routes
+        Route::get('/walikelas/dashboard', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'walikelasDashboard'])->name('portalnilai.walikelas.dashboard');
+        Route::get('/walikelas/viewnilai', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'walikelasViewNilai'])->name('portalnilai.walikelas.viewnilai');
+
+        // Guru Routes
+        Route::get('/guru/dashboard', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'guruDashboard'])->name('portalnilai.guru.dashboard');
+        Route::get('/guru/inputnilai', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'guruInputNilai'])->name('portalnilai.guru.inputnilai');
         
         // AJAX Endpoints
         Route::get('/settings-data', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'getSettings'])->name('portalnilai.settings.get');
