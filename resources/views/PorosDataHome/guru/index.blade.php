@@ -58,6 +58,8 @@
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Kode DUK</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Lengkap</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Username</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Mata Pelajaran</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Kelas</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-32 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -68,9 +70,31 @@
                             <td class="py-4 px-6 text-sm text-slate-600 dark:text-slate-300 font-mono">{{ $guru->duk ?: '—' }}</td>
                             <td class="py-4 px-6 text-sm font-semibold text-slate-900 dark:text-white">{{ $guru->name }}</td>
                             <td class="py-4 px-6 text-sm text-slate-600 dark:text-slate-300">{{ $guru->username }}</td>
+                            <td class="py-4 px-6 text-sm">
+                                <div class="flex flex-wrap gap-1 max-w-xs">
+                                    @forelse($guru->guru_mapel as $mapel)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
+                                            {{ $mapel->nama_mapel }}
+                                        </span>
+                                    @empty
+                                        <span class="text-xs text-slate-400">—</span>
+                                    @endforelse
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-sm">
+                                <div class="flex flex-wrap gap-1 max-w-xs">
+                                    @forelse($guru->guru_kelas as $kelas)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
+                                            {{ $kelas->nama_kelas }}
+                                        </span>
+                                    @empty
+                                        <span class="text-xs text-slate-400">—</span>
+                                    @endforelse
+                                </div>
+                            </td>
                             <td class="py-4 px-6 text-center">
                                 <div class="inline-flex items-center gap-2">
-                                    <button onclick="bukaEditModal('{{ $guru->id }}', '{{ addslashes($guru->name) }}', '{{ $guru->username }}', '{{ $guru->duk }}', '{{ addslashes($guru->password) }}')"
+                                    <button onclick="bukaEditModal('{{ $guru->id }}', '{{ addslashes($guru->name) }}', '{{ $guru->username }}', '{{ $guru->duk }}', '{{ addslashes($guru->password_plain ?? 'password123') }}', [{{ $guru->guru_kelas->pluck('id')->implode(',') }}], [{{ $guru->guru_mapel->pluck('id')->implode(',') }}])"
                                         class="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
@@ -91,7 +115,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-16 text-center text-slate-400">
+                            <td colspan="7" class="py-16 text-center text-slate-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mx-auto mb-3 text-slate-300">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                                 </svg>
@@ -110,7 +134,7 @@
     <!-- ===================== MODAL TAMBAH ===================== -->
     <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div id="backdrop-create" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
+        <div class="relative z-10 w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form action="{{ route('guru.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="role" value="guru">
@@ -123,32 +147,69 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
-                            <input type="text" name="name" required placeholder="Contoh: Budi Santoso, M.Pd"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column: Personal Info & Account Details -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+                                <input type="text" name="name" required placeholder="Contoh: Budi Santoso, M.Pd"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kode DUK (Opsional)</label>
+                                <input type="text" name="duk" placeholder="Contoh: 199006152015041002"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
+                                <input type="text" name="username" required placeholder="Contoh: budisantoso"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Peran</label>
+                                    <select disabled class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-sm cursor-not-allowed text-slate-500">
+                                        <option value="guru" selected>Guru</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                                    <input type="text" name="password" required placeholder="Minimal 6 karakter"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kode DUK (Opsional)</label>
-                            <input type="text" name="duk" placeholder="Contoh: 199006152015041002"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
-                            <input type="text" name="username" required placeholder="Contoh: budisantoso"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Peran Guru</label>
-                            <select disabled class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-sm cursor-not-allowed text-slate-500">
-                                <option value="guru" selected>Guru Pengajar</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
-                            <input type="text" name="password" required placeholder="Minimal 6 karakter"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+
+                        <!-- Right Column: Assignments -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Mata Pelajaran Yang Diajar</label>
+                                <div class="border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 h-[130px] overflow-y-auto space-y-2">
+                                    @forelse($mapels as $mapel)
+                                        <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                                            <input type="checkbox" name="mapel_ids[]" value="{{ $mapel->id }}"
+                                                class="rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-900">
+                                            <span>{{ $mapel->nama_mapel }}</span>
+                                        </label>
+                                    @empty
+                                        <p class="text-xs text-slate-400">Belum ada mata pelajaran</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kelas Yang Diajar</label>
+                                <div class="border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 h-[130px] overflow-y-auto space-y-2">
+                                    @forelse($classes as $kelas)
+                                        <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                                            <input type="checkbox" name="kelas_ids[]" value="{{ $kelas->id }}"
+                                                class="rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-900">
+                                            <span>{{ $kelas->nama_kelas }}</span>
+                                        </label>
+                                    @empty
+                                        <p class="text-xs text-slate-400">Belum ada kelas</p>
+                                    @endforelse
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,7 +224,7 @@
     <!-- ===================== MODAL EDIT ===================== -->
     <div id="modal-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div id="backdrop-edit" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
+        <div class="relative z-10 w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form id="form-edit" method="POST">
                 @csrf
                 @method('PUT')
@@ -177,32 +238,69 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
-                            <input type="text" name="name" id="edit-name" required placeholder="Contoh: Budi Santoso, M.Pd"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column: Personal Info & Account Details -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+                                <input type="text" name="name" id="edit-name" required placeholder="Contoh: Budi Santoso, M.Pd"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kode DUK (Opsional)</label>
+                                <input type="text" name="duk" id="edit-duk" placeholder="Contoh: 199006152015041002"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
+                                <input type="text" name="username" id="edit-username" required placeholder="Contoh: budisantoso"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Peran</label>
+                                    <select disabled class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-sm cursor-not-allowed text-slate-500">
+                                        <option value="guru" selected>Guru</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                                    <input type="text" name="password" id="edit-password" required placeholder="Kata Sandi Guru"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kode DUK (Opsional)</label>
-                            <input type="text" name="duk" id="edit-duk" placeholder="Contoh: 199006152015041002"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
-                            <input type="text" name="username" id="edit-username" required placeholder="Contoh: budisantoso"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Peran Guru</label>
-                            <select disabled class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-sm cursor-not-allowed text-slate-500">
-                                <option value="guru" selected>Guru Pengajar</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
-                            <input type="text" name="password" id="edit-password" required placeholder="Kata Sandi Guru"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+
+                        <!-- Right Column: Assignments -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Mata Pelajaran Yang Diajar</label>
+                                <div class="border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 h-[130px] overflow-y-auto space-y-2">
+                                    @forelse($mapels as $mapel)
+                                        <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                                            <input type="checkbox" name="mapel_ids[]" value="{{ $mapel->id }}"
+                                                class="rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-900">
+                                            <span>{{ $mapel->nama_mapel }}</span>
+                                        </label>
+                                    @empty
+                                        <p class="text-xs text-slate-400">Belum ada mata pelajaran</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kelas Yang Diajar</label>
+                                <div class="border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-xl p-3 h-[130px] overflow-y-auto space-y-2">
+                                    @forelse($classes as $kelas)
+                                        <label class="flex items-center gap-2.5 cursor-pointer text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                                            <input type="checkbox" name="kelas_ids[]" value="{{ $kelas->id }}"
+                                                class="rounded border-slate-300 dark:border-slate-600 text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-900">
+                                            <span>{{ $kelas->nama_kelas }}</span>
+                                        </label>
+                                    @empty
+                                        <p class="text-xs text-slate-400">Belum ada kelas</p>
+                                    @endforelse
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -237,12 +335,27 @@
     document.getElementById('btn-batal-edit').addEventListener('click', () => tutupModal('modal-edit'));
     document.getElementById('backdrop-edit').addEventListener('click', () => tutupModal('modal-edit'));
 
-    function bukaEditModal(id, name, username, duk, password) {
+    function bukaEditModal(id, name, username, duk, password, kelasIds, mapelIds) {
         document.getElementById('form-edit').action = '/porosdata/guru/' + id;
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-username').value = username;
         document.getElementById('edit-duk').value = duk || '';
         document.getElementById('edit-password').value = password;
+
+        // Clear all checkboxes first
+        document.querySelectorAll('#form-edit input[name="kelas_ids[]"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#form-edit input[name="mapel_ids[]"]').forEach(cb => cb.checked = false);
+
+        // Check assigned ones
+        kelasIds.forEach(id => {
+            const cb = document.querySelector(`#form-edit input[name="kelas_ids[]"][value="${id}"]`);
+            if (cb) cb.checked = true;
+        });
+        mapelIds.forEach(id => {
+            const cb = document.querySelector(`#form-edit input[name="mapel_ids[]"][value="${id}"]`);
+            if (cb) cb.checked = true;
+        });
+
         bukaModal('modal-edit');
     }
 

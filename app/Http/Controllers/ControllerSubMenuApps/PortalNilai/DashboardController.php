@@ -115,24 +115,20 @@ class DashboardController extends Controller
         $sd = Instansi::where('tingkat', 'SD')->first();
         $instansiId = $user->instansi_id ?? ($sd ? $sd->id : null);
         
-        $classes = Kelas::where('instansi_id', $instansiId)
+        // Only get classes assigned to the Guru
+        $classes = $user->guru_kelas()
             ->orderBy('nama_kelas', 'asc')
             ->get();
+        $classIds = $classes->pluck('id')->toArray();
 
-        $mapels = Mapel::where(function($q) use ($instansiId) {
-                $q->where('instansi_id', $instansiId)
-                  ->orWhereNull('instansi_id');
-            })
+        // Only get mapels assigned to the Guru
+        $mapels = $user->guru_mapel()
             ->orderBy('nama_mapel', 'asc')
             ->get();
-        if ($mapels->isEmpty()) {
-            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
-        }
 
+        // Total active students in assigned classes
         $totalStudents = Siswa::where('status', 'aktif')
-            ->whereHas('kelas', function($q) use ($instansiId) {
-                $q->where('instansi_id', $instansiId);
-            })
+            ->whereIn('kelas_id', $classIds)
             ->count();
 
         $accessSettings = PortalNilaiSetting::where('instansi_id', $instansiId)->first();
@@ -147,22 +143,15 @@ class DashboardController extends Controller
     {
         $user = $request->get('portalnilaiUser');
         
-        $sd = Instansi::where('tingkat', 'SD')->first();
-        $instansiId = $user->instansi_id ?? ($sd ? $sd->id : null);
-        
-        $classes = Kelas::where('instansi_id', $instansiId)
+        // Only get classes assigned to the Guru
+        $classes = $user->guru_kelas()
             ->orderBy('nama_kelas', 'asc')
             ->get();
 
-        $mapels = Mapel::where(function($q) use ($instansiId) {
-                $q->where('instansi_id', $instansiId)
-                  ->orWhereNull('instansi_id');
-            })
+        // Only get mapels assigned to the Guru
+        $mapels = $user->guru_mapel()
             ->orderBy('nama_mapel', 'asc')
             ->get();
-        if ($mapels->isEmpty()) {
-            $mapels = Mapel::orderBy('nama_mapel', 'asc')->get();
-        }
 
         return view('PorosDataHome.SubMenuApplication.PortalNilai.guru.inputNilai', compact('user', 'classes', 'mapels'));
     }
@@ -203,19 +192,24 @@ class DashboardController extends Controller
         $instansiId = ($user && $user->instansi_id) ? $user->instansi_id : ($sd ? $sd->id : null);
 
         $request->validate([
-            'tugas_buka' => 'required',
-            'tugas_tutup' => 'required',
-            'asas_buka' => 'required',
-            'asas_tutup' => 'required',
+            'tugas_buka' => 'nullable',
+            'tugas_tutup' => 'nullable',
+            'asas_buka' => 'nullable',
+            'asas_tutup' => 'nullable',
         ]);
+
+        $tugas_buka = $request->tugas_buka ? date('Y-m-d H:i:s', strtotime($request->tugas_buka)) : null;
+        $tugas_tutup = $request->tugas_tutup ? date('Y-m-d H:i:s', strtotime($request->tugas_tutup)) : null;
+        $asas_buka = $request->asas_buka ? date('Y-m-d H:i:s', strtotime($request->asas_buka)) : null;
+        $asas_tutup = $request->asas_tutup ? date('Y-m-d H:i:s', strtotime($request->asas_tutup)) : null;
 
         PortalNilaiSetting::updateOrCreate(
             ['instansi_id' => $instansiId],
             [
-                'tugas_buka' => date('Y-m-d H:i:s', strtotime($request->tugas_buka)),
-                'tugas_tutup' => date('Y-m-d H:i:s', strtotime($request->tugas_tutup)),
-                'asas_buka' => date('Y-m-d H:i:s', strtotime($request->asas_buka)),
-                'asas_tutup' => date('Y-m-d H:i:s', strtotime($request->asas_tutup)),
+                'tugas_buka' => $tugas_buka,
+                'tugas_tutup' => $tugas_tutup,
+                'asas_buka' => $asas_buka,
+                'asas_tutup' => $asas_tutup,
             ]
         );
 
@@ -239,6 +233,19 @@ class DashboardController extends Controller
         $kelas = Kelas::findOrFail($request->kelas_id);
         $instansiId = $kelas->instansi_id;
 
+        // Check if Guru is assigned to requested class and subject
+        $isAdmin = ($user && in_array($user->role, ['admin', 'superadmin'])) || ($user && $user->id === 999999);
+        if ($user && $user->role === 'guru' && !$isAdmin) {
+            $hasKelas = $user->guru_kelas()->where('kelas.id', $request->kelas_id)->exists();
+            $hasMapel = $user->guru_mapel()->where('mapel.id', $request->mapel_id)->exists();
+            if (!$hasKelas || !$hasMapel) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Anda tidak memiliki akses ke kelas atau mata pelajaran ini!'
+                ], 403);
+            }
+        }
+
         // Fetch students in this class
         $students = Siswa::where('kelas_id', $request->kelas_id)
             ->with('user')
@@ -257,8 +264,16 @@ class DashboardController extends Controller
         $now = now();
         $isAdmin = ($user && in_array($user->role, ['admin', 'superadmin'])) || ($user && $user->id === 999999);
         
-        $isAksesBuka = $isAdmin ? true : ($settings ? ($now->greaterThanOrEqualTo($settings->asas_buka) && $now->lessThanOrEqualTo($settings->asas_tutup)) : true);
-        $isAksesTugasBuka = $isAdmin ? true : ($settings ? ($now->greaterThanOrEqualTo($settings->tugas_buka) && $now->lessThanOrEqualTo($settings->tugas_tutup)) : true);
+        $isAksesBuka = true;
+        $isAksesTugasBuka = true;
+        if (!$isAdmin && $settings) {
+            if (!empty($settings->asas_buka) && !empty($settings->asas_tutup)) {
+                $isAksesBuka = ($now->greaterThanOrEqualTo($settings->asas_buka) && $now->lessThanOrEqualTo($settings->asas_tutup));
+            }
+            if (!empty($settings->tugas_buka) && !empty($settings->tugas_tutup)) {
+                $isAksesTugasBuka = ($now->greaterThanOrEqualTo($settings->tugas_buka) && $now->lessThanOrEqualTo($settings->tugas_tutup));
+            }
+        }
 
         // Compile students and grades data
         $data = [];
@@ -313,13 +328,28 @@ class DashboardController extends Controller
 
         // Access checks if not admin
         $isAdmin = ($user && in_array($user->role, ['admin', 'superadmin'])) || ($user && $user->id === 999999);
+        
+        // Check if Guru is assigned to requested class and subject
+        if ($user && $user->role === 'guru' && !$isAdmin) {
+            $hasKelas = $user->guru_kelas()->where('kelas.id', $request->kelas_id)->exists();
+            $hasMapel = $user->guru_mapel()->where('mapel.id', $request->mapel_id)->exists();
+            if (!$hasKelas || !$hasMapel) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal Menyimpan: Anda tidak memiliki akses ke kelas atau mata pelajaran ini!'
+                ], 403);
+            }
+        }
         if (!$isAdmin) {
             $settings = PortalNilaiSetting::where('instansi_id', $instansiId)->first();
             if (!$settings) {
                 $settings = PortalNilaiSetting::whereNull('instansi_id')->first();
             }
             $now = now();
-            $isAksesBuka = $settings ? ($now->greaterThanOrEqualTo($settings->asas_buka) && $now->lessThanOrEqualTo($settings->asas_tutup)) : true;
+            $isAksesBuka = true;
+            if ($settings && !empty($settings->asas_buka) && !empty($settings->asas_tutup)) {
+                $isAksesBuka = ($now->greaterThanOrEqualTo($settings->asas_buka) && $now->lessThanOrEqualTo($settings->asas_tutup));
+            }
             if (!$isAksesBuka) {
                 return response()->json([
                     'status' => 'error',

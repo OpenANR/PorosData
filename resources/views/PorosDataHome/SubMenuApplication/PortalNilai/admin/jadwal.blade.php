@@ -84,10 +84,6 @@
         const tugasBuka = document.getElementById('admin-tugas-buka').value;
         const tugasTutup = document.getElementById('admin-tugas-tutup').value;
 
-        if (!adminBuka || !adminTutup || !tugasBuka || !tugasTutup) {
-            return showToast("Semua kolom tanggal jadwal harus diisi!", "warning");
-        }
-
         const btnSaveSettings = document.getElementById('btn-save-settings');
         const loader = document.getElementById('settings-loader');
         btnSaveSettings.disabled = true;

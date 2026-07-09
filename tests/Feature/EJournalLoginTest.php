@@ -19,7 +19,7 @@ class EJournalLoginTest extends TestCase
         $response = $this->get(route('ejournal.login'));
 
         $response->assertStatus(200);
-        $response->assertSee('SMKS TEKNOLOGI BALUNG');
+        $response->assertSee('SD Negeri 01 Poros Data');
         $response->assertSee('E-Jurnal Guru');
     }
 

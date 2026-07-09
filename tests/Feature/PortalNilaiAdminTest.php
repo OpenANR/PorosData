@@ -71,7 +71,7 @@ class PortalNilaiAdminTest extends TestCase
     {
         // Mock authentication via Portal Nilai session key
         $response = $this->withSession(['portalnilai_user_id' => $this->admin->id])
-            ->get(route('portalnilai.dashboard'));
+            ->get(route('portalnilai.admin.dashboard'));
 
         $response->assertStatus(200);
         $response->assertSee('Portal Penilaian');

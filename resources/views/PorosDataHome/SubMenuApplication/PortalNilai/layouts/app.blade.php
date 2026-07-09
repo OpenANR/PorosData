@@ -85,6 +85,21 @@
             100% { transform: rotate(360deg); } 
         }
 
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(1.5rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         /* Fix dark mode calendar picker indicator */
         .dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
             filter: invert(1) brightness(0.9);
@@ -290,23 +305,22 @@
             if (!container) return;
 
             const toast = document.createElement('div');
-            toast.className = `flex items-center gap-3 px-4.5 py-3 rounded-2xl border text-xs font-bold shadow-lg animate-slide-in pointer-events-auto transition-all duration-300 bg-white dark:bg-slate-900`;
             
-            let icon = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
-            let border = 'border-emerald-100 dark:border-emerald-950/60';
+            let bgClass = 'bg-emerald-50/95 dark:bg-emerald-950/90 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-900/40';
+            let icon = '<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-sm shrink-0"></i>';
             
             if (type === "error") {
-                icon = '<i class="fa-solid fa-circle-exclamation text-rose-500"></i>';
-                border = 'border-rose-100 dark:border-rose-950/60';
+                icon = '<i class="fa-solid fa-circle-exclamation text-rose-600 dark:text-rose-400 text-sm shrink-0"></i>';
+                bgClass = 'bg-rose-50/95 dark:bg-rose-950/90 text-rose-800 dark:text-rose-200 border-rose-200 dark:border-rose-900/40';
             } else if (type === "warning") {
-                icon = '<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>';
-                border = 'border-amber-100 dark:border-amber-950/60';
+                icon = '<i class="fa-solid fa-triangle-exclamation text-amber-600 dark:text-amber-400 text-sm shrink-0"></i>';
+                bgClass = 'bg-amber-50/95 dark:bg-amber-950/90 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-900/40';
             }
 
-            toast.className += ` ${border}`;
+            toast.className = `flex items-center gap-3 px-6 py-3.5 rounded-xl border text-sm font-semibold shadow-lg animate-slide-in pointer-events-auto transition-all duration-300 ${bgClass}`;
             toast.innerHTML = `
                 ${icon}
-                <span class="text-slate-800 dark:text-slate-200">${message}</span>
+                <span>${message}</span>
             `;
 
             container.appendChild(toast);

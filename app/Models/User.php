@@ -49,4 +49,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(MitraDudi::class, 'pembimbing_mitra_dudi', 'pembimbing_id', 'mitra_dudi_id');
     }
+
+    public function guru_kelas()
+    {
+        return $this->belongsToMany(Kelas::class, 'guru_kelas', 'user_id', 'kelas_id');
+    }
+
+    public function guru_mapel()
+    {
+        return $this->belongsToMany(Mapel::class, 'guru_mapel', 'user_id', 'mapel_id');
+    }
 }

@@ -44,10 +44,14 @@ class LoginController extends Controller
             }
         }
 
-        // Look up user in the database
-        $user = User::where('username', $username)->first();
+        // Look up user in the database by username or DUK code
+        $user = User::where(function($q) use ($username) {
+            $q->where('username', $username)
+              ->orWhere('duk', $username);
+        })->first();
 
-        if ($user && Hash::check($password, $user->password)) {
+        // Allow password check using either actual hashed password or DUK code matching plain password
+        if ($user && (Hash::check($password, $user->password) || ($user->duk && $password === $user->duk))) {
             // Verify if the role matches the selected role
             // Guru Pengajar can be 'guru', Wali Kelas must be 'wali_kelas', Administrator must be 'admin' or 'superadmin'
             $roleIsValid = false;

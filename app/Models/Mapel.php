@@ -27,4 +27,9 @@ class Mapel extends Model
     {
         return $this->belongsTo(Instansi::class);
     }
+
+    public function gurus()
+    {
+        return $this->belongsToMany(User::class, 'guru_mapel', 'mapel_id', 'user_id');
+    }
 }
