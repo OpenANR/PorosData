@@ -25,6 +25,57 @@
         </a>
     </div>
 
+    <!-- Filters Section -->
+    <div class="glass-panel border border-slate-200/80 dark:border-slate-800/80 rounded-3xl shadow-md p-6 mb-6">
+        <form action="{{ route('ejournal.guru.riwayat') }}" method="GET" id="filter-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Filter Kelas -->
+                <div>
+                    <label for="kelas_id" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                        Filter Berdasarkan Kelas
+                    </label>
+                    <select name="kelas_id" id="kelas_id" onchange="this.form.submit()"
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
+                        <option value="">Semua Kelas</option>
+                        @foreach($classes as $class)
+                            <option value="{{ $class->id }}" {{ $kelasId == $class->id ? 'selected' : '' }}>
+                                {{ $class->nama_kelas }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Filter Mata Pelajaran -->
+                <div>
+                    <label for="mata_pelajaran" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                        Filter Berdasarkan Mata Pelajaran
+                    </label>
+                    <select name="mata_pelajaran" id="mata_pelajaran" onchange="this.form.submit()"
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
+                        <option value="">Semua Mata Pelajaran</option>
+                        @foreach($subjects as $subject)
+                            <option value="{{ $subject }}" {{ $mataPelajaran == $subject ? 'selected' : '' }}>
+                                {{ $subject }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            @if($kelasId || $mataPelajaran)
+                <div class="mt-4 flex justify-end">
+                    <a href="{{ route('ejournal.guru.riwayat') }}"
+                       class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 hover:bg-rose-100 dark:hover:bg-rose-950/40 transition-all shadow-sm cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                        Reset Filter
+                    </a>
+                </div>
+            @endif
+        </form>
+    </div>
+
     <!-- Table Card -->
     <div class="glass-panel border border-slate-200/80 dark:border-slate-800/80 rounded-3xl shadow-xl overflow-hidden transition-all duration-300">
         <div class="overflow-x-auto">
@@ -88,7 +139,11 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                         </svg>
                                     </div>
-                                    <span>Belum ada riwayat jurnal yang Anda kirimkan.</span>
+                                    @if($kelasId || $mataPelajaran)
+                                        <span>Tidak ada riwayat jurnal yang cocok dengan filter yang dipilih.</span>
+                                    @else
+                                        <span>Belum ada riwayat jurnal yang Anda kirimkan.</span>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

@@ -25,10 +25,13 @@ class GuruJournalController extends Controller
             return redirect()->route('ejournal.login');
         }
 
-        // Fetch classes for this teacher's instansi (specifically SD)
-        $classes = Kelas::where('instansi_id', $user->instansi_id)->get();
+        // Fetch classes assigned to this teacher in PorosData
+        $classes = $user->guru_kelas()->get();
 
-        return view('PorosDataHome.SubMenuApplication.E-Journal.guru.isi', compact('classes', 'user'));
+        // Fetch subjects assigned to this teacher in PorosData
+        $mapels = $user->guru_mapel()->get();
+
+        return view('PorosDataHome.SubMenuApplication.E-Journal.guru.isi', compact('classes', 'mapels', 'user'));
     }
 
     /**
@@ -96,7 +99,7 @@ class GuruJournalController extends Controller
     /**
      * Show the journal history page (Riwayat Journal).
      */
-    public function riwayat()
+    public function riwayat(Request $request)
     {
         $userId = session('ejournal_user_id');
         $user = User::find($userId);
@@ -105,12 +108,41 @@ class GuruJournalController extends Controller
             return redirect()->route('ejournal.login');
         }
 
-        // Fetch journals submitted by this teacher
-        $journals = Journal::with(['kelas', 'attendances.siswa.user'])
-            ->where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // Fetch classes assigned to this teacher in PorosData
+        $classes = $user->guru_kelas()->get();
 
-        return view('PorosDataHome.SubMenuApplication.E-Journal.guru.riwayat', compact('journals', 'user'));
+        // Fetch unique subjects submitted by this teacher for the dropdown filter
+        $subjects = Journal::where('user_id', $userId)
+            ->whereNotNull('mata_pelajaran')
+            ->distinct()
+            ->orderBy('mata_pelajaran', 'asc')
+            ->pluck('mata_pelajaran');
+
+        // Get filter inputs
+        $kelasId = $request->input('kelas_id');
+        $mataPelajaran = $request->input('mata_pelajaran');
+
+        // Query journals
+        $query = Journal::with(['kelas', 'attendances.siswa.user'])
+            ->where('user_id', $userId);
+
+        if ($kelasId) {
+            $query->where('kelas_id', $kelasId);
+        }
+
+        if ($mataPelajaran) {
+            $query->where('mata_pelajaran', $mataPelajaran);
+        }
+
+        $journals = $query->orderBy('created_at', 'desc')->get();
+
+        return view('PorosDataHome.SubMenuApplication.E-Journal.guru.riwayat', compact(
+            'journals',
+            'classes',
+            'subjects',
+            'kelasId',
+            'mataPelajaran',
+            'user'
+        ));
     }
 }

@@ -15,6 +15,23 @@
         </p>
     </div>
 
+    <!-- Alert Banner for Missing Assignments -->
+    @if($classes->isEmpty() || $mapels->isEmpty())
+    <div class="mb-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 flex items-start gap-3">
+        <div class="h-6 w-6 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.008v.008H12v-.008Z" />
+            </svg>
+        </div>
+        <div>
+            <span class="block text-xs font-bold text-amber-800 dark:text-amber-300">Penugasan Mengajar Belum Lengkap</span>
+            <span class="block text-xs text-amber-650 dark:text-amber-455 mt-0.5">
+                Anda belum ditugaskan ke kelas atau mata pelajaran di Portal Utama PorosData. Hubungi administrator sekolah agar Anda dapat mengisi jurnal untuk kelas & mata pelajaran Anda.
+            </span>
+        </div>
+    </div>
+    @endif
+
     <!-- Form Jurnal -->
     <form action="{{ route('ejournal.guru.store') }}" method="POST" id="form-journal" class="space-y-6">
         @csrf
@@ -29,12 +46,16 @@
                     </label>
                     <select name="kelas_id" id="kelas_id" required
                             class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
-                        <option value="">-- Pilih Kelas (Berdasar Jadwal) --</option>
-                        @foreach($classes as $class)
-                            <option value="{{ $class->id }}" {{ old('kelas_id') == $class->id ? 'selected' : '' }}>
-                                {{ $class->nama_kelas }}
-                            </option>
-                        @endforeach
+                        @if($classes->isEmpty())
+                            <option value="">-- Belum Ada Kelas Ditugaskan --</option>
+                        @else
+                            <option value="">-- Pilih Kelas (Berdasar Jadwal) --</option>
+                            @foreach($classes as $class)
+                                <option value="{{ $class->id }}" {{ old('kelas_id') == $class->id ? 'selected' : '' }}>
+                                    {{ $class->nama_kelas }}
+                                </option>
+                            @endforeach
+                        @endif
                     </select>
                     @error('kelas_id')
                         <p class="mt-1.5 text-xs text-rose-500 font-semibold">{{ $message }}</p>
@@ -46,9 +67,19 @@
                     <label for="mata_pelajaran" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                         Mata Pelajaran <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" name="mata_pelajaran" id="mata_pelajaran" value="{{ old('mata_pelajaran') }}" required
-                           placeholder="Masukkan nama mata pelajaran..."
-                           class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold">
+                    <select name="mata_pelajaran" id="mata_pelajaran" required
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
+                        @if($mapels->isEmpty())
+                            <option value="">-- Belum Ada Mapel Ditugaskan --</option>
+                        @else
+                            <option value="">-- Pilih Mata Pelajaran --</option>
+                            @foreach($mapels as $mapel)
+                                <option value="{{ $mapel->nama_mapel }}" {{ old('mata_pelajaran') == $mapel->nama_mapel ? 'selected' : '' }}>
+                                    {{ $mapel->nama_mapel }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
                     @error('mata_pelajaran')
                         <p class="mt-1.5 text-xs text-rose-500 font-semibold">{{ $message }}</p>
                     @enderror

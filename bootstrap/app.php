@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.ejournal' => \App\Http\Middleware\EnsureEJournalAuthenticated::class,
             'auth.portalpkl' => \App\Http\Middleware\EnsurePortalPKLAuthenticated::class,
             'auth.portalnilai' => \App\Http\Middleware\EnsurePortalNilaiAuthenticated::class,
+            'auth.datasiswa' => \App\Http\Middleware\EnsureDataSiswaAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

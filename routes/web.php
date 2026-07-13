@@ -34,12 +34,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/porosdata/mapel/kategori', [App\Http\Controllers\MapelController::class, 'storeKategori'])->name('mapel.kategori.store');
     Route::put('/porosdata/mapel/kategori/{id}', [App\Http\Controllers\MapelController::class, 'updateKategori'])->name('mapel.kategori.update');
     Route::delete('/porosdata/mapel/kategori/{id}', [App\Http\Controllers\MapelController::class, 'destroyKategori'])->name('mapel.kategori.destroy');
+
+    // Admin Management Routes
+    Route::resource('/porosdata/admin', App\Http\Controllers\AdminUserController::class)->names('admin_users');
 });
 
 // Standalone Shortcut entry points (accessible directly)
 Route::get('/datasiswa', function () {
-    return view('PorosDataHome.SubMenuApplication.DataSiswa.index');
-})->name('datasiswa.index');
+    return redirect()->route('datasiswa.index');
+})->name('datasiswa.index.shortcut');
 
 Route::get('/portalnilai', function () {
     return redirect()->route('portalnilai.dashboard');
@@ -56,6 +59,31 @@ Route::get('/portalpkl', function () {
 Route::get('/ejournal', function () {
     return redirect()->route('ejournal.index');
 })->name('ejournal.index.shortcut');
+
+// Standalone Data Siswa Routes (independent login/session)
+Route::prefix('/porosdata/datasiswa')->group(function () {
+    Route::get('/login', [App\Http\Controllers\ControllerSubMenuApps\DataSiswa\LoginController::class, 'showLoginForm'])->name('datasiswa.login');
+    Route::post('/login', [App\Http\Controllers\ControllerSubMenuApps\DataSiswa\LoginController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\ControllerSubMenuApps\DataSiswa\LoginController::class, 'logout'])->name('datasiswa.logout');
+
+    Route::middleware(['auth.datasiswa'])->group(function () {
+        Route::get('/', function () {
+            return view('PorosDataHome.SubMenuApplication.DataSiswa.index');
+        })->name('datasiswa.index');
+
+        Route::get('/kelola-siswa', function () {
+            return view('PorosDataHome.SubMenuApplication.DataSiswa.kelola_siswa');
+        })->name('datasiswa.kelola_siswa');
+
+        Route::get('/riwayat-dropout', function () {
+            return view('PorosDataHome.SubMenuApplication.DataSiswa.riwayat_dropout');
+        })->name('datasiswa.riwayat_dropout');
+
+        Route::get('/status-persetujuan', function () {
+            return view('PorosDataHome.SubMenuApplication.DataSiswa.status_persetujuan');
+        })->name('datasiswa.status_persetujuan');
+    });
+});
 
 // Standalone E-Journal Routes (independent login/session)
 Route::prefix('/porosdata/e-journal')->group(function () {
