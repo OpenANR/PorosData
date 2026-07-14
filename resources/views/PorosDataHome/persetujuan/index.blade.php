@@ -1,4 +1,4 @@
-@extends('PorosDataHome.SubMenuApplication.DataSiswa.layouts.app')
+@extends('PorosDataHome.layouts.app')
 
 @section('title', 'Status Persetujuan')
 
@@ -12,9 +12,9 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-base font-bold text-slate-900 dark:text-white">Modul Otorisasi & Status Persetujuan</h3>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white">Modul Otorisasi & Status Persetujuan Admin</h3>
                 <p class="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-relaxed">
-                    Halaman ini berfungsi sebagai alur kontrol otorisasi (approval flow) untuk setiap perubahan kritis data kesiswaan. Pengajuan pendaftaran siswa baru, mutasi masuk/keluar, dan permohonan penonaktifan siswa (dropout) oleh Wali Kelas harus melalui persetujuan (Approve/Reject) Admin Utama atau Kepala Sekolah sebelum tercermin secara formal di sistem.
+                    Sebagai Admin Utama atau Kepala Sekolah, Anda memegang kendali otorisasi atas setiap perubahan kritis data kesiswaan yang diajukan oleh Wali Kelas. Anda dapat menyetujui (Terima) pengajuan untuk langsung memperbarui database, atau menolak (Tolak) pengajuan untuk membatalkan perubahan tersebut.
                 </p>
             </div>
         </div>
@@ -23,34 +23,34 @@
     <!-- Header Section -->
     <div class="mb-6">
         <h1 class="text-2xl font-extrabold tracking-tight text-slate-950 dark:text-white">Status Persetujuan Pengajuan</h1>
-        <p class="text-slate-400 dark:text-slate-500 text-xs font-semibold mt-0.5">Pantau status persetujuan pengajuan perubahan data kesiswaan</p>
+        <p class="text-slate-400 dark:text-slate-500 text-xs font-semibold mt-0.5">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Kelola dan validasi usulan perubahan data siswa</p>
     </div>
 
-    <!-- Functional Search and Filter Bar -->
-    <form method="GET" action="{{ route('datasiswa.status_persetujuan') }}" class="p-4 mb-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+    <!-- Search and Filter Bar -->
+    <form method="GET" action="{{ route('persetujuan.index') }}" class="p-4 mb-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="relative w-full md:max-w-xs">
             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.637 10.637Z" />
                 </svg>
             </div>
-            <input type="text" name="search" value="{{ $search }}" placeholder="Cari NISN, nama siswa..." class="block w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/60 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-800 dark:text-slate-100">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Cari NISN, siswa, wali kelas..." class="block w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/60 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-800 dark:text-slate-100">
         </div>
 
         <div class="flex items-center gap-3 w-full md:w-auto">
-            <select name="status" onchange="this.form.submit()" class="w-full md:w-48 px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/60 rounded-xl text-xs text-slate-600 dark:text-slate-400">
+            <select name="status" onchange="this.form.submit()" class="w-full md:w-48 px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/60 rounded-xl text-xs text-slate-600 dark:text-slate-400 bg-white">
                 <option value="">Semua Status</option>
                 <option value="proses" {{ $statusFilter === 'proses' ? 'selected' : '' }}>Proses</option>
                 <option value="disetujui" {{ $statusFilter === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
                 <option value="ditolak" {{ $statusFilter === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
             </select>
             @if($search || $statusFilter)
-                <a href="{{ route('datasiswa.status_persetujuan') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 whitespace-nowrap">Hapus Filter</a>
+                <a href="{{ route('persetujuan.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 whitespace-nowrap">Hapus Filter</a>
             @endif
         </div>
     </form>
 
-    <!-- Dynamic Approval Requests Table -->
+    <!-- Table of Requests -->
     <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -60,7 +60,7 @@
                         <th class="px-6 py-4">Alasan sedang dilakukan</th>
                         <th class="px-6 py-4">Kelas</th>
                         <th class="px-6 py-4">Wali Kelas</th>
-                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-center">Status</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -86,10 +86,10 @@
                             </td>
                             <!-- Wali Kelas -->
                             <td class="px-6 py-4.5 text-slate-500">
-                                {{ $p->user->name }}
+                                {{ $p->user->name ?? 'Staf Sekolah' }}
                             </td>
                             <!-- Status -->
-                            <td class="px-6 py-4.5">
+                            <td class="px-6 py-4.5 text-center">
                                 @if($p->status === 'proses')
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30">
                                         Proses
@@ -108,21 +108,23 @@
                             <td class="px-6 py-4.5 text-right">
                                 <div class="flex items-center justify-end gap-1.5">
                                     <button type="button" 
-                                        onclick="bukaDetailModal('{{ $p->alasan }}', '{{ addslashes($p->siswa->user->name) }}', '{{ $p->siswa->nisn }}', '{{ json_encode($p->data_lama) }}', '{{ json_encode($p->data_baru) }}')"
+                                        onclick="bukaDetailModal('{{ $p->id }}', '{{ $p->alasan }}', '{{ addslashes($p->siswa->user->name ?? 'Siswa Terhapus') }}', '{{ $p->siswa->nisn ?? '-' }}', '{{ json_encode($p->data_lama) }}', '{{ json_encode($p->data_baru) }}', '{{ $p->status }}')"
                                         class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[10px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
                                         Lihat
                                     </button>
                                     @if($p->status === 'proses')
-                                        <form action="{{ route('datasiswa.status_persetujuan.cancel', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengajuan ini?')" class="inline">
+                                        <form action="{{ route('persetujuan.terima', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan perubahan ini?')" class="inline">
                                             @csrf
-                                            <button type="submit" class="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[10px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
-                                                Batalkan
+                                            <button type="submit" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                                Terima
                                             </button>
                                         </form>
-                                    @else
-                                        <button class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 rounded-lg text-[10px] font-bold cursor-not-allowed" disabled>
-                                            Batalkan
-                                        </button>
+                                        <form action="{{ route('persetujuan.tolak', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak pengajuan perubahan ini?')" class="inline">
+                                            @csrf
+                                            <button type="submit" class="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[10px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                                Tolak
+                                            </button>
+                                        </form>
                                     @endif
                                 </div>
                             </td>
@@ -173,7 +175,7 @@
 
             <!-- Modal Content (Scrollable) -->
             <div class="p-6 overflow-y-auto flex-1">
-                <!-- Dropdown / Delete Notice -->
+                <!-- Dropout Notice -->
                 <div id="dropout-notice" class="hidden mb-4 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 text-rose-800 dark:text-rose-400 text-xs flex gap-2.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 shrink-0 mt-0.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
@@ -185,7 +187,7 @@
                 </div>
 
                 <!-- Comparisons Table -->
-                <table class="w-full text-left border-collapse text-xs" id="comparisons-table">
+                <table class="w-full text-left border-collapse text-xs shadow-sm rounded-lg overflow-hidden" id="comparisons-table">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800/60 text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
                             <th class="px-4 py-2.5 w-1/3">Kolom / Informasi</th>
@@ -194,7 +196,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-300" id="comparison-rows">
-                        <!-- Dynamic Rows here -->
+                        <!-- Dynamic Rows -->
                     </tbody>
                 </table>
             </div>
@@ -202,8 +204,24 @@
             <!-- Modal Footer -->
             <div class="p-6 border-t border-slate-100 dark:border-slate-800/60 flex justify-end gap-3 shrink-0">
                 <button type="button" id="btn-tutup-detail-bawah" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold shadow-sm transition-all active:scale-[0.98]">
-                    Tutup Detail
+                    Tutup
                 </button>
+
+                <!-- Actions inside modal footer -->
+                <div id="modal-action-forms" class="hidden gap-2">
+                    <form id="form-terima-modal" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan perubahan ini?')" class="inline">
+                        @csrf
+                        <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            Terima Pengajuan
+                        </button>
+                    </form>
+                    <form id="form-tolak-modal" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak pengajuan perubahan ini?')" class="inline">
+                        @csrf
+                        <button type="submit" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            Tolak Pengajuan
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -224,12 +242,29 @@
         const comparisonsTable = document.getElementById('comparisons-table');
         const comparisonRows = document.getElementById('comparison-rows');
 
-        function bukaDetailModal(alasan, siswaNama, siswaNisn, dataLamaStr, dataBaruStr) {
+        const modalActionForms = document.getElementById('modal-action-forms');
+        const formTerimaModal = document.getElementById('form-terima-modal');
+        const formTolakModal = document.getElementById('form-tolak-modal');
+
+        function bukaDetailModal(id, alasan, siswaNama, siswaNisn, dataLamaStr, dataBaruStr, status) {
             const dataLama = JSON.parse(dataLamaStr);
             const dataBaru = JSON.parse(dataBaruStr);
 
             titleText.textContent = alasan;
             subtitleText.textContent = `Siswa: ${siswaNama} (NISN: ${siswaNisn})`;
+
+            // Configure Forms Action
+            formTerimaModal.action = `/porosdata/persetujuan/${id}/terima`;
+            formTolakModal.action = `/porosdata/persetujuan/${id}/tolak`;
+
+            // Display action buttons if status is 'proses'
+            if (status === 'proses') {
+                modalActionForms.classList.remove('hidden');
+                modalActionForms.classList.add('flex');
+            } else {
+                modalActionForms.classList.remove('flex');
+                modalActionForms.classList.add('hidden');
+            }
 
             // Clear table rows
             comparisonRows.innerHTML = '';
@@ -238,12 +273,11 @@
                 dropoutNotice.classList.remove('hidden');
                 comparisonsTable.classList.add('hidden');
                 
-                // Show a simple transition row
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors';
                 tr.innerHTML = `
                     <td class="px-4 py-3 font-medium text-slate-500">Status Akademik</td>
-                    <td class="px-4 py-3 font-mono text-rose-600 dark:text-rose-400 capitalize">${dataLama.status || 'Aktif'}</td>
+                    <td class="px-4 py-3 font-mono text-rose-600 dark:text-rose-400 capitalize">${dataLama.status || 'aktif'}</td>
                     <td class="px-4 py-3 font-mono text-emerald-600 dark:text-emerald-400 capitalize font-bold">Drop Out</td>
                 `;
                 comparisonRows.appendChild(tr);
@@ -280,7 +314,6 @@
                     const oldFormatted = field.format ? field.format(oldVal) : oldVal;
                     const newFormatted = field.format ? field.format(newVal) : newVal;
 
-                    // Only show if there's a difference or always? It's better to highlight differences
                     const hasDiff = oldVal !== newVal;
                     
                     const tr = document.createElement('tr');
@@ -340,5 +373,11 @@
         if (btnTutupDetail) btnTutupDetail.addEventListener('click', tutupDetailModal);
         if (btnTutupDetailBawah) btnTutupDetailBawah.addEventListener('click', tutupDetailModal);
         if (backdropDetail) backdropDetail.addEventListener('click', tutupDetailModal);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                tutupDetailModal();
+            }
+        });
     </script>
 @endsection

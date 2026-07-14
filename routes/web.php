@@ -7,6 +7,7 @@ use App\Http\Controllers\WaliKelasController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ControllerSubMenuApps\DataSiswa\SiswaController as DataSiswaSiswaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +38,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Admin Management Routes
     Route::resource('/porosdata/admin', App\Http\Controllers\AdminUserController::class)->names('admin_users');
+
+    // Persetujuan Perubahan Routes
+    Route::get('/porosdata/persetujuan', [App\Http\Controllers\PersetujuanController::class, 'index'])->name('persetujuan.index');
+    Route::post('/porosdata/persetujuan/{id}/terima', [App\Http\Controllers\PersetujuanController::class, 'terima'])->name('persetujuan.terima');
+    Route::post('/porosdata/persetujuan/{id}/tolak', [App\Http\Controllers\PersetujuanController::class, 'tolak'])->name('persetujuan.tolak');
 });
 
 // Standalone Shortcut entry points (accessible directly)
@@ -71,17 +77,14 @@ Route::prefix('/porosdata/datasiswa')->group(function () {
             return view('PorosDataHome.SubMenuApplication.DataSiswa.index');
         })->name('datasiswa.index');
 
-        Route::get('/kelola-siswa', function () {
-            return view('PorosDataHome.SubMenuApplication.DataSiswa.kelola_siswa');
-        })->name('datasiswa.kelola_siswa');
+        Route::get('/kelola-siswa', [DataSiswaSiswaController::class, 'index'])->name('datasiswa.kelola_siswa');
+        Route::put('/kelola-siswa/{id}', [DataSiswaSiswaController::class, 'update'])->name('datasiswa.kelola_siswa.update');
+        Route::delete('/kelola-siswa/{id}', [DataSiswaSiswaController::class, 'destroy'])->name('datasiswa.kelola_siswa.destroy');
 
-        Route::get('/riwayat-dropout', function () {
-            return view('PorosDataHome.SubMenuApplication.DataSiswa.riwayat_dropout');
-        })->name('datasiswa.riwayat_dropout');
+        Route::get('/riwayat-dropout', [DataSiswaSiswaController::class, 'riwayatDropout'])->name('datasiswa.riwayat_dropout');
 
-        Route::get('/status-persetujuan', function () {
-            return view('PorosDataHome.SubMenuApplication.DataSiswa.status_persetujuan');
-        })->name('datasiswa.status_persetujuan');
+        Route::get('/status-persetujuan', [DataSiswaSiswaController::class, 'statusPersetujuan'])->name('datasiswa.status_persetujuan');
+        Route::post('/status-persetujuan/{id}/cancel', [DataSiswaSiswaController::class, 'cancelPersetujuan'])->name('datasiswa.status_persetujuan.cancel');
     });
 });
 
