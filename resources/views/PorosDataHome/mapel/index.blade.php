@@ -143,7 +143,9 @@
                         <input type="text" name="nama_kategori" required placeholder="Nama Kategori..." 
                             class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs focus:outline-none focus:border-indigo-500 transition-colors">
                         <button type="submit" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center justify-center cursor-pointer" title="Simpan Kategori">
-                            <i class="fa-solid fa-plus"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
                         </button>
                     </div>
                 </form>
@@ -193,8 +195,10 @@
                                                     </button>
                                                 </form>
                                             @else
-                                                <span class="p-1 text-slate-300 dark:text-slate-700 cursor-not-allowed" title="Kategori Sistem tidak dapat dihapus">
-                                                    <i class="fa-solid fa-lock text-xs"></i>
+                                                <span class="p-1 text-slate-300 dark:text-slate-700 cursor-not-allowed inline-flex items-center justify-center" title="Kategori Sistem tidak dapat dihapus">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-3.5 h-3.5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                    </svg>
                                                 </span>
                                             @endif
                                         </div>

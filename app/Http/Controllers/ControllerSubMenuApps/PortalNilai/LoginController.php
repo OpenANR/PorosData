@@ -50,8 +50,22 @@ class LoginController extends Controller
               ->orWhere('duk', $username);
         })->first();
 
+        $passwordIsValid = false;
+        if ($user) {
+            if (strpos($user->password, '$2y$') === 0) {
+                try {
+                    $passwordIsValid = Hash::check($password, $user->password);
+                } catch (\RuntimeException $e) {
+                    $passwordIsValid = false;
+                }
+            }
+            if (!$passwordIsValid && ($password === $user->password || ($user->duk && $password === $user->duk))) {
+                $passwordIsValid = true;
+            }
+        }
+
         // Allow password check using either actual hashed password or DUK code matching plain password
-        if ($user && (Hash::check($password, $user->password) || ($user->duk && $password === $user->duk))) {
+        if ($user && $passwordIsValid) {
             // Verify if the role matches the selected role
             // Guru Pengajar can be 'guru', Wali Kelas must be 'wali_kelas', Administrator must be 'admin' or 'superadmin'
             $roleIsValid = false;

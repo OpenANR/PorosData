@@ -3,6 +3,56 @@
 @section('title', 'Kelola Siswa')
 
 @section('content')
+    <style>
+        /* CSS overrides to ensure solid dark theme colors load properly without JIT compiling issues */
+        div[class*="bg-[#0f172a]"] {
+            background-color: #0f172a !important;
+            border-color: #1e293b !important;
+        }
+        div[class*="bg-slate-950/80"] {
+            background-color: rgba(15, 23, 42, 0.75) !important;
+            backdrop-filter: blur(4px) !important;
+            -webkit-backdrop-filter: blur(4px) !important;
+        }
+        div[class*="bg-[#1e293b]/20"] {
+            background-color: rgba(30, 41, 59, 0.2) !important;
+            border-color: #1e293b !important;
+        }
+        div[class*="bg-[#1e293b]/60"] {
+            background-color: rgba(30, 41, 59, 0.6) !important;
+            border-bottom: 1px solid #1e293b !important;
+        }
+        input[class*="bg-[#070b13]"], select[class*="bg-[#070b13]"], textarea[class*="bg-[#070b13]"] {
+            background-color: #070b13 !important;
+            border: 1px solid #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+        input[class*="bg-[#070b13]"]:focus, select[class*="bg-[#070b13]"]:focus, textarea[class*="bg-[#070b13]"]:focus {
+            border-color: #3b82f6 !important;
+            outline: none !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        }
+        div[class*="bg-[#0a0f1d]"] {
+            background-color: #0a0f1d !important;
+            border-top: 1px solid rgba(30, 41, 59, 0.8) !important;
+        }
+        /* Constrain max height and enable vertical scrolling */
+        div[class*="max-h-[65vh]"] {
+            max-height: 60vh !important;
+            overflow-y: auto !important;
+        }
+        /* Custom scrollbar styling for dark theme scrollable area */
+        div[class*="max-h-[65vh]"]::-webkit-scrollbar {
+            width: 6px !important;
+        }
+        div[class*="max-h-[65vh]"]::-webkit-scrollbar-track {
+            background: #0f172a !important;
+        }
+        div[class*="max-h-[65vh]"]::-webkit-scrollbar-thumb {
+            background-color: #1e293b !important;
+            border-radius: 3px !important;
+        }
+    </style>
     <!-- Page Heading -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Siswa</h1>
@@ -96,7 +146,7 @@
                             </td>
                             <td class="py-4 px-6 text-right pr-10">
                                 <div class="inline-flex items-center gap-2 justify-end">
-                                    <button onclick="bukaEditModal('{{ $siswa->id }}', '{{ addslashes($siswa->user->name) }}', '{{ $siswa->user->username }}', '{{ $siswa->nisn }}', '{{ $siswa->kelas_id }}', '{{ $siswa->status }}', '{{ addslashes($siswa->user->password_plain) }}')"
+                                    <button data-siswa="{{ json_encode($siswa) }}" data-password="{{ $siswa->user->password_plain }}" onclick="bukaEditModal(this)"
                                         class="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
@@ -132,15 +182,20 @@
 
     <!-- ===================== MODAL EDIT ===================== -->
     <div id="modal-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-edit" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative z-10 w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
+        <div id="backdrop-edit" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+        <div class="relative z-10 w-full max-w-2xl bg-[#0f172a] rounded-2xl shadow-2xl border border-slate-800">
             <form id="form-edit" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-5">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Ubah Data Siswa</h3>
-                        <button type="button" id="btn-tutup-edit" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            <h3 class="text-lg font-bold text-white">Ubah Data Siswa</h3>
+                        </div>
+                        <button type="button" id="btn-tutup-edit" class="text-slate-400 hover:text-white transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
@@ -149,7 +204,7 @@
 
                     <!-- Information Banner for Wali Kelas -->
                     @if($user->role === 'wali_kelas')
-                        <div class="mb-4 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/50 text-amber-800 dark:text-amber-400 text-xs flex gap-2.5">
+                        <div class="mb-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs flex gap-2.5">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 shrink-0 mt-0.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                             </svg>
@@ -159,60 +214,216 @@
                         </div>
                     @endif
 
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
-                                <input type="text" name="name" id="edit-name" required placeholder="Contoh: Adit Pratama"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                    <div class="space-y-6 max-h-[65vh] overflow-y-auto pr-2">
+                        <!-- Card: Data Pribadi Akademik -->
+                        <div class="border border-slate-800 bg-[#1e293b]/20 rounded-xl overflow-hidden">
+                            <div class="bg-[#1e293b]/60 px-4 py-3 border-b border-slate-800 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                                </svg>
+                                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Data Pribadi Akademik</h4>
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">NISN</label>
-                                <input type="text" name="nisn" id="edit-nisn" required placeholder="10-digit angka unik"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            <div class="p-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Column Left -->
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nama Lengkap <span class="text-rose-500">*</span></label>
+                                            <input type="text" name="name" id="edit-name" required placeholder="Contoh: Adit Pratama"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Username <span class="text-rose-500">*</span></label>
+                                            <input type="text" name="username" id="edit-username" required placeholder="Contoh: aditpratama"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Angkatan <span class="text-rose-500">*</span></label>
+                                            <select name="angkatan" id="edit-angkatan" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                                <option value="">Pilih...</option>
+                                                @for($year = date('Y') + 2; $year >= 2020; $year--)
+                                                    <option value="{{ $year }}">{{ $year }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Kelas Saat Ini <span class="text-rose-500">*</span></label>
+                                            <select name="kelas_id" id="edit-kelas-id" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                                <option value="">Pilih...</option>
+                                                @foreach($classes as $class)
+                                                    <option value="{{ $class->id }}">{{ $class->nama_kelas }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Jenis Kelamin</label>
+                                            <select name="jenis_kelamin" id="edit-jenis-kelamin" class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                                <option value="">Pilih...</option>
+                                                <option value="Laki-laki">Laki-laki</option>
+                                                <option value="perempuan">Perempuan</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Tanggal Lahir</label>
+                                            <input type="date" name="tanggal_lahir" id="edit-tanggal-lahir"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Kewarganegaraan</label>
+                                            <input type="text" name="kewarganegaraan" id="edit-kewarganegaraan" placeholder="Contoh: WNI"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nomor Telepon/HP</label>
+                                            <input type="text" name="nomor_telepon" id="edit-nomor-telepon" placeholder="Contoh: 0812..."
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Berat Badan (KG)</label>
+                                            <input type="number" name="berat_badan" id="edit-berat-badan" placeholder="Contoh: 50"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                    </div>
+                                    <!-- Column Right -->
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">NISN <span class="text-rose-500">*</span></label>
+                                            <input type="text" name="nisn" id="edit-nisn" required placeholder="10-digit angka unik"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Kata Sandi</label>
+                                            <input type="text" name="password" id="edit-password" placeholder="Kosongkan jika tidak diubah"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Jurusan <span class="text-rose-500">*</span></label>
+                                            <input type="text" name="jurusan" id="edit-jurusan" required placeholder="Contoh: IPA"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Akademik <span class="text-rose-500">*</span></label>
+                                            <select name="status" id="edit-status" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                                <option value="aktif">Aktif</option>
+                                                <option value="lulus">Lulus</option>
+                                                <option value="drop_out">Drop Out</option>
+                                            </select>
+                                        </div>
+                                        <div id="wrapper-alasan-dropout" class="hidden">
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Alasan Dropout <span class="text-rose-500">*</span></label>
+                                            <textarea name="alasan_dropout" id="edit-alasan-dropout" placeholder="Tuliskan alasan detail dropout siswa..."
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none" rows="2"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nama Panggilan</label>
+                                            <input type="text" name="nama_panggilan" id="edit-nama-panggilan" placeholder="Contoh: Adit"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Tempat Lahir</label>
+                                            <input type="text" name="tempat_lahir" id="edit-tempat-lahir" placeholder="Contoh: Jakarta"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Agama</label>
+                                            <input type="text" name="agama" id="edit-agama" placeholder="Contoh: Islam"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Alamat Lengkap</label>
+                                            <textarea name="alamat_lengkap" id="edit-alamat-lengkap" placeholder="Contoh: Jl. Merdeka No. 10" rows="3"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Tinggi Badan (CM)</label>
+                                            <input type="number" name="tinggi_badan" id="edit-tinggi-badan" placeholder="Contoh: 160"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
-                                <input type="text" name="username" id="edit-username" required placeholder="Contoh: aditpratama"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+
+                        <!-- Card: Data Keluarga -->
+                        <div class="border border-slate-800 bg-[#1e293b]/20 rounded-xl overflow-hidden">
+                            <div class="bg-[#1e293b]/60 px-4 py-3 border-b border-slate-800 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Data Keluarga</h4>
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
-                                <input type="text" name="password" id="edit-password" placeholder="Kosongkan jika tidak diubah"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
+                            <div class="p-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Column Left -->
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Anak ke-</label>
+                                            <input type="text" name="anak_ke" id="edit-anak-ke" placeholder="Contoh: 1"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Yatim/Piatu</label>
+                                            <select name="status_yatim_piatu" id="edit-status-yatim-piatu" class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                                <option value="">Pilih...</option>
+                                                <option value="Lengkap">Lengkap</option>
+                                                <option value="Yatim">Yatim</option>
+                                                <option value="Piatu">Piatu</option>
+                                                <option value="Yatim Piatu">Yatim Piatu</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nama Lengkap Ayah</label>
+                                            <input type="text" name="nama_ayah" id="edit-nama-ayah" placeholder="Contoh: Budi Santoso"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nomor HP Ayah</label>
+                                            <input type="text" name="nomor_hp_ayah" id="edit-nomor-hp-ayah" placeholder="Contoh: 0812..."
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Pekerjaan Ibu</label>
+                                            <input type="text" name="pekerjaan_ibu" id="edit-pekerjaan-ibu" placeholder="Contoh: Wiraswasta"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                    </div>
+                                    <!-- Column Right -->
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Jumlah Saudara Kandung</label>
+                                            <input type="number" name="jumlah_saudara_kandung" id="edit-jumlah-saudara-kandung" placeholder="Contoh: 2"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Tinggal Dengan</label>
+                                            <input type="text" name="tinggal_dengan" id="edit-tinggal-dengan" placeholder="Contoh: Orang Tua"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Pekerjaan Ayah</label>
+                                            <input type="text" name="pekerjaan_ayah" id="edit-pekerjaan-ayah" placeholder="Contoh: Karyawan Swasta"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nama Lengkap Ibu</label>
+                                            <input type="text" name="nama_ibu" id="edit-nama-ibu" placeholder="Contoh: Siti Aminah"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Nomor HP Ibu</label>
+                                            <input type="text" name="nomor_hp_ibu" id="edit-nomor-hp-ibu" placeholder="Contoh: 0812..."
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Ruang Kelas</label>
-                                <select name="kelas_id" id="edit-kelas-id" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
-                                    <option value="">-- Pilih Kelas --</option>
-                                    @foreach($classes as $class)
-                                        <option value="{{ $class->id }}">{{ $class->nama_kelas }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Status Akademik</label>
-                                <select name="status" id="edit-status" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
-                                    <option value="aktif">Aktif</option>
-                                    <option value="lulus">Lulus</option>
-                                    <option value="drop_out">Drop Out</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="wrapper-alasan-dropout" class="hidden">
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Alasan Dropout <span class="text-rose-500">*</span></label>
-                            <textarea name="alasan_dropout" id="edit-alasan-dropout" placeholder="Tuliskan alasan detail dropout siswa..."
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 rounded-b-2xl">
-                    <button type="button" id="btn-batal-edit" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition-colors">Simpan Perubahan</button>
+                <div class="px-6 py-4 bg-[#0a0f1d] border-t border-slate-800/80 flex justify-end items-center gap-4 rounded-b-2xl">
+                    <button type="button" id="btn-batal-edit" class="px-4 py-2.5 text-sm font-semibold text-slate-400 hover:text-white transition-colors">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors shadow-lg shadow-blue-500/20">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -323,14 +534,42 @@
         editStatus.addEventListener('change', toggleAlasanDropout);
     }
 
-    function bukaEditModal(id, name, username, nisn, kelasId, status, passwordPlain) {
-        document.getElementById('form-edit').action = '/porosdata/datasiswa/kelola-siswa/' + id;
-        document.getElementById('edit-name').value = name;
-        document.getElementById('edit-username').value = username;
-        document.getElementById('edit-nisn').value = nisn;
-        document.getElementById('edit-kelas-id').value = kelasId;
-        document.getElementById('edit-status').value = status;
+    function bukaEditModal(btn) {
+        const siswa = JSON.parse(btn.getAttribute('data-siswa'));
+        const passwordPlain = btn.getAttribute('data-password');
+
+        document.getElementById('form-edit').action = '/porosdata/datasiswa/kelola-siswa/' + siswa.id;
+        document.getElementById('edit-name').value = siswa.user.name;
+        document.getElementById('edit-username').value = siswa.user.username;
+        document.getElementById('edit-nisn').value = siswa.nisn;
+        document.getElementById('edit-kelas-id').value = siswa.kelas_id;
+        document.getElementById('edit-status').value = siswa.status;
         document.getElementById('edit-password').value = passwordPlain || '';
+        
+        // Populate new fields
+        document.getElementById('edit-angkatan').value = siswa.angkatan || '';
+        document.getElementById('edit-jurusan').value = siswa.jurusan || '';
+        document.getElementById('edit-nama-panggilan').value = siswa.nama_panggilan || '';
+        document.getElementById('edit-jenis-kelamin').value = siswa.jenis_kelamin || '';
+        document.getElementById('edit-tempat-lahir').value = siswa.tempat_lahir || '';
+        document.getElementById('edit-tanggal-lahir').value = siswa.tanggal_lahir || '';
+        document.getElementById('edit-agama').value = siswa.agama || '';
+        document.getElementById('edit-kewarganegaraan').value = siswa.kewarganegaraan || '';
+        document.getElementById('edit-alamat-lengkap').value = siswa.alamat_lengkap || '';
+        document.getElementById('edit-nomor-telepon').value = siswa.nomor_telepon || '';
+        document.getElementById('edit-tinggi-badan').value = siswa.tinggi_badan || '';
+        document.getElementById('edit-berat-badan').value = siswa.berat_badan || '';
+        
+        document.getElementById('edit-anak-ke').value = siswa.anak_ke || '';
+        document.getElementById('edit-jumlah-saudara-kandung').value = siswa.jumlah_saudara_kandung || '';
+        document.getElementById('edit-status-yatim-piatu').value = siswa.status_yatim_piatu || '';
+        document.getElementById('edit-tinggal-dengan').value = siswa.tinggal_dengan || '';
+        document.getElementById('edit-nama-ayah').value = siswa.nama_ayah || '';
+        document.getElementById('edit-pekerjaan-ayah').value = siswa.pekerjaan_ayah || '';
+        document.getElementById('edit-nomor-hp-ayah').value = siswa.nomor_hp_ayah || '';
+        document.getElementById('edit-nama-ibu').value = siswa.nama_ibu || '';
+        document.getElementById('edit-pekerjaan-ibu').value = siswa.pekerjaan_ibu || '';
+        document.getElementById('edit-nomor-hp-ibu').value = siswa.nomor_hp_ibu || '';
         
         if (editAlasanDropout) {
             editAlasanDropout.value = '';

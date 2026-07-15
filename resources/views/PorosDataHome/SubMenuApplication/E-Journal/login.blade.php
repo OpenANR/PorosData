@@ -150,21 +150,21 @@
 
     <!-- Toast Notifications -->
     @if (session('success') || session('error'))
-        <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border glass-panel transition-all duration-300 translate-y-12 opacity-0">
+        <div id="toast" class="fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border transition-all duration-300 translate-x-12 opacity-0 {{ session('success') ? 'bg-emerald-50/95 dark:bg-emerald-950/90 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-900/40' : 'bg-rose-50/95 dark:bg-rose-950/90 text-rose-800 dark:text-rose-200 border-rose-200 dark:border-rose-900/40' }}">
             @if (session('success'))
                 <div class="h-8 w-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                 </div>
-                <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ session('success') }}</span>
+                <span class="text-sm font-semibold">{{ session('success') }}</span>
             @else
                 <div class="h-8 w-8 rounded-xl bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                     </svg>
                 </div>
-                <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ session('error') }}</span>
+                <span class="text-sm font-semibold">{{ session('error') }}</span>
             @endif
         </div>
         <script>
@@ -172,11 +172,11 @@
                 const toast = document.getElementById('toast');
                 if (toast) {
                     setTimeout(() => {
-                        toast.classList.remove('translate-y-12', 'opacity-0');
+                        toast.classList.remove('translate-x-12', 'opacity-0');
                     }, 100);
 
                     setTimeout(() => {
-                        toast.classList.add('translate-y-12', 'opacity-0');
+                        toast.classList.add('translate-x-12', 'opacity-0');
                     }, 4000);
                 }
             });

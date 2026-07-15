@@ -215,8 +215,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi (Isi untuk mengubah)</label>
-                                <input type="text" name="password" id="edit-password" placeholder="Kosongkan jika tidak diubah"
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                                <input type="text" name="password" id="edit-password" placeholder="Minimal 6 karakter"
                                     class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
                             </div>
                         </div>
@@ -258,7 +258,7 @@
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-username').value = username;
         document.getElementById('edit-role').value = role;
-        document.getElementById('edit-password').value = ''; // keep empty for security, only update if filled
+        document.getElementById('edit-password').value = password;
 
         bukaModal('modal-edit');
     }

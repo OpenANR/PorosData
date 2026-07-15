@@ -28,7 +28,7 @@ class SDSeeder extends Seeder
                 'name' => 'Budi Santoso',
                 'username' => '20072047',
                 'duk' => '20072047',
-                'password' => Hash::make('password123'),
+                'password' => 'password123',
                 'role' => 'wali_kelas',
                 'instansi_id' => $sd->id
             ],
@@ -36,7 +36,7 @@ class SDSeeder extends Seeder
                 'name' => 'Siti Aminah',
                 'username' => '20091513',
                 'duk' => '20091513',
-                'password' => Hash::make('password123'),
+                'password' => 'password123',
                 'role' => 'wali_kelas',
                 'instansi_id' => $sd->id
             ],
@@ -44,7 +44,7 @@ class SDSeeder extends Seeder
                 'name' => 'Rudi Hermawan',
                 'username' => '20092049',
                 'duk' => '20092049',
-                'password' => Hash::make('password123'),
+                'password' => 'password123',
                 'role' => 'wali_kelas',
                 'instansi_id' => $sd->id
             ],

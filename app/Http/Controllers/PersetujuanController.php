@@ -98,14 +98,18 @@ class PersetujuanController extends Controller
 
             // Update student details if present
             $siswaData = [];
-            if (isset($dataBaru['kelas_id'])) {
-                $siswaData['kelas_id'] = $dataBaru['kelas_id'];
-            }
-            if (isset($dataBaru['nisn'])) {
-                $siswaData['nisn'] = $dataBaru['nisn'];
-            }
-            if (isset($dataBaru['status'])) {
-                $siswaData['status'] = $dataBaru['status'];
+            $fieldsToUpdate = [
+                'kelas_id', 'nisn', 'status', 'angkatan', 'jurusan', 'nama_panggilan',
+                'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan',
+                'alamat_lengkap', 'nomor_telepon', 'tinggi_badan', 'berat_badan',
+                'anak_ke', 'jumlah_saudara_kandung', 'status_yatim_piatu', 'tinggal_dengan',
+                'nama_ayah', 'pekerjaan_ayah', 'nomor_hp_ayah', 'nama_ibu', 'pekerjaan_ibu',
+                'nomor_hp_ibu'
+            ];
+            foreach ($fieldsToUpdate as $field) {
+                if (array_key_exists($field, $dataBaru)) {
+                    $siswaData[$field] = $dataBaru[$field];
+                }
             }
 
             if (!empty($siswaData)) {

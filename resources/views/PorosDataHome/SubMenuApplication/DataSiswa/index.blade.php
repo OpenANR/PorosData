@@ -24,12 +24,12 @@
         <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Siswa Aktif</span>
-                <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">324</h3>
+                <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">{{ $totalSiswaAktif }}</h3>
                 <span class="text-xs font-medium text-emerald-500 flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
                         <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.5-5.5a.75.75 0 0 1 1.08 0l5.5 5.5a.75.75 0 1 1-1.08 1.04l-3.96-3.908V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
                     </svg>
-                    +12 Siswa semester ini
+                    +{{ $siswaBaruCount }} Siswa semester ini
                 </span>
             </div>
             <div class="h-14 w-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
@@ -43,8 +43,8 @@
         <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Dropout</span>
-                <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">8</h3>
-                <span class="text-xs font-medium text-slate-400">Tahun Ajaran 2025/2026</span>
+                <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">{{ $totalDropout }}</h3>
+                <span class="text-xs font-medium text-slate-400">Tahun Ajaran {{ $schoolYear }}</span>
             </div>
             <div class="h-14 w-14 rounded-2xl bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
@@ -57,9 +57,13 @@
         <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Persetujuan Pending</span>
-                <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">3</h3>
-                <span class="text-xs font-medium text-amber-500 flex items-center gap-1">
-                    Perlu tindakan segera
+                <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">{{ $persetujuanPending }}</h3>
+                <span class="text-xs font-medium {{ $persetujuanPending > 0 ? 'text-amber-500' : 'text-slate-400' }} flex items-center gap-1">
+                    @if($persetujuanPending > 0)
+                        Perlu tindakan segera
+                    @else
+                        Tidak ada pengajuan
+                    @endif
                 </span>
             </div>
             <div class="h-14 w-14 rounded-2xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">

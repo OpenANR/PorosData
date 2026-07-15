@@ -8,6 +8,8 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ControllerSubMenuApps\DataSiswa\SiswaController as DataSiswaSiswaController;
+use App\Http\Controllers\ControllerSubMenuApps\DataSiswa\DashboardController as DataSiswaDashboardController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,8 +57,8 @@ Route::get('/portalnilai', function () {
 })->name('portalnilai.index');
 
 Route::get('/portalsiswa', function () {
-    return view('PorosDataHome.SubMenuApplication.PortalSiswa.index');
-})->name('portalsiswa.index');
+    return redirect()->route('portalsiswa.index');
+})->name('portalsiswa.index.shortcut');
 
 Route::get('/portalpkl', function () {
     return redirect()->route('portalpkl.dashboard');
@@ -73,9 +75,7 @@ Route::prefix('/porosdata/datasiswa')->group(function () {
     Route::post('/logout', [App\Http\Controllers\ControllerSubMenuApps\DataSiswa\LoginController::class, 'logout'])->name('datasiswa.logout');
 
     Route::middleware(['auth.datasiswa'])->group(function () {
-        Route::get('/', function () {
-            return view('PorosDataHome.SubMenuApplication.DataSiswa.index');
-        })->name('datasiswa.index');
+        Route::get('/', [DataSiswaDashboardController::class, 'index'])->name('datasiswa.index');
 
         Route::get('/kelola-siswa', [DataSiswaSiswaController::class, 'index'])->name('datasiswa.kelola_siswa');
         Route::put('/kelola-siswa/{id}', [DataSiswaSiswaController::class, 'update'])->name('datasiswa.kelola_siswa.update');
@@ -183,3 +183,18 @@ Route::prefix('/porosdata/portalnilai')->group(function () {
         Route::post('/save-grades', [App\Http\Controllers\ControllerSubMenuApps\PortalNilai\DashboardController::class, 'saveGrades'])->name('portalnilai.grades.save');
     });
 });
+
+// Standalone Portal Siswa Routes (independent login/session)
+Route::prefix('/porosdata/portalsiswa')->group(function () {
+    Route::get('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalSiswa\LoginController::class, 'showLoginForm'])->name('portalsiswa.login');
+    Route::post('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalSiswa\LoginController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\ControllerSubMenuApps\PortalSiswa\LoginController::class, 'logout'])->name('portalsiswa.logout');
+
+    Route::middleware(['auth.portalsiswa'])->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('portalsiswa.dashboard');
+        })->name('portalsiswa.index');
+        Route::get('/dashboard', [App\Http\Controllers\ControllerSubMenuApps\PortalSiswa\DashboardController::class, 'index'])->name('portalsiswa.dashboard');
+    });
+});
+

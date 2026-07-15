@@ -61,7 +61,7 @@ class WaliKelasController extends Controller
             'username' => $request->duk, // Login using DUK
             'duk' => $request->duk,
             'role' => 'wali_kelas',
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'instansi_id' => $instansiId,
         ]);
 
@@ -108,7 +108,7 @@ class WaliKelasController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $data['password'] = $request->password;
         }
 
         $user->update($data);
@@ -287,10 +287,10 @@ class WaliKelasController extends Controller
             ];
 
             if (!empty($passwordRaw)) {
-                $data['password'] = Hash::make($passwordRaw);
+                $data['password'] = $passwordRaw;
             } elseif (!$user) {
                 // If new user and password is empty, set default password
-                $data['password'] = Hash::make('password123');
+                $data['password'] = 'password123';
             }
 
             if ($user) {

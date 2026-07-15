@@ -304,7 +304,29 @@
                     { key: 'nisn', label: 'NISN' },
                     { key: 'username', label: 'Username' },
                     { key: 'kelas_id', label: 'Kelas', format: (val) => allClassesMap[val] || `Kelas ID ${val}` },
-                    { key: 'status', label: 'Status Akademik', format: (val) => val === 'aktif' ? 'Aktif' : (val === 'lulus' ? 'Lulus' : 'Drop Out') }
+                    { key: 'status', label: 'Status Akademik', format: (val) => val === 'aktif' ? 'Aktif' : (val === 'lulus' ? 'Lulus' : 'Drop Out') },
+                    { key: 'angkatan', label: 'Angkatan' },
+                    { key: 'jurusan', label: 'Jurusan' },
+                    { key: 'nama_panggilan', label: 'Nama Panggilan' },
+                    { key: 'jenis_kelamin', label: 'Jenis Kelamin' },
+                    { key: 'tempat_lahir', label: 'Tempat Lahir' },
+                    { key: 'tanggal_lahir', label: 'Tanggal Lahir' },
+                    { key: 'agama', label: 'Agama' },
+                    { key: 'kewarganegaraan', label: 'Kewarganegaraan' },
+                    { key: 'alamat_lengkap', label: 'Alamat Lengkap' },
+                    { key: 'nomor_telepon', label: 'Nomor Telepon' },
+                    { key: 'tinggi_badan', label: 'Tinggi Badan (cm)' },
+                    { key: 'berat_badan', label: 'Berat Badan (kg)' },
+                    { key: 'anak_ke', label: 'Anak Ke-' },
+                    { key: 'jumlah_saudara_kandung', label: 'Jumlah Saudara Kandung' },
+                    { key: 'status_yatim_piatu', label: 'Status Yatim/Piatu' },
+                    { key: 'tinggal_dengan', label: 'Tinggal Dengan' },
+                    { key: 'nama_ayah', label: 'Nama Lengkap Ayah' },
+                    { key: 'pekerjaan_ayah', label: 'Pekerjaan Ayah' },
+                    { key: 'nomor_hp_ayah', label: 'Nomor HP Ayah' },
+                    { key: 'nama_ibu', label: 'Nama Lengkap Ibu' },
+                    { key: 'pekerjaan_ibu', label: 'Pekerjaan Ibu' },
+                    { key: 'nomor_hp_ibu', label: 'Nomor HP Ibu' }
                 ];
 
                 fields.forEach(field => {

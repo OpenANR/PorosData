@@ -38,7 +38,21 @@ class LoginController extends Controller
             ->orWhere('duk', $usernameOrDuk)
             ->first();
 
-        if ($user && Hash::check($password, $user->password)) {
+        $passwordIsValid = false;
+        if ($user) {
+            if (strpos($user->password, '$2y$') === 0) {
+                try {
+                    $passwordIsValid = Hash::check($password, $user->password);
+                } catch (\RuntimeException $e) {
+                    $passwordIsValid = false;
+                }
+            }
+            if (!$passwordIsValid && $password === $user->password) {
+                $passwordIsValid = true;
+            }
+        }
+
+        if ($user && $passwordIsValid) {
             // Verify if the role is allowed to access Data Siswa
             // Exclusive only to wali_kelas, admin, and superadmin
             if (in_array($user->role, ['superadmin', 'admin', 'wali_kelas'])) {

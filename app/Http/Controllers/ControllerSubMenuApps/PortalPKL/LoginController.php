@@ -36,7 +36,21 @@ class LoginController extends Controller
         // Look up user by username
         $user = User::where('username', $username)->first();
 
-        if ($user && Hash::check($password, $user->password)) {
+        $passwordIsValid = false;
+        if ($user) {
+            if (strpos($user->password, '$2y$') === 0) {
+                try {
+                    $passwordIsValid = Hash::check($password, $user->password);
+                } catch (\RuntimeException $e) {
+                    $passwordIsValid = false;
+                }
+            }
+            if (!$passwordIsValid && $password === $user->password) {
+                $passwordIsValid = true;
+            }
+        }
+
+        if ($user && $passwordIsValid) {
             // Verify if the role is allowed to access Portal PKL
             if (in_array($user->role, ['superadmin', 'admin', 'pembimbing', 'siswa'])) {
                 session(['portalpkl_user_id' => $user->id]);
