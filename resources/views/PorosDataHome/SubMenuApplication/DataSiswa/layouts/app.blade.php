@@ -48,7 +48,7 @@
     <div class="min-h-full flex flex-col md:flex-row">
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-40 w-64 h-screen -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 flex flex-col justify-between shrink-0">
-            <div class="px-6 py-5 flex-1 flex flex-col overflow-y-auto">
+            <div class="px-6 py-5 flex-1 flex flex-col overflow-y-auto no-scrollbar">
                 <!-- Logo / Header -->
                 <div class="flex items-center gap-3 mb-8">
                     <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-200 dark:shadow-none">

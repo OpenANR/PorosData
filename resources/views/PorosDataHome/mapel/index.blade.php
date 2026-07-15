@@ -212,10 +212,11 @@
         </div>
     </div>
 
+@push('modals')
     <!-- ===================== MODAL TAMBAH MAPEL ===================== -->
     <div id="modal-create-mapel" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <!-- Backdrop -->
-        <div id="backdrop-create-mapel" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div id="backdrop-create-mapel" class="absolute inset-0 custom-backdrop"></div>
         <!-- Panel -->
         <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form action="{{ route('mapel.store') }}" method="POST">
@@ -261,7 +262,7 @@
 
     <!-- ===================== MODAL EDIT MAPEL ===================== -->
     <div id="modal-edit-mapel" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-edit-mapel" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div id="backdrop-edit-mapel" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form id="form-edit-mapel" method="POST">
                 @csrf
@@ -307,7 +308,7 @@
 
     <!-- ===================== MODAL EDIT KATEGORI ===================== -->
     <div id="modal-edit-kategori" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-edit-kategori" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div id="backdrop-edit-kategori" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form id="form-edit-kategori" method="POST">
                 @csrf
@@ -336,6 +337,7 @@
             </form>
         </div>
     </div>
+@endpush
 @endsection
 
 @section('scripts')
@@ -350,10 +352,13 @@
     }
     function tutupModal(id) {
         const el = document.getElementById(id);
-        if (el) {
+        if (!el || el.classList.contains('hidden')) return;
+        el.classList.add('modal-closing');
+        setTimeout(() => {
+            el.classList.remove('modal-closing');
             el.classList.add('hidden');
             el.classList.remove('flex');
-        }
+        }, 180);
     }
 
     // Modal Create Mapel

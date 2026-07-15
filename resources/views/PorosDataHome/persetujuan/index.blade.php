@@ -156,9 +156,10 @@
         @endif
     </div>
 
+@push('modals')
     <!-- ===================== DETAIL MODAL ===================== -->
     <div id="modal-detail" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-detail" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div id="backdrop-detail" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800/80 max-h-[85vh] flex flex-col">
             <!-- Modal Header -->
             <div class="p-6 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between shrink-0">
@@ -225,6 +226,7 @@
             </div>
         </div>
     </div>
+@endpush
 @endsection
 
 @section('scripts')
@@ -388,8 +390,13 @@
         }
 
         function tutupDetailModal() {
-            modalDetail.classList.add('hidden');
-            modalDetail.classList.remove('flex');
+            if (modalDetail.classList.contains('hidden')) return;
+            modalDetail.classList.add('modal-closing');
+            setTimeout(() => {
+                modalDetail.classList.remove('modal-closing');
+                modalDetail.classList.add('hidden');
+                modalDetail.classList.remove('flex');
+            }, 180);
         }
 
         if (btnTutupDetail) btnTutupDetail.addEventListener('click', tutupDetailModal);

@@ -134,9 +134,10 @@
         @endif
     </div>
 
+@push('modals')
     <!-- ===================== MODAL TAMBAH ===================== -->
     <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center p-4 animate-fade-in">
-        <div id="backdrop-create" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"></div>
+        <div id="backdrop-create" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
             <form action="{{ route('walikelas.store') }}" method="POST">
                 @csrf
@@ -199,7 +200,7 @@
 
     <!-- ===================== MODAL EDIT ===================== -->
     <div id="modal-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4 animate-fade-in">
-        <div id="backdrop-edit" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"></div>
+        <div id="backdrop-edit" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
             <form id="form-edit" method="POST">
                 @csrf
@@ -263,7 +264,7 @@
 
     <!-- ===================== MODAL IMPORT ===================== -->
     <div id="modal-import" class="fixed inset-0 z-50 hidden items-center justify-center p-4 animate-fade-in">
-        <div id="backdrop-import" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"></div>
+        <div id="backdrop-import" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
             <form action="{{ route('walikelas.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -311,19 +312,26 @@
             </form>
         </div>
     </div>
+@endpush
 @endsection
 
 @section('scripts')
 <script>
     function bukaModal(id) {
         const el = document.getElementById(id);
+        if (!el) return;
         el.classList.remove('hidden');
         el.classList.add('flex');
     }
     function tutupModal(id) {
         const el = document.getElementById(id);
-        el.classList.add('hidden');
-        el.classList.remove('flex');
+        if (!el || el.classList.contains('hidden')) return;
+        el.classList.add('modal-closing');
+        setTimeout(() => {
+            el.classList.remove('modal-closing');
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }, 180);
     }
 
     document.getElementById('btn-buka-create').addEventListener('click', () => bukaModal('modal-create'));

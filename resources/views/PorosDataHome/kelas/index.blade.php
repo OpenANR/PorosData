@@ -111,10 +111,11 @@
         @endif
     </div>
 
+@push('modals')
     <!-- ===================== MODAL TAMBAH ===================== -->
     <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <!-- Backdrop -->
-        <div id="backdrop-create" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div id="backdrop-create" class="absolute inset-0 custom-backdrop"></div>
         <!-- Panel -->
         <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form action="{{ route('kelas.store') }}" method="POST">
@@ -155,7 +156,7 @@
 
     <!-- ===================== MODAL EDIT ===================== -->
     <div id="modal-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-edit" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div id="backdrop-edit" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800">
             <form id="form-edit" method="POST">
                 @csrf
@@ -193,6 +194,7 @@
             </form>
         </div>
     </div>
+@endpush
 @endsection
 
 @section('scripts')
@@ -200,13 +202,19 @@
     // Helper: buka/tutup modal
     function bukaModal(id) {
         const el = document.getElementById(id);
+        if (!el) return;
         el.classList.remove('hidden');
         el.classList.add('flex');
     }
     function tutupModal(id) {
         const el = document.getElementById(id);
-        el.classList.add('hidden');
-        el.classList.remove('flex');
+        if (!el || el.classList.contains('hidden')) return;
+        el.classList.add('modal-closing');
+        setTimeout(() => {
+            el.classList.remove('modal-closing');
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }, 180);
     }
 
     // Tombol buka modal tambah

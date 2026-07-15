@@ -9,11 +9,6 @@
             background-color: #0f172a !important;
             border-color: #1e293b !important;
         }
-        div[class*="bg-slate-950/80"] {
-            background-color: rgba(15, 23, 42, 0.75) !important;
-            backdrop-filter: blur(4px) !important;
-            -webkit-backdrop-filter: blur(4px) !important;
-        }
         div[class*="bg-[#1e293b]/20"] {
             background-color: rgba(30, 41, 59, 0.2) !important;
             border-color: #1e293b !important;
@@ -187,9 +182,10 @@
         @endif
     </div>
 
+@push('modals')
     <!-- ===================== MODAL TAMBAH ===================== -->
     <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-create" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+        <div id="backdrop-create" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-2xl bg-[#0f172a] rounded-2xl shadow-2xl border border-slate-800">
             <form action="{{ route('siswa.store') }}" method="POST">
                 @csrf
@@ -419,7 +415,7 @@
 
     <!-- ===================== MODAL EDIT ===================== -->
     <div id="modal-edit" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-edit" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+        <div id="backdrop-edit" class="absolute inset-0 custom-backdrop"></div>
         <div class="relative z-10 w-full max-w-2xl bg-[#0f172a] rounded-2xl shadow-2xl border border-slate-800">
             <form id="form-edit" method="POST">
                 @csrf
@@ -647,19 +643,26 @@
             </form>
         </div>
     </div>
+@endpush
 @endsection
 
 @section('scripts')
 <script>
     function bukaModal(id) {
         const el = document.getElementById(id);
+        if (!el) return;
         el.classList.remove('hidden');
         el.classList.add('flex');
     }
     function tutupModal(id) {
         const el = document.getElementById(id);
-        el.classList.add('hidden');
-        el.classList.remove('flex');
+        if (!el || el.classList.contains('hidden')) return;
+        el.classList.add('modal-closing');
+        setTimeout(() => {
+            el.classList.remove('modal-closing');
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }, 180);
     }
 
     document.getElementById('btn-buka-create').addEventListener('click', () => bukaModal('modal-create'));

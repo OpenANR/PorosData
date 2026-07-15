@@ -242,4 +242,37 @@ class PersetujuanAdminTest extends TestCase
         $response->assertSee($this->siswa->user->name);
         $response->assertSee('Pindah domisili');
     }
+
+    public function test_wali_kelas_can_view_status_persetujuan(): void
+    {
+        // 1. Create a pending request
+        $persetujuan = PersetujuanPerubahan::create([
+            'siswa_id' => $this->siswa->id,
+            'user_id' => $this->waliKelas->id,
+            'alasan' => 'Edit data siswa',
+            'data_lama' => [
+                'name' => $this->siswa->user->name,
+                'username' => $this->siswa->user->username,
+                'nisn' => $this->siswa->nisn,
+                'kelas_id' => $this->siswa->kelas_id,
+                'status' => $this->siswa->status,
+            ],
+            'data_baru' => [
+                'name' => 'Name Updated By Wali',
+                'username' => $this->siswa->user->username,
+                'nisn' => $this->siswa->nisn,
+                'kelas_id' => $this->siswa->kelas_id,
+                'status' => $this->siswa->status,
+            ],
+            'status' => 'proses'
+        ]);
+
+        // 2. Access status persetujuan page
+        $response = $this->withSession(['datasiswa_user_id' => $this->waliKelas->id])
+            ->get(route('datasiswa.status_persetujuan'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Edit data siswa');
+        $response->assertSee($this->siswa->user->name);
+    }
 }

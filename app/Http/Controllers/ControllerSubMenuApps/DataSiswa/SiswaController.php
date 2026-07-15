@@ -399,10 +399,20 @@ class SiswaController extends Controller
         $search = $request->input('search');
         $statusFilter = $request->input('status');
 
-        $query = PersetujuanPerubahan::with(['siswa.user', 'user']);
+        $query = PersetujuanPerubahan::with(['siswa.user', 'siswa.kelas', 'user']);
 
         if ($user->role === 'wali_kelas') {
-            $query->where('user_id', $user->id);
+            $supervisedClassIds = Kelas::where('user_id', $user->id)->pluck('id')->toArray();
+            if (empty($supervisedClassIds)) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->where(function($q) use ($supervisedClassIds) {
+                    $q->whereHas('siswa', function($sq) use ($supervisedClassIds) {
+                        $sq->whereIn('kelas_id', $supervisedClassIds);
+                    })
+                    ->orWhereIn('data_lama->kelas_id', $supervisedClassIds);
+                });
+            }
         }
 
         if ($search) {
@@ -430,7 +440,12 @@ class SiswaController extends Controller
         $allClasses = Kelas::all()->keyBy('id');
 
         foreach ($persetujuans as $p) {
-            $kelas = Kelas::where('user_id', $p->user_id)->first();
+            $kelas = null;
+            if ($p->siswa && $p->siswa->kelas) {
+                $kelas = $p->siswa->kelas;
+            } else if (isset($p->data_lama['kelas_id'])) {
+                $kelas = $allClasses->get($p->data_lama['kelas_id']);
+            }
             $p->nama_kelas = $kelas ? $kelas->nama_kelas : 'Tanpa Kelas';
         }
 

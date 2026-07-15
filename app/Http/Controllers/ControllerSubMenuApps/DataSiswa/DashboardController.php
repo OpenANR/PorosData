@@ -100,7 +100,17 @@ class DashboardController extends Controller
         // 3. Persetujuan Pending (corresponds to pending status change requests)
         $pendingQuery = PersetujuanPerubahan::where('status', 'proses');
         if ($user->role === 'wali_kelas') {
-            $pendingQuery->where('user_id', $user->id);
+            $supervisedClassIds = Kelas::where('user_id', $user->id)->pluck('id')->toArray();
+            if (empty($supervisedClassIds)) {
+                $pendingQuery->whereRaw('1 = 0');
+            } else {
+                $pendingQuery->where(function($q) use ($supervisedClassIds) {
+                    $q->whereHas('siswa', function($sq) use ($supervisedClassIds) {
+                        $sq->whereIn('kelas_id', $supervisedClassIds);
+                    })
+                    ->orWhereIn('data_lama->kelas_id', $supervisedClassIds);
+                });
+            }
         }
         $persetujuanPending = $pendingQuery->count();
 

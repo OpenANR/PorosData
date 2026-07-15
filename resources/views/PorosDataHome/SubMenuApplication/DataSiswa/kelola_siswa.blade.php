@@ -506,10 +506,13 @@
     }
     function tutupModal(id) {
         const el = document.getElementById(id);
-        if (el) {
+        if (!el || el.classList.contains('hidden')) return;
+        el.classList.add('modal-closing');
+        setTimeout(() => {
+            el.classList.remove('modal-closing');
             el.classList.add('hidden');
             el.classList.remove('flex');
-        }
+        }, 180);
     }
 
     document.getElementById('btn-tutup-edit').addEventListener('click', () => tutupModal('modal-edit'));
