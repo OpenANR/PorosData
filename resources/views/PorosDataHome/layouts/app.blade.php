@@ -54,12 +54,18 @@
 
         /* Modal Backdrop Fade In & Out */
         @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                background-color: rgba(0, 0, 0, 0) !important;
+                backdrop-filter: blur(0px) !important;
+                -webkit-backdrop-filter: blur(0px) !important;
+            }
         }
         @keyframes modalFadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+            to {
+                background-color: rgba(0, 0, 0, 0) !important;
+                backdrop-filter: blur(0px) !important;
+                -webkit-backdrop-filter: blur(0px) !important;
+            }
         }
 
         /* Modal Panel Zoom In & Out (Springy entry, smooth exit) */

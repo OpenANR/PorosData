@@ -140,6 +140,9 @@ Route::prefix('/porosdata/portal-pkl')->group(function () {
         Route::delete('/admin/siswa-pkl/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'destroy'])->name('portalpkl.admin.siswa.destroy');
 
         Route::get('/pembimbing', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\PembimbingController::class, 'index'])->name('portalpkl.pembimbing');
+        Route::get('/pembimbing/monitoring', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\PembimbingController::class, 'monitoring'])->name('portalpkl.pembimbing.monitoring');
+        Route::delete('/pembimbing/monitoring/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\PembimbingController::class, 'destroyKehadiran'])->name('portalpkl.pembimbing.monitoring.destroy');
+        Route::get('/pembimbing/siswa', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\PembimbingController::class, 'siswa'])->name('portalpkl.pembimbing.siswa');
         Route::get('/siswa', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\SiswaController::class, 'index'])->name('portalpkl.siswa');
 
         // Siswa Kehadiran Routes

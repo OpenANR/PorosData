@@ -76,6 +76,7 @@ class AdminPembimbingController extends Controller
             'name' => $request->input('name'),
             'username' => $request->input('username'),
             'password' => Hash::make($request->input('password')),
+            'password_plain' => $request->input('password'),
             'role' => 'pembimbing',
         ]);
 
@@ -128,6 +129,7 @@ class AdminPembimbingController extends Controller
 
         if ($request->filled('password')) {
             $updateData['password'] = Hash::make($request->input('password'));
+            $updateData['password_plain'] = $request->input('password');
         }
 
         $pembimbing->update($updateData);

@@ -44,6 +44,76 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+
+        .custom-backdrop {
+            background-color: rgba(15, 23, 42, 0.6) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+        .dark .custom-backdrop {
+            background-color: rgba(2, 6, 23, 0.7) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+
+        /* Modal Backdrop Fade In & Out */
+        @keyframes modalFadeIn {
+            from {
+                background-color: rgba(0, 0, 0, 0) !important;
+                backdrop-filter: blur(0px) !important;
+                -webkit-backdrop-filter: blur(0px) !important;
+            }
+        }
+        @keyframes modalFadeOut {
+            to {
+                background-color: rgba(0, 0, 0, 0) !important;
+                backdrop-filter: blur(0px) !important;
+                -webkit-backdrop-filter: blur(0px) !important;
+            }
+        }
+
+        /* Modal Panel Zoom In & Out (Springy entry, smooth exit) */
+        @keyframes modalScaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes modalScaleOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.95); opacity: 0; }
+        }
+
+        /* Entry Animations */
+        .fixed.inset-0:not(.hidden) > div.absolute.inset-0,
+        .fixed.inset-0:not(.hidden) > [id^="backdrop-"] {
+            animation: modalFadeIn 0.2s ease-out forwards;
+        }
+        .fixed.inset-0:not(.hidden) > .relative,
+        .fixed.inset-0:not(.hidden) > div:not(.absolute) {
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Exit Animations */
+        .fixed.inset-0.modal-closing > div.absolute.inset-0,
+        .fixed.inset-0.modal-closing > [id^="backdrop-"] {
+            animation: modalFadeOut 0.18s ease-in forwards;
+        }
+        .fixed.inset-0.modal-closing > .relative,
+        .fixed.inset-0.modal-closing > div:not(.absolute) {
+            animation: modalScaleOut 0.18s ease-in forwards;
+        }
+
+        /* Content Entry Animation */
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .animate-content-fade-in {
+            animation: contentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="min-h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
@@ -113,19 +183,15 @@
                         <!-- Pembimbing Links -->
                         <a href="{{ route('portalpkl.pembimbing') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.pembimbing') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
                             <i class="fa-solid fa-desktop text-base w-5 text-center"></i>
-                            Dashboard Pembimbing
+                            Dashboard
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
-                            <i class="fa-solid fa-graduation-cap text-base w-5 text-center"></i>
-                            Bimbingan Siswa
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
+                        <a href="{{ route('portalpkl.pembimbing.monitoring') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.pembimbing.monitoring*') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
                             <i class="fa-solid fa-list-check text-base w-5 text-center"></i>
-                            Monitoring & Presensi
+                            Monitoring Siswa
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
-                            <i class="fa-solid fa-award text-base w-5 text-center"></i>
-                            Penilaian PKL
+                        <a href="{{ route('portalpkl.pembimbing.siswa') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.pembimbing.siswa*') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
+                            <i class="fa-solid fa-user-graduate text-base w-5 text-center"></i>
+                            Kelola Siswa
                         </a>
                     @elseif($portalpklUser->role === 'siswa')
                         <!-- Siswa Links -->
@@ -179,9 +245,40 @@
                     <button id="sidebar-toggle" class="p-2 -ml-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200 md:hidden focus:outline-none cursor-pointer">
                         <i class="fa-solid fa-bars text-lg"></i>
                     </button>
-                    <h2 class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider hidden md:block">
-                        @yield('subtitle', 'SMK Teknologi Balung')
-                    </h2>
+                    <!-- Navigation Breadcrumbs -->
+                    <div class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <span class="text-slate-400 dark:text-slate-500 font-medium">Portal-PKL</span>
+                        <span class="text-slate-300 dark:text-slate-700 font-medium">/</span>
+                        <span>
+                            @if(request()->routeIs('portalpkl.superadmin'))
+                                Dashboard Superadmin
+                            @elseif(request()->routeIs('portalpkl.admin'))
+                                Dashboard Admin
+                            @elseif(request()->routeIs('portalpkl.admin.mitra.*'))
+                                Mitra DUDI
+                            @elseif(request()->routeIs('portalpkl.admin.pembimbing.*'))
+                                Data Pembimbing
+                            @elseif(request()->routeIs('portalpkl.admin.siswa.*'))
+                                Siswa PKL
+                            @elseif(request()->routeIs('portalpkl.admin.kehadiran*'))
+                                Kehadiran Siswa
+                            @elseif(request()->routeIs('portalpkl.pembimbing'))
+                                Dashboard
+                            @elseif(request()->routeIs('portalpkl.pembimbing.monitoring*'))
+                                Monitoring Siswa
+                            @elseif(request()->routeIs('portalpkl.pembimbing.siswa*'))
+                                Kelola Siswa
+                            @elseif(request()->routeIs('portalpkl.siswa'))
+                                Dashboard Siswa
+                            @elseif(request()->routeIs('portalpkl.siswa.kehadiran*'))
+                                Kehadiran PKL
+                            @elseif(request()->routeIs('portalpkl.siswa.riwayat*'))
+                                Riwayat Absensi
+                            @else
+                                @yield('title', 'Dashboard')
+                            @endif
+                        </span>
+                    </div>
                 </div>
 
                 <!-- Utilities (Search / Dark Mode Toggle) -->
@@ -201,7 +298,7 @@
             </header>
 
             <!-- Main Workspace Container -->
-            <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto animate-fade-in">
+            <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto animate-content-fade-in">
                 @yield('content')
             </main>
         </div>
@@ -289,7 +386,83 @@
                     applyThemeIcons();
                 });
             }
+
+            // Sidebar Menu Selection Sliding Transition
+            const nav = document.querySelector('#sidebar nav');
+            if (nav) {
+                const links = nav.querySelectorAll('a');
+                let activeLink = null;
+                
+                links.forEach(a => {
+                    a.classList.add('relative', 'z-10'); // raise above indicator
+                    if (a.classList.contains('bg-orange-50') || a.className.includes('bg-orange-') || a.className.includes('nav-active')) {
+                        activeLink = a;
+                    }
+                });
+
+                if (activeLink) {
+                    nav.classList.add('relative');
+
+                    // Create sliding pill indicator
+                    const indicator = document.createElement('div');
+                    indicator.id = 'nav-indicator';
+                    indicator.className = 'absolute left-0 right-0 rounded-xl bg-orange-50 dark:bg-orange-950/40 pointer-events-none z-0';
+                    nav.appendChild(indicator);
+
+                    // Fetch previous position from sessionStorage
+                    const prevTop = sessionStorage.getItem('portalpkl-nav-prev-top');
+                    const prevHeight = sessionStorage.getItem('portalpkl-nav-prev-height');
+
+                    // Remove current active background styles so only indicator is shown
+                    activeLink.classList.remove('bg-orange-50', 'dark:bg-orange-950/40');
+
+                    // Position helper
+                    const setIndicatorPosition = (top, height, useTransition = false) => {
+                        if (useTransition) {
+                            indicator.style.transition = 'top 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                        } else {
+                            indicator.style.transition = 'none';
+                        }
+                        indicator.style.top = top + 'px';
+                        indicator.style.height = height + 'px';
+                    };
+
+                    if (prevTop !== null && prevHeight !== null) {
+                        // Start at previous menu item's position
+                        setIndicatorPosition(parseFloat(prevTop), parseFloat(prevHeight), false);
+
+                        // Animate to new position with a slight delay so browser repaint is complete and the user sees the movement
+                        setTimeout(() => {
+                            setIndicatorPosition(activeLink.offsetTop, activeLink.offsetHeight, true);
+                        }, 50);
+                    } else {
+                        // Place immediately at active item
+                        setIndicatorPosition(activeLink.offsetTop, activeLink.offsetHeight, false);
+                    }
+
+                    // Keep indicator position updated when fonts/layout finishes loading, window resizes, or sidebar toggle happens
+                    const syncPosition = () => {
+                        setIndicatorPosition(activeLink.offsetTop, activeLink.offsetHeight, false);
+                    };
+
+                    window.addEventListener('load', syncPosition);
+                    window.addEventListener('resize', syncPosition);
+
+                    // Also watch for transitionend of sidebar (in case sidebar is toggled in mobile and offsetTop changes)
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.addEventListener('transitionend', syncPosition);
+                    }
+
+                    // Store active item's position right before navigating away
+                    window.addEventListener('beforeunload', () => {
+                        sessionStorage.setItem('portalpkl-nav-prev-top', activeLink.offsetTop);
+                        sessionStorage.setItem('portalpkl-nav-prev-height', activeLink.offsetHeight);
+                    });
+                }
+            }
         });
     </script>
+    @stack('modals')
 </body>
 </html>

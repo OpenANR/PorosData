@@ -1,6 +1,6 @@
 @extends('PorosDataHome.SubMenuApplication.PortalPKL.layouts.app')
 
-@section('title', 'Kehadiran Siswa PKL')
+@section('title', 'Monitoring Siswa PKL')
 
 @section('content')
     <div class="space-y-6">
@@ -12,7 +12,7 @@
                         Monitoring Kehadiran Siswa
                     </h1>
                     <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm">
-                        Kelola dan tinjau absensi harian serta jurnal kegiatan siswa PKL.
+                        Kelola dan tinjau absensi harian serta jurnal kegiatan siswa PKL bimbingan Anda.
                     </p>
                 </div>
                 <div class="flex items-center gap-2">
@@ -77,7 +77,7 @@
             <div class="glass-panel border border-slate-200/80 dark:border-slate-800/80 shadow-md rounded-2xl p-4 col-span-2 lg:col-span-1">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider">Total Siswa PKL</p>
+                        <p class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider">Siswa Bimbingan</p>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1">{{ $stats['total_siswa'] }}</h3>
                     </div>
                     <div class="h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 flex items-center justify-center">
@@ -89,7 +89,7 @@
 
         <!-- Filters Section -->
         <div class="glass-panel border border-slate-200/80 dark:border-slate-800/80 shadow-lg rounded-2xl p-5">
-            <form action="{{ route('portalpkl.admin.kehadiran') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <form action="{{ route('portalpkl.pembimbing.monitoring') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <!-- Search -->
                 <div class="space-y-1.5">
                     <label for="search" class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Cari Siswa</label>
@@ -124,7 +124,7 @@
                         <i class="fa-solid fa-filter mr-1"></i> Filter
                     </button>
                     @if($search || $status || $tanggal !== today()->toDateString())
-                        <a href="{{ route('portalpkl.admin.kehadiran') }}" class="py-2 px-4 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-800 transition-all flex items-center justify-center">
+                        <a href="{{ route('portalpkl.pembimbing.monitoring') }}" class="py-2 px-4 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-800 transition-all flex items-center justify-center">
                             Reset
                         </a>
                     @endif
@@ -180,7 +180,7 @@
                                         <button type="button" onclick="showDetailModal({{ json_encode($att) }}, {{ json_encode($att->siswa->user) }}, {{ json_encode($att->siswa->kelas) }}, {{ json_encode($att->siswa->mitra) }})" class="py-1.5 px-3 bg-orange-50 dark:bg-orange-950/30 hover:bg-orange-100 dark:hover:bg-orange-900/40 text-orange-600 dark:text-orange-400 rounded-xl text-xs font-bold transition-all border border-orange-200/30 dark:border-orange-900/20 active:scale-95 cursor-pointer flex items-center gap-1">
                                             <i class="fa-solid fa-eye text-[10px]"></i> Detail
                                         </button>
-                                        <form action="{{ route('portalpkl.admin.kehadiran.destroy', $att->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data presensi {{ $att->siswa->user->name ?? 'siswa ini' }}?');" class="inline">
+                                        <form action="{{ route('portalpkl.pembimbing.monitoring.destroy', $att->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data presensi {{ $att->siswa->user->name ?? 'siswa ini' }}?');" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="py-1.5 px-3 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 rounded-xl text-xs font-bold transition-all border border-rose-200/30 dark:border-rose-900/20 active:scale-95 cursor-pointer flex items-center gap-1">
@@ -231,7 +231,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-4 p-4 bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 rounded-2xl">
                     <div class="space-y-1">
                         <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Identitas Siswa</span>
-                        <h4 id="modal-name" class="font-extrabold text-slate-800 dark:text-slate-100 text-base">Muhammad Rafli</h4>
+                        <h4 id="modal-name" class="font-extrabold text-slate-800 dark:text-slate-100 text-base">Nama Siswa</h4>
                         <p class="text-xs text-slate-400"><span id="modal-nisn" class="font-mono">1000000011</span> | <span id="modal-kelas">XII TKJ 1</span></p>
                     </div>
 
@@ -242,7 +242,7 @@
                     
                     <div class="space-y-1 text-left sm:text-right">
                         <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Tempat PKL</span>
-                        <h4 id="modal-company" class="font-bold text-slate-800 dark:text-slate-100 text-sm">CV. Creative Media</h4>
+                        <h4 id="modal-company" class="font-bold text-slate-800 dark:text-slate-100 text-sm">Nama Mitra</h4>
                     </div>
                 </div>
 
@@ -250,11 +250,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                     <div>
                         <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block">Tanggal & Jam</span>
-                        <span id="modal-time" class="text-slate-700 dark:text-slate-300 font-semibold text-sm">Minggu, 05 Juli 2026 - 08:23 WIB</span>
+                        <span id="modal-time" class="text-slate-700 dark:text-slate-300 font-semibold text-sm">Tanggal Absen</span>
                     </div>
                     <div>
                         <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block">Status Kehadiran</span>
-                        <span id="modal-status" class="inline-block mt-0.5 px-3 py-1 rounded-full font-bold">Hadir</span>
+                        <span id="modal-status" class="inline-block mt-0.5 px-3 py-1 rounded-full font-bold">Status</span>
                     </div>
                 </div>
 
@@ -275,7 +275,7 @@
                         <!-- Target Coordinates -->
                         <div class="space-y-1">
                             <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Target Lokasi PKL</span>
-                            <span id="modal-target-coords" class="text-slate-700 dark:text-slate-300 font-mono text-xs"> -8.26789, 113.62345</span>
+                            <span id="modal-target-coords" class="text-slate-700 dark:text-slate-300 font-mono text-xs">-8.26789, 113.62345</span>
                         </div>
                     </div>
 
@@ -285,7 +285,7 @@
                         <div id="modal-journal-container" class="md:col-span-2 space-y-1.5">
                             <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Journal Kegiatan Harian</span>
                             <div id="modal-journal" class="h-full p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-sm rounded-2xl whitespace-pre-line leading-relaxed min-h-[120px]">
-                                Mengerjakan perbaikan frontend admin Portal PKL.
+                                Isi jurnal kegiatan harian.
                             </div>
                         </div>
 
@@ -314,7 +314,7 @@
                     <div class="space-y-1.5">
                         <span id="modal-ket-title" class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Keterangan / Alasan</span>
                         <div id="modal-keterangan" class="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 text-sm rounded-2xl whitespace-pre-line leading-relaxed">
-                            Sakit demam, surat keterangan dokter terlampir.
+                            Alasan izin/sakit.
                         </div>
                     </div>
 

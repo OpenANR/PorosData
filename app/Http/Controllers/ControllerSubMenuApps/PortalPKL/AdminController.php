@@ -37,7 +37,7 @@ class AdminController extends Controller
         $tanggal = $request->input('tanggal', today()->toDateString()); // Default filter to today
 
         // Base Query
-        $query = \App\Models\PklAttendance::with(['siswa.user', 'siswa.kelas', 'siswa.mitra']);
+        $query = \App\Models\PklAttendance::with(['siswa.user', 'siswa.kelas', 'siswa.mitra.pembimbings']);
 
         // Filter by Date
         if ($tanggal) {

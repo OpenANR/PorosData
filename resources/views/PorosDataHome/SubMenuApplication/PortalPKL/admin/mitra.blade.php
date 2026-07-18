@@ -22,12 +22,12 @@
         <form method="GET" action="{{ route('portalpkl.admin.mitra.index') }}" class="w-full sm:w-80 relative">
             <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama mitra atau alamat..."
                 class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all">
-            <div class="absolute left-3.5 top-3.5 text-slate-400">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
             </div>
             @if($search)
-                <a href="{{ route('portalpkl.admin.mitra.index') }}" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                    <i class="fa-solid fa-xmark text-sm mt-0.5"></i>
+                <a href="{{ route('portalpkl.admin.mitra.index') }}" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </a>
             @endif
         </form>
@@ -123,6 +123,8 @@
         @endif
     </div>
 
+    <!-- ===================== MODALS ===================== -->
+    @push('modals')
     <!-- ===================== MODAL TAMBAH ===================== -->
     <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div id="backdrop-create" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
@@ -232,9 +234,11 @@
 
             // Close Create Modal
             const closeCreateModal = () => {
+                modalCreate.classList.add('modal-closing');
                 modalContentCreate.classList.remove('scale-100', 'opacity-100');
                 modalContentCreate.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => {
+                    modalCreate.classList.remove('modal-closing');
                     modalCreate.classList.remove('flex');
                     modalCreate.classList.add('hidden');
                 }, 300);
@@ -267,9 +271,11 @@
 
             // Close Edit Modal
             const closeEditModal = () => {
+                modalEdit.classList.add('modal-closing');
                 modalContentEdit.classList.remove('scale-100', 'opacity-100');
                 modalContentEdit.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => {
+                    modalEdit.classList.remove('modal-closing');
                     modalEdit.classList.remove('flex');
                     modalEdit.classList.add('hidden');
                 }, 300);
@@ -280,4 +286,5 @@
             if (backdropEdit) backdropEdit.addEventListener('click', closeEditModal);
         });
     </script>
+    @endpush
 @endsection
