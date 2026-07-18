@@ -41,6 +41,19 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+
+        /* Content Entry Animation */
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .animate-content-fade-in {
+            animation: contentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="min-h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
@@ -143,9 +156,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
                     </button>
-                    <h2 class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider hidden md:block">
-                        @yield('subtitle', 'SD Negeri 01 Poros Data')
-                    </h2>
+                    <!-- Navigation Breadcrumbs -->
+                    <div class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <span class="text-slate-400 dark:text-slate-500 font-medium">E-Journal</span>
+                        <span class="text-slate-300 dark:text-slate-700 font-medium">/</span>
+                        <span>@yield('title')</span>
+                    </div>
                 </div>
 
                 <!-- Utilities (Dark Mode Toggle) -->
@@ -163,7 +179,7 @@
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 p-6 md:p-8">
+            <main class="flex-1 p-6 md:p-8 animate-content-fade-in">
                 @yield('content')
             </main>
         </div>
@@ -197,6 +213,63 @@
     <!-- Base Scripts for Toggle and Sidebar -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Sidebar Menu Selection Sliding Transition
+            const nav = document.querySelector('#sidebar nav');
+            if (nav) {
+                const links = nav.querySelectorAll('a');
+                let activeLink = null;
+                
+                links.forEach(a => {
+                    a.classList.add('relative', 'z-10'); // raise above indicator
+                    if (a.classList.contains('bg-blue-50') || a.className.includes('bg-blue-') || a.className.includes('nav-active')) {
+                        activeLink = a;
+                    }
+                });
+
+                if (activeLink) {
+                    nav.classList.add('relative');
+
+                    // Create sliding pill indicator
+                    const indicator = document.createElement('div');
+                    indicator.id = 'nav-indicator';
+                    indicator.className = 'absolute left-0 right-0 rounded-xl bg-blue-50 dark:bg-blue-950/40 pointer-events-none z-0';
+                    nav.appendChild(indicator);
+
+                    // Fetch previous position from sessionStorage
+                    const prevTop = sessionStorage.getItem('nav-ejournal-prev-top');
+                    const prevHeight = sessionStorage.getItem('nav-ejournal-prev-height');
+
+                    // Remove current active background styles so only indicator is shown
+                    activeLink.classList.remove('bg-blue-50', 'dark:bg-blue-950/40');
+
+                    if (prevTop !== null && prevHeight !== null) {
+                        // Start at previous menu item's position
+                        indicator.style.transition = 'none';
+                        indicator.style.top = prevTop + 'px';
+                        indicator.style.height = prevHeight + 'px';
+
+                        // Force browser layout repaint
+                        void indicator.offsetHeight;
+
+                        // Animate to new active item position using a spring/bounce curve
+                        indicator.style.transition = 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        indicator.style.top = activeLink.offsetTop + 'px';
+                        indicator.style.height = activeLink.offsetHeight + 'px';
+                    } else {
+                        // Place immediately at active item
+                        indicator.style.transition = 'none';
+                        indicator.style.top = activeLink.offsetTop + 'px';
+                        indicator.style.height = activeLink.offsetHeight + 'px';
+                    }
+
+                    // Store active item's position right before navigating away
+                    window.addEventListener('beforeunload', () => {
+                        sessionStorage.setItem('nav-ejournal-prev-top', activeLink.offsetTop);
+                        sessionStorage.setItem('nav-ejournal-prev-height', activeLink.offsetHeight);
+                    });
+                }
+            }
+
             // Sidebar toggle for mobile
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebar-toggle');

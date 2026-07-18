@@ -9,17 +9,6 @@
         <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Manajemen mata pelajaran dan kategorinya</p>
     </div>
 
-    <!-- Success & Error Alerts -->
-    @if(session('success'))
-        <div class="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-400 text-sm font-medium">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 text-rose-800 dark:text-rose-400 text-sm font-medium">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- ======================= LEFT: MATA PELAJARAN ======================= -->

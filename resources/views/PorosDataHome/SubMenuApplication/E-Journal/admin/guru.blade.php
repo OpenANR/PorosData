@@ -40,7 +40,7 @@
                         <th class="px-6 py-4.5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-48 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-150 dark:divide-slate-850">
+                <tbody class="divide-y divide-slate-200/60 dark:divide-slate-800/60">
                     @forelse($teachers as $index => $teacher)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
                             <!-- No -->

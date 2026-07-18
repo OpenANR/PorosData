@@ -4,28 +4,76 @@
 
 @section('content')
     <style>
-        /* CSS overrides to ensure solid dark theme colors load properly without JIT compiling issues */
-        div[class*="bg-[#0f172a]"] {
+        /* CSS overrides to ensure solid colors load properly in light/dark themes */
+        
+        /* ==================== DARK THEME ==================== */
+        .dark div[class*="bg-[#0f172a]"] {
             background-color: #0f172a !important;
             border-color: #1e293b !important;
         }
+        .dark div[class*="bg-slate-950/80"] {
+            background-color: rgba(2, 6, 23, 0.75) !important;
+        }
+        .dark div[class*="bg-[#1e293b]/20"] {
+            background-color: rgba(30, 41, 59, 0.2) !important;
+            border-color: #1e293b !important;
+        }
+        .dark div[class*="bg-[#1e293b]/60"] {
+            background-color: rgba(30, 41, 59, 0.6) !important;
+            border-bottom: 1px solid #1e293b !important;
+        }
+        .dark input[class*="bg-[#070b13]"], .dark select[class*="bg-[#070b13]"], .dark textarea[class*="bg-[#070b13]"] {
+            background-color: #070b13 !important;
+            border: 1px solid #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+        .dark input[class*="bg-[#070b13]"]:focus, .dark select[class*="bg-[#070b13]"]:focus, .dark textarea[class*="bg-[#070b13]"]:focus {
+            border-color: #3b82f6 !important;
+            outline: none !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        }
+        .dark div[class*="bg-[#0a0f1d]"] {
+            background-color: #0a0f1d !important;
+            border-top: 1px solid rgba(30, 41, 59, 0.8) !important;
+        }
+        .dark div[class*="bg-[#0f172a]"] h3, .dark div[class*="bg-[#0f172a]"] h4 {
+            color: #ffffff !important;
+        }
+        .dark #btn-tutup-create, .dark #btn-tutup-edit, .dark #btn-batal-create, .dark #btn-batal-edit {
+            color: #94a3b8 !important;
+        }
+        .dark #btn-tutup-create:hover, .dark #btn-tutup-edit:hover, .dark #btn-batal-create:hover, .dark #btn-batal-edit:hover {
+            color: #ffffff !important;
+        }
+        .dark div[class*="max-h-[65vh]"]::-webkit-scrollbar-track {
+            background: #0f172a !important;
+        }
+        .dark div[class*="max-h-[65vh]"]::-webkit-scrollbar-thumb {
+            background: #1e293b !important;
+        }
+
+        /* ==================== LIGHT THEME ==================== */
+        div[class*="bg-[#0f172a]"] {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
         div[class*="bg-slate-950/80"] {
-            background-color: rgba(15, 23, 42, 0.75) !important;
+            background-color: rgba(15, 23, 42, 0.4) !important;
             backdrop-filter: blur(4px) !important;
             -webkit-backdrop-filter: blur(4px) !important;
         }
         div[class*="bg-[#1e293b]/20"] {
-            background-color: rgba(30, 41, 59, 0.2) !important;
-            border-color: #1e293b !important;
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
         }
         div[class*="bg-[#1e293b]/60"] {
-            background-color: rgba(30, 41, 59, 0.6) !important;
-            border-bottom: 1px solid #1e293b !important;
+            background-color: #f1f5f9 !important;
+            border-bottom: 1px solid #e2e8f0 !important;
         }
         input[class*="bg-[#070b13]"], select[class*="bg-[#070b13]"], textarea[class*="bg-[#070b13]"] {
-            background-color: #070b13 !important;
-            border: 1px solid #1e293b !important;
-            color: #f1f5f9 !important;
+            background-color: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
         }
         input[class*="bg-[#070b13]"]:focus, select[class*="bg-[#070b13]"]:focus, textarea[class*="bg-[#070b13]"]:focus {
             border-color: #3b82f6 !important;
@@ -33,24 +81,35 @@
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
         }
         div[class*="bg-[#0a0f1d]"] {
-            background-color: #0a0f1d !important;
-            border-top: 1px solid rgba(30, 41, 59, 0.8) !important;
+            background-color: #f8fafc !important;
+            border-top: 1px solid #e2e8f0 !important;
         }
-        /* Constrain max height and enable vertical scrolling */
+        div[class*="bg-[#0f172a]"] h3, div[class*="bg-[#0f172a]"] h4 {
+            color: #0f172a !important;
+        }
+        #btn-tutup-create, #btn-tutup-edit, #btn-batal-create, #btn-batal-edit {
+            color: #64748b !important;
+        }
+        #btn-tutup-create:hover, #btn-tutup-edit:hover, #btn-batal-create:hover, #btn-batal-edit:hover {
+            color: #1e293b !important;
+        }
+        div[class*="max-h-[65vh]"]::-webkit-scrollbar-track {
+            background: #ffffff !important;
+        }
+        div[class*="max-h-[65vh]"]::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+        }
+
+        /* Common settings */
         div[class*="max-h-[65vh]"] {
             max-height: 60vh !important;
             overflow-y: auto !important;
         }
-        /* Custom scrollbar styling for dark theme scrollable area */
         div[class*="max-h-[65vh]"]::-webkit-scrollbar {
             width: 6px !important;
         }
-        div[class*="max-h-[65vh]"]::-webkit-scrollbar-track {
-            background: #0f172a !important;
-        }
         div[class*="max-h-[65vh]"]::-webkit-scrollbar-thumb {
-            background-color: #1e293b !important;
-            border-radius: 3px !important;
+            border-radius: 9999px !important;
         }
     </style>
     <!-- Page Heading -->

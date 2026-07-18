@@ -36,10 +36,10 @@
                     Filter Berdasarkan Kelas
                 </label>
                 <select name="kelas_id" id="kelas_id" onchange="this.form.submit()"
-                        class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
-                    <option value="">Semua Kelas</option>
+                        class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
+                    <option value="" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">Semua Kelas</option>
                     @foreach($classes as $class)
-                        <option value="{{ $class->id }}" {{ $kelasId == $class->id ? 'selected' : '' }}>
+                        <option value="{{ $class->id }}" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200" {{ $kelasId == $class->id ? 'selected' : '' }}>
                             {{ $class->nama_kelas }}
                         </option>
                     @endforeach
@@ -60,7 +60,7 @@
                         <th class="px-6 py-4.5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-48 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-150 dark:divide-slate-850">
+                <tbody class="divide-y divide-slate-200/60 dark:divide-slate-800/60">
                     @forelse($students as $index => $student)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
                             <!-- No -->

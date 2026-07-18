@@ -45,13 +45,13 @@
                         Pilih Kelas <span class="text-rose-500">*</span>
                     </label>
                     <select name="kelas_id" id="kelas_id" required
-                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
                         @if($classes->isEmpty())
-                            <option value="">-- Belum Ada Kelas Ditugaskan --</option>
+                            <option value="" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">-- Belum Ada Kelas Ditugaskan --</option>
                         @else
-                            <option value="">-- Pilih Kelas (Berdasar Jadwal) --</option>
+                            <option value="" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">-- Pilih Kelas (Berdasar Jadwal) --</option>
                             @foreach($classes as $class)
-                                <option value="{{ $class->id }}" {{ old('kelas_id') == $class->id ? 'selected' : '' }}>
+                                <option value="{{ $class->id }}" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200" {{ old('kelas_id') == $class->id ? 'selected' : '' }}>
                                     {{ $class->nama_kelas }}
                                 </option>
                             @endforeach
@@ -68,13 +68,13 @@
                         Mata Pelajaran <span class="text-rose-500">*</span>
                     </label>
                     <select name="mata_pelajaran" id="mata_pelajaran" required
-                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-semibold cursor-pointer">
                         @if($mapels->isEmpty())
-                            <option value="">-- Belum Ada Mapel Ditugaskan --</option>
+                            <option value="" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">-- Belum Ada Mapel Ditugaskan --</option>
                         @else
-                            <option value="">-- Pilih Mata Pelajaran --</option>
+                            <option value="" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">-- Pilih Mata Pelajaran --</option>
                             @foreach($mapels as $mapel)
-                                <option value="{{ $mapel->nama_mapel }}" {{ old('mata_pelajaran') == $mapel->nama_mapel ? 'selected' : '' }}>
+                                <option value="{{ $mapel->nama_mapel }}" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200" {{ old('mata_pelajaran') == $mapel->nama_mapel ? 'selected' : '' }}>
                                     {{ $mapel->nama_mapel }}
                                 </option>
                             @endforeach
@@ -105,7 +105,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse" id="students-table">
                             <thead>
-                                <tr class="bg-slate-100/50 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-850">
+                                <tr class="bg-slate-100/50 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-800/60">
                                     <th class="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-16">No</th>
                                     <th class="px-4 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nama Siswa</th>
                                     <th class="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-24">Hadir</th>
@@ -249,11 +249,11 @@
                                     <div class="flex items-center justify-center">
                                         <span class="keterangan-text text-xs font-extrabold text-emerald-600 dark:text-emerald-400 px-3.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100/50 dark:border-emerald-950/30 rounded-xl block text-center w-full max-w-[200px] transition-all">HADIR</span>
                                         <select name="attendance[${student.id}][keterangan]"
-                                                class="keterangan-select hidden text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/20 border border-rose-100/50 dark:border-rose-950/30 rounded-xl w-full max-w-[200px] px-3.5 py-1.5 focus:ring-rose-500 focus:border-rose-500 transition-all text-center cursor-pointer dark:bg-slate-900/50">
-                                            <option value="A" class="font-semibold text-rose-600 dark:text-rose-400">Alpa (A)</option>
-                                            <option value="I" class="font-semibold text-amber-600 dark:text-amber-400">Izin (I)</option>
-                                            <option value="S" class="font-semibold text-blue-600 dark:text-blue-400">Sakit (S)</option>
-                                            <option value="P" class="font-semibold text-purple-600 dark:text-purple-400">Bolos (P)</option>
+                                                class="keterangan-select hidden text-xs font-bold text-rose-600 dark:text-rose-450 bg-rose-50 dark:bg-slate-900 border border-rose-100/50 dark:border-slate-800 rounded-xl w-full max-w-[200px] px-3.5 py-1.5 focus:ring-rose-500 focus:border-rose-500 transition-all text-center cursor-pointer">
+                                            <option value="A" class="bg-white dark:bg-slate-900 font-semibold text-rose-600 dark:text-rose-400">Alpa (A)</option>
+                                            <option value="I" class="bg-white dark:bg-slate-900 font-semibold text-amber-600 dark:text-amber-400">Izin (I)</option>
+                                            <option value="S" class="bg-white dark:bg-slate-900 font-semibold text-blue-600 dark:text-blue-400">Sakit (S)</option>
+                                            <option value="P" class="bg-white dark:bg-slate-900 font-semibold text-purple-600 dark:text-purple-400">Bolos (P)</option>
                                         </select>
                                     </div>
                                 </td>
