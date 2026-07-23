@@ -175,10 +175,7 @@
                             <i class="fa-solid fa-calendar-check text-base w-5 text-center"></i>
                             Kehadiran Siswa
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200">
-                            <i class="fa-solid fa-book-bookmark text-base w-5 text-center"></i>
-                            Laporan & Nilai
-                        </a>
+
                     @elseif($portalpklUser->role === 'pembimbing')
                         <!-- Pembimbing Links -->
                         <a href="{{ route('portalpkl.pembimbing') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.pembimbing') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">

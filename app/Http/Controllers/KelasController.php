@@ -14,7 +14,7 @@ class KelasController extends Controller
      */
     public function index(Request $request)
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $search = $request->input('search');
@@ -45,9 +45,9 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         if (!$sd) {
-            return redirect()->back()->with('error', 'Instansi tingkat SD belum dibuat.');
+            return redirect()->back()->with('error', 'Instansi belum dikonfigurasi. Harap hubungi Superadmin.');
         }
 
         $request->validate([

@@ -22,5 +22,9 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Hash::extend('plain', function () {
             return new \App\Services\PlainTextHasher();
         });
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('instansi')) {
+            \Illuminate\Support\Facades\View::share('instansi_app', \App\Models\Instansi::first());
+        }
     }
 }

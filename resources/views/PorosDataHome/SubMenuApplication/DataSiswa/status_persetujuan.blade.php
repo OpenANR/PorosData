@@ -156,8 +156,8 @@
 
     <!-- ===================== DETAIL MODAL ===================== -->
     <div id="modal-detail" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-        <div id="backdrop-detail" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-        <div class="relative z-10 w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800/80 max-h-[85vh] flex flex-col">
+        <div id="backdrop-detail" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        <div id="modal-content-detail" class="relative z-10 w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800/80 max-h-[85vh] flex flex-col opacity-0 scale-95 transition-all duration-300 transform">
             <!-- Modal Header -->
             <div class="p-6 border-b border-slate-100 dark:border-slate-800/60 flex items-center justify-between shrink-0">
                 <div>
@@ -215,6 +215,7 @@
 
         const modalDetail = document.getElementById('modal-detail');
         const backdropDetail = document.getElementById('backdrop-detail');
+        const modalContentDetail = document.getElementById('modal-content-detail');
         const btnTutupDetail = document.getElementById('btn-tutup-detail');
         const btnTutupDetailBawah = document.getElementById('btn-tutup-detail-bawah');
 
@@ -349,14 +350,28 @@
                 }
             }
 
-            // Open Modal
+            // Open Modal with Animation
             modalDetail.classList.remove('hidden');
             modalDetail.classList.add('flex');
+            
+            setTimeout(() => {
+                backdropDetail.classList.remove('opacity-0');
+                backdropDetail.classList.add('opacity-100');
+                modalContentDetail.classList.remove('opacity-0', 'scale-95');
+                modalContentDetail.classList.add('opacity-100', 'scale-100');
+            }, 10);
         }
 
         function tutupDetailModal() {
-            modalDetail.classList.add('hidden');
-            modalDetail.classList.remove('flex');
+            backdropDetail.classList.remove('opacity-100');
+            backdropDetail.classList.add('opacity-0');
+            modalContentDetail.classList.remove('opacity-100', 'scale-100');
+            modalContentDetail.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modalDetail.classList.add('hidden');
+                modalDetail.classList.remove('flex');
+            }, 300);
         }
 
         if (btnTutupDetail) btnTutupDetail.addEventListener('click', tutupDetailModal);

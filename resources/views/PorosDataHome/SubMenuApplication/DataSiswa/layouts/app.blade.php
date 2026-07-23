@@ -41,6 +41,75 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+        .custom-backdrop {
+            background-color: rgba(15, 23, 42, 0.6) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+        .dark .custom-backdrop {
+            background-color: rgba(2, 6, 23, 0.7) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+
+        /* Modal Backdrop Fade In & Out */
+        @keyframes modalFadeIn {
+            from {
+                background-color: rgba(0, 0, 0, 0) !important;
+                backdrop-filter: blur(0px) !important;
+                -webkit-backdrop-filter: blur(0px) !important;
+            }
+        }
+        @keyframes modalFadeOut {
+            to {
+                background-color: rgba(0, 0, 0, 0) !important;
+                backdrop-filter: blur(0px) !important;
+                -webkit-backdrop-filter: blur(0px) !important;
+            }
+        }
+
+        /* Modal Panel Zoom In & Out (Springy entry, smooth exit) */
+        @keyframes modalScaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes modalScaleOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.95); opacity: 0; }
+        }
+
+        /* Entry Animations */
+        .fixed.inset-0:not(.hidden) > div.absolute.inset-0,
+        .fixed.inset-0:not(.hidden) > [id^="backdrop-"] {
+            animation: modalFadeIn 0.2s ease-out;
+        }
+        .fixed.inset-0:not(.hidden) > .relative,
+        .fixed.inset-0:not(.hidden) > div:not(.absolute) {
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Exit Animations */
+        .fixed.inset-0.modal-closing > div.absolute.inset-0,
+        .fixed.inset-0.modal-closing > [id^="backdrop-"] {
+            animation: modalFadeOut 0.18s ease-in forwards;
+        }
+        .fixed.inset-0.modal-closing > .relative,
+        .fixed.inset-0.modal-closing > div:not(.absolute) {
+            animation: modalScaleOut 0.18s ease-in forwards;
+        }
+
+        /* Content Entry Animation */
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .animate-content-fade-in {
+            animation: contentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
     </style>
 </head>
 <body class="min-h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
@@ -192,8 +261,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
                     </button>
-                    <!-- Module Indicator -->
-                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Portal Data Siswa</span>
+                    <!-- Navigation Breadcrumbs -->
+                    <div class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                        <span class="text-slate-400 dark:text-slate-500 font-medium">Data Siswa</span>
+                        <span class="text-slate-300 dark:text-slate-700 font-medium">/</span>
+                        <span>@yield('title', 'Dashboard')</span>
+                    </div>
                 </div>
 
                 <!-- Utilities (Search / Dark Mode Toggle) -->
@@ -213,7 +286,7 @@
             </header>
 
             <!-- Main Workspace Container -->
-            <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
+            <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto animate-content-fade-in">
                 @yield('content')
             </main>
         </div>
@@ -259,6 +332,63 @@
     <!-- General Application Script (Sidebar & Theme Toggling) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Sidebar Menu Selection Sliding Transition
+            const nav = document.querySelector('#sidebar nav');
+            if (nav) {
+                const links = nav.querySelectorAll('a');
+                let activeLink = null;
+                
+                links.forEach(a => {
+                    a.classList.add('relative', 'z-10'); // raise above indicator
+                    if (a.classList.contains('bg-indigo-50') || a.className.includes('bg-indigo-') || a.className.includes('nav-active')) {
+                        activeLink = a;
+                    }
+                });
+
+                if (activeLink) {
+                    nav.classList.add('relative');
+
+                    // Create sliding pill indicator
+                    const indicator = document.createElement('div');
+                    indicator.id = 'nav-indicator';
+                    indicator.className = 'absolute left-0 right-0 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 pointer-events-none z-0';
+                    nav.appendChild(indicator);
+
+                    // Fetch previous position from sessionStorage
+                    const prevTop = sessionStorage.getItem('datasiswa-nav-prev-top');
+                    const prevHeight = sessionStorage.getItem('datasiswa-nav-prev-height');
+
+                    // Remove current active background styles so only indicator is shown
+                    activeLink.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/40');
+
+                    if (prevTop !== null && prevHeight !== null) {
+                        // Start at previous menu item's position
+                        indicator.style.transition = 'none';
+                        indicator.style.top = prevTop + 'px';
+                        indicator.style.height = prevHeight + 'px';
+
+                        // Force browser layout repaint
+                        void indicator.offsetHeight;
+
+                        // Animate to new active item position using a spring/bounce curve
+                        indicator.style.transition = 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        indicator.style.top = activeLink.offsetTop + 'px';
+                        indicator.style.height = activeLink.offsetHeight + 'px';
+                    } else {
+                        // Place immediately at active item
+                        indicator.style.transition = 'none';
+                        indicator.style.top = activeLink.offsetTop + 'px';
+                        indicator.style.height = activeLink.offsetHeight + 'px';
+                    }
+
+                    // Store active item's position right before navigating away
+                    window.addEventListener('beforeunload', () => {
+                        sessionStorage.setItem('datasiswa-nav-prev-top', activeLink.offsetTop);
+                        sessionStorage.setItem('datasiswa-nav-prev-height', activeLink.offsetHeight);
+                    });
+                }
+            }
+
             // Sidebar Toggle
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebar = document.getElementById('sidebar');

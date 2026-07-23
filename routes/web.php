@@ -7,6 +7,7 @@ use App\Http\Controllers\WaliKelasController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\ControllerSubMenuApps\DataSiswa\SiswaController as DataSiswaSiswaController;
 use App\Http\Controllers\ControllerSubMenuApps\DataSiswa\DashboardController as DataSiswaDashboardController;
 
@@ -22,6 +23,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Admin Panel Protected Routes
 Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/instance-setup', [App\Http\Controllers\SetupController::class, 'showForm'])->name('instance-setup.form');
+    Route::post('/instance-setup', [App\Http\Controllers\SetupController::class, 'processSetup'])->name('instance-setup.process');
+
     Route::get('/porosdata', [DashboardController::class, 'index'])->name('dashboard');
 
     // CRUD resource routes
@@ -31,6 +35,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/porosdata/walikelas', WaliKelasController::class)->names('walikelas');
     Route::resource('/porosdata/kelas', KelasController::class)->names('kelas');
     Route::resource('/porosdata/siswa', SiswaController::class)->names('siswa');
+    
+    // Import/Export Routes
+    Route::get('/porosdata/import-export', [ImportExportController::class, 'index'])->name('import-export.index');
+    Route::get('/porosdata/import-export/export-siswa', [ImportExportController::class, 'exportSiswa'])->name('import-export.export-siswa');
     
     // Mapel and Category Routes
     Route::resource('/porosdata/mapel', App\Http\Controllers\MapelController::class)->names('mapel');
@@ -116,7 +124,7 @@ Route::prefix('/porosdata/portal-pkl')->group(function () {
     Route::post('/login', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\LoginController::class, 'login']);
     Route::post('/logout', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\LoginController::class, 'logout'])->name('portalpkl.logout');
 
-    Route::middleware(['auth.portalpkl'])->group(function () {
+    Route::middleware(['auth.portalpkl', 'ensure.smk'])->group(function () {
         Route::get('/', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\DashboardController::class, 'index'])->name('portalpkl.dashboard');
         
         Route::get('/superadmin', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\SuperAdminController::class, 'index'])->name('portalpkl.superadmin');

@@ -16,7 +16,7 @@ class WaliKelasController extends Controller
      */
     public function index(Request $request)
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $search = $request->input('search');
@@ -44,7 +44,7 @@ class WaliKelasController extends Controller
      */
     public function store(Request $request)
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $request->validate([
@@ -113,7 +113,7 @@ class WaliKelasController extends Controller
 
         $user->update($data);
 
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         if ($instansiId) {
@@ -162,7 +162,7 @@ class WaliKelasController extends Controller
      */
     public function exportCsv()
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $walikelas = User::where('role', 'wali_kelas')
@@ -216,11 +216,11 @@ class WaliKelasController extends Controller
             'file_csv.required' => 'File CSV wajib diunggah.',
         ]);
 
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         if (!$instansiId) {
-            return redirect()->back()->with('error', 'Instansi tingkat SD belum dikonfigurasi.');
+            return redirect()->back()->with('error', 'Instansi belum dikonfigurasi.');
         }
 
         $file = $request->file('file_csv');

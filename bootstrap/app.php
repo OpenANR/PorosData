@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\CheckInstansiSetup::class,
+        ]);
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureIsAdminOrSuperadmin::class,
             'auth.ejournal' => \App\Http\Middleware\EnsureEJournalAuthenticated::class,
@@ -19,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.portalnilai' => \App\Http\Middleware\EnsurePortalNilaiAuthenticated::class,
             'auth.datasiswa' => \App\Http\Middleware\EnsureDataSiswaAuthenticated::class,
             'auth.portalsiswa' => \App\Http\Middleware\EnsurePortalSiswaAuthenticated::class,
+            'ensure.smk' => \App\Http\Middleware\EnsureInstansiIsSMK::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_sekolah');
             $table->enum('tingkat', ['SD', 'SMP', 'SMA', 'SMK']);
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

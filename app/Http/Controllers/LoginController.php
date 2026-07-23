@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Instansi;
+
 class LoginController extends Controller
 {
     /**
@@ -15,7 +17,8 @@ class LoginController extends Controller
         if (Auth::check()) {
             return redirect()->route('dashboard');
         }
-        return view('auth.login');
+        $instansi = Instansi::first();
+        return view('auth.login', compact('instansi'));
     }
 
     /**
