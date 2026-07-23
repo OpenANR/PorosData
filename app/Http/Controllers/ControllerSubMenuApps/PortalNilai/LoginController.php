@@ -26,22 +26,18 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'role' => ['required', 'string', 'in:guru,wali_kelas,admin'],
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $role = $request->input('role');
         $username = $request->input('username');
         $password = $request->input('password');
 
         // Check if Administrator and matches dummy credentials
-        if ($role === 'admin') {
-            if ($username === 'admin_nilai' && $password === 'admin123') {
-                session(['portalnilai_user_id' => 'dummy_admin']);
-                return redirect()->route('portalnilai.dashboard')
-                    ->with('success', 'Selamat datang di Portal Nilai (Administrator Dummy)!');
-            }
+        if ($username === 'admin_nilai' && $password === 'admin123') {
+            session(['portalnilai_user_id' => 'dummy_admin']);
+            return redirect()->route('portalnilai.dashboard')
+                ->with('success', 'Selamat datang di Portal Nilai (Administrator Dummy)!');
         }
 
         // Look up user in the database by username or DUK code
@@ -66,31 +62,21 @@ class LoginController extends Controller
 
         // Allow password check using either actual hashed password or DUK code matching plain password
         if ($user && $passwordIsValid) {
-            // Verify if the role matches the selected role
-            // Guru Pengajar can be 'guru', Wali Kelas must be 'wali_kelas', Administrator must be 'admin' or 'superadmin'
-            $roleIsValid = false;
-            if ($role === 'guru' && $user->role === 'guru') {
-                $roleIsValid = true;
-            } elseif ($role === 'wali_kelas' && $user->role === 'wali_kelas') {
-                $roleIsValid = true;
-            } elseif ($role === 'admin' && in_array($user->role, ['admin', 'superadmin'])) {
-                $roleIsValid = true;
-            }
-
-            if ($roleIsValid) {
+            // Verify if the role is allowed to access Portal Nilai
+            if (in_array($user->role, ['superadmin', 'admin', 'guru', 'wali_kelas'])) {
                 session(['portalnilai_user_id' => $user->id]);
                 return redirect()->route('portalnilai.dashboard')
                     ->with('success', 'Selamat datang di Portal Nilai, ' . $user->name . '!');
             }
 
             return back()->withErrors([
-                'username' => 'Akses ditolak. Peran Anda tidak sesuai dengan opsi login yang dipilih.',
-            ])->onlyInput('username', 'role');
+                'username' => 'Akses ditolak. Peran Anda tidak diizinkan untuk mengakses Portal Nilai.',
+            ])->onlyInput('username');
         }
 
         return back()->withErrors([
             'username' => 'Username atau Password salah.',
-        ])->onlyInput('username', 'role');
+        ])->onlyInput('username');
     }
 
     /**

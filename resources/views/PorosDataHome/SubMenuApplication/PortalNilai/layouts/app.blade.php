@@ -100,6 +100,19 @@
             animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
+        /* Content Entry Animation */
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .animate-content-fade-in {
+            animation: contentFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         /* Fix dark mode calendar picker indicator */
         .dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
             filter: invert(1) brightness(0.9);
@@ -147,12 +160,20 @@
             <div class="px-6 py-5 flex-1 flex flex-col overflow-y-auto no-scrollbar">
                 <!-- Logo / Header -->
                 <div class="flex items-center gap-3 mb-8">
-                    <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-blue-200 dark:shadow-none">
-                        <i class="fa-solid fa-graduation-cap text-lg"></i>
-                    </div>
+                    @if(isset($instansi_app) && $instansi_app->logo)
+                        <div class="h-10 w-10 rounded-xl overflow-hidden shadow-md shadow-slate-200 dark:shadow-none bg-white flex shrink-0">
+                            <img src="{{ Storage::url($instansi_app->logo) }}" alt="Logo" class="w-full h-full object-contain p-1">
+                        </div>
+                    @else
+                        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-blue-200 dark:shadow-none shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.57 50.57 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.902 59.902 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M12 13.489v-3.375" />
+                            </svg>
+                        </div>
+                    @endif
                     <div>
                         <span class="font-bold text-base leading-tight block bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-300">Portal Nilai</span>
-                        <span class="text-[10px] text-slate-400 font-medium truncate block max-w-[150px]" id="sidebar-sekolah-nama">{{ ($portalnilaiUser && $portalnilaiUser->instansi) ? $portalnilaiUser->instansi->nama_sekolah : 'SD Negeri 01 Poros Data' }}</span>
+                        <span class="text-xs text-slate-400 font-medium block truncate max-w-[150px]" id="sidebar-sekolah-nama">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
                     </div>
                 </div>
 
@@ -161,43 +182,57 @@
                     @if($portalnilaiUser && (in_array($portalnilaiUser->role, ['admin', 'superadmin']) || $portalnilaiUser->id === 999999))
                         <!-- Nav Dashboard Admin -->
                         <a href="/porosdata/portalnilai/admin/dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*admin/dashboard') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-house w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                            </svg>
                             <span>Dashboard</span>
                         </a>
 
                         <!-- Nav Input Nilai Admin -->
                         <a href="/porosdata/portalnilai/admin/inputnilai" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*admin/inputnilai') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-pen-to-square w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
                             <span>Input Nilai</span>
                         </a>
 
                         <!-- Nav Pengaturan Jadwal Admin -->
                         <a href="/porosdata/portalnilai/admin/jadwal" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*admin/jadwal') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-calendar-days w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                            </svg>
                             <span>Pengaturan Jadwal</span>
                         </a>
                     @elseif($portalnilaiUser && $portalnilaiUser->role === 'wali_kelas')
                         <!-- Nav Dashboard Wali -->
                         <a href="/porosdata/portalnilai/walikelas/dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*walikelas/dashboard') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-house w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                            </svg>
                             <span>Dashboard</span>
                         </a>
 
                         <!-- Nav Pantau Nilai Wali -->
                         <a href="/porosdata/portalnilai/walikelas/viewnilai" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*walikelas/viewnilai') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                            </svg>
                             <span>Pantau Nilai</span>
                         </a>
                     @elseif($portalnilaiUser && $portalnilaiUser->role === 'guru')
                         <!-- Nav Dashboard Guru -->
                         <a href="/porosdata/portalnilai/guru/dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*guru/dashboard') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-house w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                            </svg>
                             <span>Dashboard</span>
                         </a>
 
                         <!-- Nav Input Nilai Guru -->
                         <a href="/porosdata/portalnilai/guru/inputnilai" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all {{ Request::is('*guru/inputnilai') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
-                            <i class="fa-solid fa-pen-to-square w-5 text-center"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
                             <span>Input Nilai</span>
                         </a>
                     @endif
@@ -267,7 +302,7 @@
             </header>
 
             <!-- Main Workspace Container -->
-            <main class="flex-grow p-4 md:p-6 flex flex-col gap-6 max-w-[1600px] w-full mx-auto">
+            <main class="flex-grow p-4 md:p-6 flex flex-col gap-6 max-w-[1600px] w-full mx-auto animate-content-fade-in">
                 @yield('content')
             </main>
         </div>
@@ -331,6 +366,63 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Sidebar Menu Selection Sliding Transition
+            const nav = document.querySelector('#sidebar nav');
+            if (nav) {
+                const links = nav.querySelectorAll('a');
+                let activeLink = null;
+                
+                links.forEach(a => {
+                    a.classList.add('relative', 'z-10'); // raise above indicator
+                    if (a.classList.contains('bg-indigo-50') || a.className.includes('bg-indigo-') || a.className.includes('nav-active')) {
+                        activeLink = a;
+                    }
+                });
+
+                if (activeLink) {
+                    nav.classList.add('relative');
+
+                    // Create sliding pill indicator
+                    const indicator = document.createElement('div');
+                    indicator.id = 'nav-indicator';
+                    indicator.className = 'absolute left-0 right-0 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 pointer-events-none z-0';
+                    nav.appendChild(indicator);
+
+                    // Fetch previous position from sessionStorage
+                    const prevTop = sessionStorage.getItem('nav-prev-top');
+                    const prevHeight = sessionStorage.getItem('nav-prev-height');
+
+                    // Remove current active background styles so only indicator is shown
+                    activeLink.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/40');
+
+                    if (prevTop !== null && prevHeight !== null) {
+                        // Start at previous menu item's position
+                        indicator.style.transition = 'none';
+                        indicator.style.top = prevTop + 'px';
+                        indicator.style.height = prevHeight + 'px';
+
+                        // Force browser layout repaint
+                        void indicator.offsetHeight;
+
+                        // Animate to new active item position using a spring/bounce curve
+                        indicator.style.transition = 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        indicator.style.top = activeLink.offsetTop + 'px';
+                        indicator.style.height = activeLink.offsetHeight + 'px';
+                    } else {
+                        // Place immediately at active item
+                        indicator.style.transition = 'none';
+                        indicator.style.top = activeLink.offsetTop + 'px';
+                        indicator.style.height = activeLink.offsetHeight + 'px';
+                    }
+
+                    // Store active item's position right before navigating away
+                    window.addEventListener('beforeunload', () => {
+                        sessionStorage.setItem('nav-prev-top', activeLink.offsetTop);
+                        sessionStorage.setItem('nav-prev-height', activeLink.offsetHeight);
+                    });
+                }
+            }
+
             // Sidebar Toggle
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebar = document.getElementById('sidebar');

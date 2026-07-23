@@ -124,12 +124,18 @@
             <div class="px-6 py-5 flex-1 flex flex-col overflow-y-auto no-scrollbar">
                 <!-- Logo / Header -->
                 <div class="flex items-center gap-3 mb-8">
-                    <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white font-bold shadow-md shadow-orange-200 dark:shadow-none">
-                        <i class="fa-solid fa-briefcase text-lg"></i>
-                    </div>
+                    @if(isset($instansi_app) && $instansi_app->logo)
+                        <div class="h-10 w-10 rounded-xl overflow-hidden shadow-md shadow-slate-200 dark:shadow-none bg-white flex shrink-0">
+                            <img src="{{ Storage::url($instansi_app->logo) }}" alt="Logo" class="w-full h-full object-contain p-1">
+                        </div>
+                    @else
+                        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white font-bold shadow-md shadow-orange-200 dark:shadow-none shrink-0">
+                            <i class="fa-solid fa-briefcase text-lg"></i>
+                        </div>
+                    @endif
                     <div>
                         <span class="font-bold text-lg leading-tight block bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent dark:from-orange-400 dark:to-amber-300">Portal PKL</span>
-                        <span class="text-[9px] text-slate-400 font-semibold block uppercase tracking-wider">SMK Teknologi Balung</span>
+                        <span class="text-xs text-slate-400 font-medium">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
                     </div>
                 </div>
 

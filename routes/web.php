@@ -39,6 +39,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Import/Export Routes
     Route::get('/porosdata/import-export', [ImportExportController::class, 'index'])->name('import-export.index');
     Route::get('/porosdata/import-export/export-siswa', [ImportExportController::class, 'exportSiswa'])->name('import-export.export-siswa');
+    Route::post('/porosdata/import-export/import-siswa', [ImportExportController::class, 'importSiswa'])->name('import-export.import-siswa');
+    Route::delete('/porosdata/import-export/reset-siswa', [ImportExportController::class, 'resetSiswa'])->name('import-export.reset-siswa');
     
     // Mapel and Category Routes
     Route::resource('/porosdata/mapel', App\Http\Controllers\MapelController::class)->names('mapel');

@@ -71,10 +71,10 @@
                 
                 <div>
                     <h2 class="text-xl font-bold tracking-tight text-white leading-tight">
-                        {{ $instansiData->nama_sekolah ?? 'PorosData' }}
+                        PorosData
                     </h2>
                     <p class="text-xs font-medium text-slate-300/80 tracking-wide uppercase">
-                        Portal Sekolah SD
+                        {{ $instansiData->nama_sekolah ?? 'Portal Sekolah' }}
                     </p>
                 </div>
             </div>
