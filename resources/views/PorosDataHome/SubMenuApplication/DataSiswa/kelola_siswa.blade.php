@@ -115,7 +115,7 @@
     <!-- Page Heading -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Siswa</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Manajemen data siswa aktif, lulus, dan alumni</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manajemen data siswa aktif, lulus, dan alumni</p>
     </div>
 
     <!-- Actions and Filters Bar -->
@@ -151,18 +151,6 @@
             @endif
         </form>
     </div>
-
-    <!-- Validation Errors -->
-    @if ($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 text-rose-800 dark:text-rose-400">
-            <p class="font-bold text-sm mb-1">Gagal menyimpan data:</p>
-            <ul class="list-disc pl-5 text-xs space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <!-- Table -->
     <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">

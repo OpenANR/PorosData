@@ -49,7 +49,7 @@ class SiswaController extends Controller
             ->paginate(10);
 
         // Get all classrooms for filter dropdown
-        $classes = Kelas::when($instansiId, function($q) use ($instansiId) {
+        $classes = Kelas::with('jurusan')->when($instansiId, function($q) use ($instansiId) {
                 return $q->where('instansi_id', $instansiId);
             })
             ->orderBy('nama_kelas', 'asc')

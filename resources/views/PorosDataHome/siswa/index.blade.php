@@ -107,7 +107,7 @@
     <!-- Page Heading -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Siswa</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Manajemen data siswa aktif, lulus, dan alumni</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manajemen data siswa aktif, lulus, dan alumni</p>
     </div>
 
     <!-- Actions and Filters Bar -->
@@ -146,18 +146,6 @@
             Tambah Siswa
         </button>
     </div>
-
-    <!-- Validation Errors -->
-    @if ($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 text-rose-800 dark:text-rose-400">
-            <p class="font-bold text-sm mb-1">Gagal menyimpan data:</p>
-            <ul class="list-disc pl-5 text-xs space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <!-- Table -->
     <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">
@@ -285,19 +273,15 @@
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Angkatan <span class="text-rose-500">*</span></label>
-                                            <select name="angkatan" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
-                                                <option value="">Pilih...</option>
-                                                @for($year = date('Y') + 2; $year >= 2020; $year--)
-                                                    <option value="{{ $year }}">{{ $year }}</option>
-                                                @endfor
-                                            </select>
+                                            <input type="text" name="angkatan" id="create-angkatan" required placeholder="Contoh: 2024/2025"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Kelas Saat Ini <span class="text-rose-500">*</span></label>
-                                            <select name="kelas_id" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
-                                                <option value="">Pilih...</option>
+                                            <select name="kelas_id" id="create-kelas-id" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none" onchange="document.getElementById('create-jurusan').value = this.options[this.selectedIndex].getAttribute('data-jurusan')">
+                                                <option value="" data-jurusan="">Pilih...</option>
                                                 @foreach($classes as $class)
-                                                    <option value="{{ $class->id }}">{{ $class->nama_kelas }}</option>
+                                                    <option value="{{ $class->id }}" data-jurusan="{{ $class->jurusan ? $class->jurusan->nama_jurusan : '-' }}">{{ $class->nama_kelas }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -344,8 +328,8 @@
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Jurusan <span class="text-rose-500">*</span></label>
-                                            <input type="text" name="jurusan" required placeholder="Contoh: IPA"
-                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                            <input type="text" name="jurusan" id="create-jurusan" required readonly placeholder="Pilih kelas terlebih dahulu"
+                                                class="w-full bg-[#1e293b]/50 border border-slate-800 text-slate-400 text-sm rounded-lg px-4 py-2.5 cursor-not-allowed focus:outline-none">
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Akademik <span class="text-rose-500">*</span></label>
@@ -516,19 +500,15 @@
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Angkatan <span class="text-rose-500">*</span></label>
-                                            <select name="angkatan" id="edit-angkatan" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
-                                                <option value="">Pilih...</option>
-                                                @for($year = date('Y') + 2; $year >= 2020; $year--)
-                                                    <option value="{{ $year }}">{{ $year }}</option>
-                                                @endfor
-                                            </select>
+                                            <input type="text" name="angkatan" id="edit-angkatan" required placeholder="Contoh: 2024/2025"
+                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Kelas Saat Ini <span class="text-rose-500">*</span></label>
-                                            <select name="kelas_id" id="edit-kelas-id" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
-                                                <option value="">Pilih...</option>
+                                            <select name="kelas_id" id="edit-kelas-id" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none" onchange="document.getElementById('edit-jurusan').value = this.options[this.selectedIndex].getAttribute('data-jurusan')">
+                                                <option value="" data-jurusan="">Pilih...</option>
                                                 @foreach($classes as $class)
-                                                    <option value="{{ $class->id }}">{{ $class->nama_kelas }}</option>
+                                                    <option value="{{ $class->id }}" data-jurusan="{{ $class->jurusan ? $class->jurusan->nama_jurusan : '-' }}">{{ $class->nama_kelas }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -575,8 +555,8 @@
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Jurusan <span class="text-rose-500">*</span></label>
-                                            <input type="text" name="jurusan" id="edit-jurusan" required placeholder="Contoh: IPA"
-                                                class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
+                                            <input type="text" name="jurusan" id="edit-jurusan" required readonly placeholder="Pilih kelas terlebih dahulu"
+                                                class="w-full bg-[#1e293b]/50 border border-slate-800 text-slate-400 text-sm rounded-lg px-4 py-2.5 cursor-not-allowed focus:outline-none">
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Akademik <span class="text-rose-500">*</span></label>

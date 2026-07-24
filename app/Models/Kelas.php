@@ -9,6 +9,16 @@ class Kelas extends Model
     protected $table = 'kelas';
     protected $guarded = ['id'];
 
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class);
+    }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
+
     public function instansi()
     {
         return $this->belongsTo(Instansi::class);

@@ -114,6 +114,53 @@
 </head>
 <body class="min-h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
 
+    <!-- Global Validation Error Toast -->
+    @if ($errors->any())
+        <div id="global-error-toast" class="fixed top-6 right-6 flex flex-col gap-2 p-4 sm:px-5 sm:py-3.5 rounded-2xl shadow-xl border transition-all duration-300 translate-x-12 opacity-0 bg-rose-50/95 dark:bg-rose-950/90 text-rose-800 dark:text-rose-200 border-rose-200 dark:border-rose-900/40 w-[calc(100vw-3rem)] sm:w-auto max-w-md" style="z-index: 999999;">
+            <div class="flex items-start gap-3">
+                <div class="h-8 w-8 mt-0.5 rounded-xl bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <span class="text-sm font-semibold block mb-1">Gagal menyimpan data:</span>
+                    <ul class="list-disc pl-4 text-xs space-y-1 text-rose-700 dark:text-rose-300">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <button type="button" onclick="dismissErrorToast()" class="shrink-0 text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 transition-colors focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toast = document.getElementById('global-error-toast');
+                if (toast) {
+                    setTimeout(() => {
+                        toast.classList.remove('translate-x-12', 'opacity-0');
+                    }, 50);
+
+                    setTimeout(() => {
+                        dismissErrorToast();
+                    }, 5000);
+                }
+            });
+            
+            function dismissErrorToast() {
+                const toast = document.getElementById('global-error-toast');
+                if (toast) {
+                    toast.classList.add('translate-x-12', 'opacity-0');
+                    setTimeout(() => { toast.style.display = 'none'; }, 300);
+                }
+            }
+        </script>
+    @endif
     <div class="min-h-full flex flex-col md:flex-row">
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-40 w-64 h-screen -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 flex flex-col justify-between shrink-0">

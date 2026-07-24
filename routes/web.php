@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\WaliKelasController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ImportExportController;
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/porosdata/walikelas/import', [WaliKelasController::class, 'importCsv'])->name('walikelas.import');
     Route::resource('/porosdata/walikelas', WaliKelasController::class)->names('walikelas');
     Route::resource('/porosdata/kelas', KelasController::class)->names('kelas');
+    Route::resource('/porosdata/jurusan', JurusanController::class)->names('jurusan');
     Route::resource('/porosdata/siswa', SiswaController::class)->names('siswa');
     
     // Import/Export Routes

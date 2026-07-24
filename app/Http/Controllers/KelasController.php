@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kelas;
 use App\Models\User;
 use App\Models\Instansi;
+use App\Models\Jurusan;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -14,7 +15,7 @@ class KelasController extends Controller
      */
     public function index(Request $request)
     {
-        $sd = Instansi::first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $search = $request->input('search');
@@ -37,7 +38,12 @@ class KelasController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('PorosDataHome.kelas.index', compact('classes', 'teachers', 'search', 'sd'));
+        $jurusans = collect();
+        if ($sd && in_array($sd->tingkat, ['SMA', 'SMK'])) {
+            $jurusans = Jurusan::where('instansi_id', $instansiId)->orderBy('nama_jurusan', 'asc')->get();
+        }
+
+        return view('PorosDataHome.kelas.index', compact('classes', 'teachers', 'search', 'sd', 'jurusans'));
     }
 
     /**
@@ -45,7 +51,7 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        $sd = Instansi::first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         if (!$sd) {
             return redirect()->back()->with('error', 'Instansi belum dikonfigurasi. Harap hubungi Superadmin.');
         }
@@ -53,6 +59,7 @@ class KelasController extends Controller
         $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'user_id' => 'nullable|exists:users,id',
+            'jurusan_id' => 'nullable|exists:jurusans,id',
         ]);
 
         // Optional: ensure this teacher is not already assigned as Wali Kelas elsewhere
@@ -67,6 +74,7 @@ class KelasController extends Controller
             'instansi_id' => $sd->id,
             'nama_kelas' => $request->nama_kelas,
             'user_id' => $request->user_id ?: null,
+            'jurusan_id' => $request->jurusan_id ?: null,
         ]);
 
         return redirect()->route('kelas.index')->with('success', 'Data Kelas berhasil ditambahkan.');
@@ -82,6 +90,7 @@ class KelasController extends Controller
         $request->validate([
             'nama_kelas' => 'required|string|max:255',
             'user_id' => 'nullable|exists:users,id',
+            'jurusan_id' => 'nullable|exists:jurusans,id',
         ]);
 
         if ($request->filled('user_id') && $request->user_id != $kelas->user_id) {
@@ -94,6 +103,7 @@ class KelasController extends Controller
         $kelas->update([
             'nama_kelas' => $request->nama_kelas,
             'user_id' => $request->user_id ?: null,
+            'jurusan_id' => $request->jurusan_id ?: null,
         ]);
 
         return redirect()->route('kelas.index')->with('success', 'Data Kelas berhasil diubah.');

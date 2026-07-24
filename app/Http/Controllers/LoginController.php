@@ -17,7 +17,7 @@ class LoginController extends Controller
         if (Auth::check()) {
             return redirect()->route('dashboard');
         }
-        $instansi = Instansi::first();
+        $instansi = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         return view('auth.login', compact('instansi'));
     }
 

@@ -16,7 +16,7 @@ class WaliKelasController extends Controller
      */
     public function index(Request $request)
     {
-        $sd = Instansi::first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $search = $request->input('search');
@@ -36,7 +36,11 @@ class WaliKelasController extends Controller
             ->orderBy('name', 'asc')
             ->paginate(10);
 
-        return view('PorosDataHome.kelolaWaliKelas', compact('walikelas', 'search', 'sd'));
+        $kelas_tersedia = Kelas::when($instansiId, function($q) use ($instansiId) {
+            return $q->where('instansi_id', $instansiId);
+        })->orderBy('nama_kelas', 'asc')->get();
+
+        return view('PorosDataHome.kelolaWaliKelas', compact('walikelas', 'search', 'sd', 'kelas_tersedia'));
     }
 
     /**
@@ -44,14 +48,14 @@ class WaliKelasController extends Controller
      */
     public function store(Request $request)
     {
-        $sd = Instansi::first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $request->validate([
             'name' => 'required|string|max:255',
             'duk' => 'required|string|max:255|unique:users,duk|unique:users,username',
             'password' => 'required|string|min:6',
-            'kelas_diampu' => 'nullable|string',
+            'kelas_diampu' => 'nullable|exists:kelas,id',
         ], [
             'duk.unique' => 'Kode DUK sudah terdaftar.',
         ]);
@@ -61,19 +65,13 @@ class WaliKelasController extends Controller
             'username' => $request->duk, // Login using DUK
             'duk' => $request->duk,
             'role' => 'wali_kelas',
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
+            'password_plain' => $request->password,
             'instansi_id' => $instansiId,
         ]);
 
-        if ($request->filled('kelas_diampu') && $instansiId) {
-            $classNames = array_map('trim', explode(',', $request->kelas_diampu));
-            foreach ($classNames as $className) {
-                if (empty($className)) continue;
-                Kelas::updateOrCreate(
-                    ['instansi_id' => $instansiId, 'nama_kelas' => $className],
-                    ['user_id' => $user->id]
-                );
-            }
+        if ($request->filled('kelas_diampu')) {
+            Kelas::where('id', $request->kelas_diampu)->update(['user_id' => $user->id]);
         }
 
         return redirect()->route('walikelas.index')->with('success', 'Akun Wali Kelas berhasil ditambahkan.');
@@ -96,7 +94,7 @@ class WaliKelasController extends Controller
                 Rule::unique('users', 'username')->ignore($user->id),
             ],
             'password' => 'nullable|string|min:6',
-            'kelas_diampu' => 'nullable|string',
+            'kelas_diampu' => 'nullable|exists:kelas,id',
         ], [
             'duk.unique' => 'Kode DUK sudah terdaftar.',
         ]);
@@ -108,35 +106,18 @@ class WaliKelasController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = $request->password;
+            $data['password'] = Hash::make($request->password);
+            $data['password_plain'] = $request->password;
         }
 
         $user->update($data);
 
-        $sd = Instansi::first();
-        $instansiId = $sd ? $sd->id : null;
+        // Remove user_id from all their current classes
+        Kelas::where('user_id', $user->id)->update(['user_id' => null]);
 
-        if ($instansiId) {
-            $oldClassIds = Kelas::where('user_id', $user->id)->pluck('id')->toArray();
-            $newClassIds = [];
-
-            if ($request->filled('kelas_diampu')) {
-                $classNames = array_map('trim', explode(',', $request->kelas_diampu));
-                foreach ($classNames as $className) {
-                    if (empty($className)) continue;
-                    $class = Kelas::updateOrCreate(
-                        ['instansi_id' => $instansiId, 'nama_kelas' => $className],
-                        ['user_id' => $user->id]
-                    );
-                    $newClassIds[] = $class->id;
-                }
-            }
-
-            // Remove user_id from classes that are no longer assigned to this Wali Kelas
-            $removedClassIds = array_diff($oldClassIds, $newClassIds);
-            if (!empty($removedClassIds)) {
-                Kelas::whereIn('id', $removedClassIds)->update(['user_id' => null]);
-            }
+        // Assign to new class if selected
+        if ($request->filled('kelas_diampu')) {
+            Kelas::where('id', $request->kelas_diampu)->update(['user_id' => $user->id]);
         }
 
         return redirect()->route('walikelas.index')->with('success', 'Data Wali Kelas berhasil diubah.');
@@ -162,7 +143,7 @@ class WaliKelasController extends Controller
      */
     public function exportCsv()
     {
-        $sd = Instansi::first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $walikelas = User::where('role', 'wali_kelas')
@@ -190,10 +171,10 @@ class WaliKelasController extends Controller
             foreach ($walikelas as $user) {
                 $classNames = $user->classes->pluck('nama_kelas')->join(', ');
                 
-                // Export password directly as it is stored in plain-text
+                // Export password directly as it is stored in plain-text column
                 fputcsv($file, [
                     $user->duk,
-                    $user->password,
+                    $user->password_plain ?? '',
                     $user->name,
                     $classNames
                 ]);
@@ -216,7 +197,7 @@ class WaliKelasController extends Controller
             'file_csv.required' => 'File CSV wajib diunggah.',
         ]);
 
-        $sd = Instansi::first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         if (!$instansiId) {
@@ -287,10 +268,12 @@ class WaliKelasController extends Controller
             ];
 
             if (!empty($passwordRaw)) {
-                $data['password'] = $passwordRaw;
+                $data['password'] = Hash::make($passwordRaw);
+                $data['password_plain'] = $passwordRaw;
             } elseif (!$user) {
                 // If new user and password is empty, set default password
-                $data['password'] = 'password123';
+                $data['password'] = Hash::make('password123');
+                $data['password_plain'] = 'password123';
             }
 
             if ($user) {

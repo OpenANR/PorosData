@@ -17,7 +17,7 @@ class GuruController extends Controller
      */
     public function index(Request $request)
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $search = $request->input('search');
@@ -56,7 +56,7 @@ class GuruController extends Controller
      */
     public function store(Request $request)
     {
-        $sd = Instansi::where('tingkat', 'SD')->first();
+        $sd = Instansi::where('tingkat', 'SD')->first() ?? Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $request->validate([

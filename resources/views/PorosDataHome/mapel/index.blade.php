@@ -6,7 +6,7 @@
     <!-- Page Heading -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Mata Pelajaran & Kategori</h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Manajemen mata pelajaran dan kategorinya</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manajemen mata pelajaran dan kategorinya</p>
     </div>
 
 

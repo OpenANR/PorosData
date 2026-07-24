@@ -93,7 +93,7 @@ class ImportExportController extends Controller
             'file_csv.required' => 'File CSV wajib diunggah.',
         ]);
 
-        $sd = \App\Models\Instansi::first();
+        $sd = \App\Models\Instansi::where('tingkat', 'SD')->first() ?? \App\Models\Instansi::first();
         $instansiId = $sd ? $sd->id : null;
 
         $file = $request->file('file_csv');
@@ -148,9 +148,11 @@ class ImportExportController extends Controller
             ];
             
             if (!empty($passwordRaw)) {
-                $dataUser['password'] = $passwordRaw;
+                $dataUser['password'] = \Illuminate\Support\Facades\Hash::make($passwordRaw);
+                $dataUser['password_plain'] = $passwordRaw;
             } elseif (!$user) {
-                $dataUser['password'] = 'password123';
+                $dataUser['password'] = \Illuminate\Support\Facades\Hash::make('password123');
+                $dataUser['password_plain'] = 'password123';
             }
 
             if ($user) {

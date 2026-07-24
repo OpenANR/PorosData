@@ -7,7 +7,7 @@
     <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Wali Kelas</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Manajemen akun wali kelas</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manajemen akun wali kelas</p>
         </div>
     </div>
 
@@ -52,18 +52,6 @@
         </div>
     </div>
 
-    <!-- Validation Errors -->
-    @if ($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 text-rose-800 dark:text-rose-400">
-            <p class="font-bold text-sm mb-1">Gagal menyimpan data:</p>
-            <ul class="list-disc pl-5 text-xs space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <!-- Table -->
     <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">
         <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/20">
@@ -97,7 +85,7 @@
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <div class="inline-flex items-center gap-2">
-                                    <button onclick="bukaEditModal('{{ $user->id }}', '{{ addslashes($user->name) }}', '{{ $user->duk }}', '{{ $user->classes->pluck('nama_kelas')->join(', ') }}', '{{ addslashes($user->password) }}')"
+                                    <button onclick="bukaEditModal('{{ $user->id }}', '{{ addslashes($user->name) }}', '{{ $user->duk }}', '{{ $user->classes->first()->id ?? '' }}', '{{ addslashes($user->password) }}')"
                                         class="p-2 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors cursor-pointer" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
@@ -184,9 +172,13 @@
                                 class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kelas Yang Diampu (Gunakan koma jika > 1 kelas)</label>
-                            <input type="text" name="kelas_diampu" placeholder="Cth: 11-RPL 2, 12-TPM"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pilih Kelas</label>
+                            <select name="kelas_diampu" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white appearance-none cursor-pointer">
+                                <option value="">-- Pilih Kelas --</option>
+                                @foreach($kelas_tersedia as $kls)
+                                    <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -248,9 +240,13 @@
                                 class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Kelas Yang Diampu (Gunakan koma jika > 1 kelas)</label>
-                            <input type="text" name="kelas_diampu" id="edit-kelas-diampu" placeholder="Cth: 11-RPL 2, 12-TPM"
-                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pilih Kelas</label>
+                            <select name="kelas_diampu" id="edit-kelas-diampu" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white appearance-none cursor-pointer">
+                                <option value="">-- Pilih Kelas --</option>
+                                @foreach($kelas_tersedia as $kls)
+                                    <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>

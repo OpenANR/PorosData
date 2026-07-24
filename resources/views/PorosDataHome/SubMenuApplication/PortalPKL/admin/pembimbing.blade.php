@@ -33,18 +33,6 @@
         </form>
     </div>
 
-    <!-- Validation Errors -->
-    @if ($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 text-rose-800 dark:text-rose-400">
-            <p class="font-bold text-sm mb-1">Gagal menyimpan data:</p>
-            <ul class="list-disc pl-5 text-xs space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <!-- Table of Pembimbing -->
     <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm">
         <div class="overflow-x-auto">

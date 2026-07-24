@@ -23,7 +23,7 @@
     <!-- Header Section -->
     <div class="mb-6">
         <h1 class="text-2xl font-extrabold tracking-tight text-slate-950 dark:text-white">Riwayat Dropout Siswa</h1>
-        <p class="text-slate-400 dark:text-slate-500 text-xs font-semibold mt-0.5">{{ $sd ? $sd->nama_sekolah : 'Sekolah SD' }} — Catatan historis siswa yang tidak aktif atau dropout</p>
+        <p class="text-slate-400 dark:text-slate-500 text-xs font-semibold mt-0.5">Catatan historis siswa yang tidak aktif atau dropout</p>
     </div>
 
     <!-- Search and Filter Bar -->
