@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Halaman Login PorosData Portal Administrasi Sekolah.">
-    <title>Login - PorosData Portal Sekolah</title>
+    <meta name="description" content="Halaman Login Poros Data Portal Administrasi Sekolah.">
+    <title>Login - Poros Data Portal Sekolah</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,7 +71,7 @@
                 
                 <div>
                     <h2 class="text-xl font-bold tracking-tight text-white leading-tight">
-                        PorosData
+                        Poros Data
                     </h2>
                     <p class="text-xs font-medium text-slate-300/80 tracking-wide uppercase">
                         {{ $instansiData->nama_sekolah ?? 'Portal Sekolah' }}
@@ -89,7 +89,7 @@
                         <span class="text-xs font-semibold uppercase tracking-wider">Tentang Platform</span>
                     </div>
                     <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal">
-                        "PorosData adalah platform pusat manajemen data dan administrasi sekolah terpadu yang dirancang untuk memudahkan pengelolaan informasi akademik, data siswa, kepegawaian, serta laporan aktivitas sekolah secara efisien dan real-time."
+                        "Poros Data adalah platform pusat manajemen data dan administrasi sekolah terpadu yang dirancang untuk memudahkan pengelolaan informasi akademik, data siswa, kepegawaian, serta laporan aktivitas sekolah secara efisien dan real-time."
                     </p>
                 </div>
             </div>
@@ -101,7 +101,7 @@
             <!-- Top Action Row: Theme Toggle -->
             <div class="flex items-center justify-between mb-6 sm:mb-8">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    PorosData Authentication
+                    Poros Data Authentication
                 </span>
                 <button id="theme-toggle" type="button" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
                     <!-- Sun Icon (dark mode active) -->
@@ -120,7 +120,7 @@
                 <!-- Welcome Title -->
                 <div class="mb-8">
                     <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                        Welcome back to PorosData
+                        Welcome back to Poros Data
                     </h1>
                     <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
                         Silakan masukkan username dan password Anda untuk masuk ke sistem dashboard.

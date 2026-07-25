@@ -80,7 +80,7 @@
                                     </button>
                                     @if(Auth::id() !== $admin->id)
                                         <form action="{{ route('admin_users.destroy', $admin->id) }}" method="POST"
-                                            onsubmit="return confirm('Hapus data admin ini? Pengguna ini akan kehilangan semua akses ke dashboard PorosData dan seluruh sub-aplikasi.')" class="inline">
+                                            onsubmit="return confirm('Hapus data admin ini? Pengguna ini akan kehilangan semua akses ke dashboard Poros Data dan seluruh sub-aplikasi.')" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="p-2 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer" title="Hapus">

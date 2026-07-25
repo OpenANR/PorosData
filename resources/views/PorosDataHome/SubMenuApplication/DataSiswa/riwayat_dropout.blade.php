@@ -55,30 +55,34 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800/60 text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider">
-                        <th class="px-6 py-4">Tanggal Keluar</th>
-                        <th class="px-6 py-4">Nama Siswa</th>
-                        <th class="px-6 py-4">Kelas Terakhir</th>
-                        <th class="px-6 py-4">Alasan Dropout</th>
-                        <th class="px-6 py-4">Penanggung Jawab</th>
-                        <th class="px-6 py-4">Status Arsip</th>
+                    <tr class="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800">
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Tanggal Keluar</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Siswa</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Kelas Terakhir</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Alasan Dropout</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Penanggung Jawab</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Status Arsip</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
                     @forelse($riwayats as $r)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                            <td class="px-6 py-4.5 text-slate-500 font-mono">{{ $r->updated_at->format('d M Y') }}</td>
-                            <td class="px-6 py-4.5">
-                                <span class="block text-slate-900 dark:text-white">{{ $r->siswa && $r->siswa->user ? $r->siswa->user->name : ($r->data_lama['name'] ?? '-') }}</span>
-                                <span class="block text-[10px] text-slate-400 font-medium">NISN: {{ $r->siswa ? $r->siswa->nisn : ($r->data_lama['nisn'] ?? '-') }}</span>
+                            <td class="py-4 px-6 text-sm font-mono text-slate-600 dark:text-slate-300 font-medium">{{ $r->updated_at->format('d M Y') }}</td>
+                            <td class="py-4 px-6">
+                                <div class="text-sm font-semibold text-slate-900 dark:text-white">{{ $r->siswa && $r->siswa->user ? $r->siswa->user->name : ($r->data_lama['name'] ?? '-') }}</div>
+                                <div class="text-xs font-mono text-slate-400 dark:text-slate-500 mt-0.5">NISN: {{ $r->siswa ? $r->siswa->nisn : ($r->data_lama['nisn'] ?? '-') }}</div>
                             </td>
-                            <td class="px-6 py-4.5 text-slate-500">{{ $r->nama_kelas }}</td>
-                            <td class="px-6 py-4.5 text-slate-500">
-                                <span class="block">{{ $r->data_baru['alasan_dropout'] ?? '-' }}</span>
+                            <td class="py-4 px-6 text-center">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                                    {{ $r->nama_kelas }}
+                                </span>
                             </td>
-                            <td class="px-6 py-4.5 text-slate-500">{{ $r->user->name ?? 'Staf Sekolah' }}</td>
-                            <td class="px-6 py-4.5">
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
+                            <td class="py-4 px-6 text-sm text-slate-600 dark:text-slate-300 font-medium">
+                                {{ $r->data_baru['alasan_dropout'] ?? '-' }}
+                            </td>
+                            <td class="py-4 px-6 text-sm font-medium text-slate-600 dark:text-slate-300">{{ $r->user->name ?? 'Staf Sekolah' }}</td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
                                     Terverifikasi
                                 </span>
                             </td>

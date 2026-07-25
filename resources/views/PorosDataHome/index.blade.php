@@ -241,7 +241,10 @@
                     </svg>
                     Riwayat Kelulusan
                 </a>
-                <a href="{{ route('siswa.riwayat_dropout') }}" class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:underline flex items-center gap-1">
+                <a href="{{ route('siswa.riwayat_dropout') }}" class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
                     Riwayat DO
                 </a>
             </div>

@@ -13,7 +13,7 @@
             Halaman Portal Nilai
         </h1>
         <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm leading-relaxed">
-            Selamat datang di modul Portal Nilai. Modul ini digunakan untuk input, olah, dan ekspor nilai akademik siswa di SD PorosData.
+            Selamat datang di modul Portal Nilai. Modul ini digunakan untuk input, olah, dan ekspor nilai akademik siswa di SD Poros Data.
         </p>
     </div>
 @endsection

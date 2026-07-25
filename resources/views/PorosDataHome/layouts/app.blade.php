@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Aplikasi CRUD Pengelolaan Data Siswa dan Guru Sekolah SD PorosData.">
-    <title>@yield('title', 'PorosData') - Portal Sekolah SD</title>
+    <meta name="description" content="Aplikasi CRUD Pengelolaan Data Siswa dan Guru Sekolah SD Poros Data.">
+    <title>@yield('title', 'Poros Data') - Portal Sekolah SD</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,7 +179,7 @@
                         </div>
                     @endif
                     <div>
-                        <span class="font-bold text-lg leading-tight block bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-300">PorosData</span>
+                        <span class="font-bold text-lg leading-tight block bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-300">Poros Data</span>
                         <span class="text-xs text-slate-400 font-medium">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
                     </div>
                 </div>
@@ -369,7 +369,7 @@
 
                     <!-- Navigation Breadcrumbs -->
                     <div class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                        <span class="text-slate-400 dark:text-slate-500 font-medium">PorosData</span>
+                        <span class="text-slate-400 dark:text-slate-500 font-medium">Poros Data</span>
                         <span class="text-slate-300 dark:text-slate-700 font-medium">/</span>
                         <span>@yield('title', 'Dashboard')</span>
                     </div>

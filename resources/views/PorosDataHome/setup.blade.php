@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setup Instansi - PorosData</title>
+    <title>Setup Instansi - Poros Data</title>
     <!-- Theme Script to Prevent FOUC -->
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -130,7 +130,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
                 </svg>
             </div>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white font-heading tracking-tight mb-2">Setup PorosData</h1>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white font-heading tracking-tight mb-2">Setup Poros Data</h1>
             <p class="text-slate-600 dark:text-slate-300 text-sm md:text-base font-medium max-w-md mx-auto">Lengkapi konfigurasi awal sekolah dan perbarui kredensial superadmin untuk memulai.</p>
         </div>
 
@@ -281,7 +281,7 @@
         
         <!-- Footer -->
         <div class="text-center mt-6 text-xs text-slate-500 dark:text-slate-400 font-medium animate-fade-in-up delay-300 pb-4">
-            &copy; {{ date('Y') }} PorosData System. Dirancang dengan <span class="text-rose-500">♥</span> untuk pendidikan.
+            &copy; {{ date('Y') }} Poros Data System. Dirancang dengan <span class="text-rose-500">♥</span> untuk pendidikan.
         </div>
     </div>
 

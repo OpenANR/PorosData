@@ -55,72 +55,74 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800/60 text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider">
-                        <th class="px-6 py-4">Tanggal dan jam</th>
-                        <th class="px-6 py-4">Alasan sedang dilakukan</th>
-                        <th class="px-6 py-4">Kelas</th>
-                        <th class="px-6 py-4">Wali Kelas</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                    <tr class="bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800">
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Tanggal dan jam</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Alasan sedang dilakukan</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Kelas</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Wali Kelas</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Status</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
                     @forelse($persetujuans as $p)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
                             <!-- Tanggal dan jam -->
-                            <td class="px-6 py-4.5 text-slate-500 font-medium">
+                            <td class="py-4 px-6 text-sm font-mono text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap">
                                 {{ $p->created_at->format('d-m-Y H:i') }}
                             </td>
                             <!-- Alasan sedang dilakukan -->
-                            <td class="px-6 py-4.5 text-slate-900 dark:text-white">
-                                <div>{{ $p->alasan }}</div>
+                            <td class="py-4 px-6">
+                                <div class="text-sm font-semibold text-slate-900 dark:text-white">{{ $p->alasan }}</div>
                                 @if(isset($p->data_baru['alasan_dropout']))
-                                    <div class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">
+                                    <div class="text-xs text-slate-400 dark:text-slate-500 font-medium mt-0.5">
                                         Ket: {{ $p->data_baru['alasan_dropout'] }}
                                     </div>
                                 @endif
                             </td>
                             <!-- Kelas -->
-                            <td class="px-6 py-4.5 text-slate-500">
-                                {{ $p->nama_kelas }}
+                            <td class="py-4 px-6 text-center">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                                    {{ $p->nama_kelas }}
+                                </span>
                             </td>
                             <!-- Wali Kelas -->
-                            <td class="px-6 py-4.5 text-slate-500">
+                            <td class="py-4 px-6 text-sm text-slate-600 dark:text-slate-300 font-medium">
                                 {{ $p->user->name }}
                             </td>
                             <!-- Status -->
-                            <td class="px-6 py-4.5">
+                            <td class="py-4 px-6 text-center">
                                 @if($p->status === 'proses')
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30">
                                         Proses
                                     </span>
                                 @elseif($p->status === 'disetujui')
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
                                         Disetujui
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30">
                                         Ditolak
                                     </span>
                                 @endif
                             </td>
                             <!-- Aksi -->
-                            <td class="px-6 py-4.5 text-right">
+                            <td class="py-4 px-6 text-right">
                                 <div class="flex items-center justify-end gap-1.5">
                                     <button type="button" 
                                         onclick="bukaDetailModal('{{ $p->alasan }}', '{{ addslashes($p->siswa->user->name) }}', '{{ $p->siswa->nisn }}', '{{ json_encode($p->data_lama) }}', '{{ json_encode($p->data_baru) }}')"
-                                        class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[10px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                        class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
                                         Lihat
                                     </button>
                                     @if($p->status === 'proses')
                                         <form action="{{ route('datasiswa.status_persetujuan.cancel', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengajuan ini?')" class="inline">
                                             @csrf
-                                            <button type="submit" class="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[10px] font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                            <button type="submit" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
                                                 Batalkan
                                             </button>
                                         </form>
                                     @else
-                                        <button class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 rounded-lg text-[10px] font-bold cursor-not-allowed" disabled>
+                                        <button class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 rounded-lg text-xs font-semibold cursor-not-allowed" disabled>
                                             Batalkan
                                         </button>
                                     @endif

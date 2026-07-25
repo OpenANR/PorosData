@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Halaman Login Portal Nilai - PorosData.">
-    <title>Login - Portal Nilai - PorosData</title>
+    <meta name="description" content="Halaman Login Portal Nilai - Poros Data.">
+    <title>Login - Portal Nilai - Poros Data</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,7 +71,7 @@
                 
                 <div>
                     <h2 class="text-xl font-bold tracking-tight text-white leading-tight">
-                        {{ $instansiData->nama_sekolah ?? 'PorosData' }}
+                        {{ $instansiData->nama_sekolah ?? 'Poros Data' }}
                     </h2>
                     <p class="text-xs font-medium text-slate-300/80 tracking-wide uppercase">
                         Portal Nilai

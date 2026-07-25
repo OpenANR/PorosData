@@ -11,7 +11,7 @@
             Kelola Siswa
         </h1>
         <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Daftar siswa aktif di lingkungan sekolah. Pengelolaan data siswa hanya dapat dilakukan melalui portal utama PorosData.
+            Daftar siswa aktif di lingkungan sekolah. Pengelolaan data siswa hanya dapat dilakukan melalui portal utama Poros Data.
         </p>
     </div>
 
@@ -24,7 +24,7 @@
         </div>
         <div>
             <span class="block text-xs font-bold text-amber-800 dark:text-amber-300">Mode Read-Only Aktif</span>
-            <span class="block text-xs text-amber-650 dark:text-amber-455 mt-0.5">Data siswa tersinkronisasi langsung dari database PorosData. Hubungi administrator utama untuk melakukan perubahan data.</span>
+            <span class="block text-xs text-amber-650 dark:text-amber-455 mt-0.5">Data siswa tersinkronisasi langsung dari database Poros Data. Hubungi administrator utama untuk melakukan perubahan data.</span>
         </div>
     </div>
 

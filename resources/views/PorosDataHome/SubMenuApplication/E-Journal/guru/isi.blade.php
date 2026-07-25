@@ -26,7 +26,7 @@
         <div>
             <span class="block text-xs font-bold text-amber-800 dark:text-amber-300">Penugasan Mengajar Belum Lengkap</span>
             <span class="block text-xs text-amber-650 dark:text-amber-455 mt-0.5">
-                Anda belum ditugaskan ke kelas atau mata pelajaran di Portal Utama PorosData. Hubungi administrator sekolah agar Anda dapat mengisi jurnal untuk kelas & mata pelajaran Anda.
+                Anda belum ditugaskan ke kelas atau mata pelajaran di Portal Utama Poros Data. Hubungi administrator sekolah agar Anda dapat mengisi jurnal untuk kelas & mata pelajaran Anda.
             </span>
         </div>
     </div>

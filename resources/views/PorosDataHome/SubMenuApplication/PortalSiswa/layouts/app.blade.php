@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Portal Siswa - PorosData.">
-    <title>@yield('title', 'Portal Siswa') - PorosData</title>
+    <meta name="description" content="Portal Siswa - Poros Data.">
+    <title>@yield('title', 'Portal Siswa') - Poros Data</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -112,7 +112,7 @@
 
     <!-- Footer -->
     <footer class="mt-auto py-6 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-400 dark:text-slate-500">
-        <p>&copy; 2026 PorosData - Student Identity Portal. All Rights Reserved.</p>
+        <p>&copy; 2026 Poros Data - Student Identity Portal. All Rights Reserved.</p>
     </footer>
 
     <!-- Toast Notifications -->
