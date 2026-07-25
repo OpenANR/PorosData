@@ -1,4 +1,4 @@
-@extends('PorosDataHome.SubMenuApplication.DataSiswa.layouts.app')
+@extends('PorosDataHome.layouts.app')
 
 @section('title', 'Riwayat DO Siswa')
 
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Search and Filter Bar -->
-    <form method="GET" action="{{ route('datasiswa.riwayat_dropout') }}" class="p-4 mb-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+    <form method="GET" action="{{ route('siswa.riwayat_dropout') }}" class="p-4 mb-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="relative w-full md:max-w-xs">
             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
@@ -45,7 +45,7 @@
                 @endforeach
             </select>
             @if($search || $alasan)
-                <a href="{{ route('datasiswa.riwayat_dropout') }}" class="text-xs font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 whitespace-nowrap">Hapus Filter</a>
+                <a href="{{ route('siswa.riwayat_dropout') }}" class="text-xs font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 whitespace-nowrap">Hapus Filter</a>
             @endif
         </div>
     </form>
@@ -110,3 +110,4 @@
         @endif
     </div>
 @endsection
+

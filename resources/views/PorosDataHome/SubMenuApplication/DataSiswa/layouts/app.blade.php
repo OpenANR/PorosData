@@ -155,9 +155,9 @@
 
                     <a href="{{ route('datasiswa.riwayat_dropout') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('datasiswa.riwayat_dropout') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
-                        Riwayat Dropout Siswa
+                        Riwayat DO Siswa
                     </a>
 
                     <a href="{{ route('datasiswa.status_persetujuan') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('datasiswa.status_persetujuan') ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">
@@ -237,7 +237,7 @@
                     </div>
                     <div class="min-w-0 flex-1">
                         <span class="block text-xs font-semibold truncate text-slate-800 dark:text-slate-200">{{ $datasiswaUser->name ?? 'Wali Kelas' }}</span>
-                        <span class="block text-[10px] text-slate-400 font-medium capitalize">{{ $datasiswaUser->role ?? 'User' }}</span>
+                        <span class="block text-[10px] text-slate-400 font-medium capitalize">{{ str_replace('_', ' ', $datasiswaUser->role ?? 'User') }}</span>
                     </div>
                 </div>
 

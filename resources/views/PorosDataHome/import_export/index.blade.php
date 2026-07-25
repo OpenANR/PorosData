@@ -95,25 +95,150 @@
         </div>
     </div>
 
-    <!-- Card Reset Data Siswa -->
-    <div class="mt-6 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6">
-        <div class="flex items-center gap-3.5 mb-4">
-            <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                </svg>
+    <!-- Area Reset Data -->
+    <div class="mt-8 mb-4">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Data Master</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Gunakan fitur ini dengan hati-hati. Tindakan ini akan menghapus data secara permanen.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card Reset Data Siswa -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3.5 mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Data Siswa</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh data siswa</span> yang ada di sistem (baik siswa aktif maupun DO) secara permanen.
+                </p>
             </div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Data Siswa</h2>
+            <button type="button" onclick="bukaModalReset('{{ route('import-export.reset-siswa') }}', 'Data Siswa')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full justify-center mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                    <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+                Hapus Semua Data Siswa
+            </button>
         </div>
-        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
-            Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh data siswa</span> yang ada di sistem (baik siswa aktif maupun DO) secara permanen. Gunakan fitur ini jika Anda ingin mengosongkan database untuk memulai tahun ajaran baru atau mengulang proses import CSV dari awal.
-        </p>
-        <button type="button" onclick="bukaModalReset()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full sm:w-auto justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
-                <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
-            </svg>
-            Kosongkan / Hapus Semua Data Siswa
-        </button>
+
+        <!-- Card Reset Kelas -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3.5 mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Kelas</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh data kelas</span> yang ada di sistem secara permanen.
+                </p>
+            </div>
+            <button type="button" onclick="bukaModalReset('{{ route('import-export.reset-kelas') }}', 'Data Kelas')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full justify-center mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                    <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+                Hapus Semua Data Kelas
+            </button>
+        </div>
+
+        <!-- Card Reset Wali Kelas -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3.5 mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Wali Kelas</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh data wali kelas</span> yang ada di sistem secara permanen.
+                </p>
+            </div>
+            <button type="button" onclick="bukaModalReset('{{ route('import-export.reset-walikelas') }}', 'Data Wali Kelas')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full justify-center mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                    <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+                Hapus Semua Wali Kelas
+            </button>
+        </div>
+
+        <!-- Card Reset Guru -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3.5 mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Guru</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh data guru</span> yang ada di sistem secara permanen.
+                </p>
+            </div>
+            <button type="button" onclick="bukaModalReset('{{ route('import-export.reset-guru') }}', 'Data Guru')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full justify-center mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                    <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+                Hapus Semua Data Guru
+            </button>
+        </div>
+
+        <!-- Card Reset Status -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3.5 mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Status</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh status persetujuan</span> yang ada di sistem secara permanen.
+                </p>
+            </div>
+            <button type="button" onclick="bukaModalReset('{{ route('import-export.reset-status') }}', 'Status Persetujuan')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full justify-center mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                    <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+                Hapus Status Persetujuan
+            </button>
+        </div>
+
+        <!-- Card Reset Mapel -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-3.5 mb-4">
+                    <div class="h-12 w-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Reset Mapel</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-5">
+                    Peringatan: Tindakan ini akan <span class="font-bold">menghapus seluruh data mapel</span> yang ada di sistem secara permanen.
+                </p>
+            </div>
+            <button type="button" onclick="bukaModalReset('{{ route('import-export.reset-mapel') }}', 'Data Mapel')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition-colors shadow-md shadow-rose-100 dark:shadow-none w-full justify-center mt-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5">
+                    <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                </svg>
+                Hapus Semua Data Mapel
+            </button>
+        </div>
     </div>
 
     @push('modals')
@@ -126,11 +251,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
             </div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Hapus Seluruh Data Siswa</h3>
-            <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-4">
-                Tindakan ini akan menghapus semua data siswa beserta akun loginnya secara permanen. Silakan ketik <span class="font-bold text-rose-500">HAPUS</span> untuk mengonfirmasi.
+            <h3 id="modal-reset-title" class="text-base font-bold text-slate-900 dark:text-white mb-2">Hapus Seluruh Data</h3>
+            <p id="modal-reset-desc" class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-4">
+                Tindakan ini akan menghapus semua data secara permanen. Silakan ketik <span class="font-bold text-rose-500">HAPUS</span> untuk mengonfirmasi.
             </p>
-            <form action="{{ route('import-export.reset-siswa') }}" method="POST" class="space-y-4 text-left">
+            <form id="form-reset-data" action="" method="POST" class="space-y-4 text-left">
                 @csrf
                 @method('DELETE')
                 <div>
@@ -149,11 +274,16 @@
 
 @section('scripts')
 <script>
-    function bukaModalReset() {
+    function bukaModalReset(url, label) {
         const el = document.getElementById('modal-confirm-reset');
         if (el) {
             el.classList.remove('hidden');
             el.classList.add('flex');
+            
+            document.getElementById('modal-reset-title').textContent = 'Hapus Seluruh ' + label;
+            document.getElementById('modal-reset-desc').innerHTML = 'Tindakan ini akan menghapus semua <strong>' + label + '</strong> beserta kaitannya secara permanen. Silakan ketik <span class="font-bold text-rose-500">HAPUS</span> untuk mengonfirmasi.';
+            document.getElementById('form-reset-data').action = url;
+            
             const input = document.getElementById('input-konfirmasi-hapus');
             input.value = '';
             document.getElementById('btn-submit-reset').disabled = true;

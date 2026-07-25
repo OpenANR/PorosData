@@ -35,6 +35,7 @@ class KelasController extends Controller
             ->when($instansiId, function($q) use ($instansiId) {
                 return $q->where('instansi_id', $instansiId);
             })
+            ->with('classes')
             ->orderBy('name', 'asc')
             ->get();
 

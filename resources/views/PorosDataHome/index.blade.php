@@ -42,18 +42,22 @@
         </a>
 
         <!-- Card 2: Siswa -->
-        <a href="{{ route('siswa.index') }}" class="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-50/20 dark:hover:shadow-none transition-all duration-300 flex items-center justify-between">
-            <div class="space-y-1">
+        <a href="{{ route('siswa.index') }}" class="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-50/20 dark:hover:shadow-none transition-all duration-300 flex items-start justify-between">
+            <div class="space-y-1 flex-1">
                 <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Siswa Terdaftar</span>
                 <h3 class="text-3xl font-extrabold text-slate-950 dark:text-white">{{ $totalSiswa }}</h3>
-                <span class="text-xs font-medium text-slate-400 group-hover:text-violet-500 dark:group-hover:text-violet-400 transition-colors flex items-center gap-1">
+                <div class="flex items-center gap-2 py-1">
+                    <span class="text-[11px] font-medium text-slate-500 flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-100 dark:border-slate-700/50"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> {{ $totalSiswaLaki }} Laki-laki</span>
+                    <span class="text-[11px] font-medium text-slate-500 flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-100 dark:border-slate-700/50"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span> {{ $totalSiswaPerempuan }} Perempuan</span>
+                </div>
+                <span class="text-xs font-medium text-slate-400 group-hover:text-violet-500 dark:group-hover:text-violet-400 transition-colors flex items-center gap-1 pt-1">
                     Kelola Siswa 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 group-hover:translate-x-0.5 transition-transform">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
                 </span>
             </div>
-            <div class="h-14 w-14 rounded-2xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <div class="h-14 w-14 rounded-2xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform mt-0.5">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.57 50.57 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.902 59.902 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M12 13.489v-3.375" />
                 </svg>
@@ -141,9 +145,17 @@
                         $percent = $stat['siswa_count'] > 0 ? min(($stat['siswa_count'] / $maxLimit) * 100, 100) : 0;
                     @endphp
                     <div class="space-y-1.5">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700 dark:text-slate-300">{{ $stat['nama'] }} <span class="text-xs font-normal text-slate-400 dark:text-slate-500">({{ $stat['wali_kelas'] }})</span></span>
-                            <span class="font-extrabold text-slate-900 dark:text-white">{{ $stat['siswa_count'] }} <span class="text-[10px] text-slate-400 font-medium">Siswa</span></span>
+                        <div class="flex items-end justify-between text-sm">
+                            <div class="flex flex-col gap-0.5">
+                                <span class="font-semibold text-slate-700 dark:text-slate-300">{{ $stat['nama'] }} <span class="text-xs font-normal text-slate-400 dark:text-slate-500">({{ $stat['wali_kelas'] }})</span></span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-extrabold text-slate-900 dark:text-white leading-none">{{ $stat['siswa_count'] }} <span class="text-[10px] text-slate-400 font-medium">Siswa</span></span>
+                                <div class="flex items-center gap-1.5 mt-1.5">
+                                    <span class="text-[10px] font-medium text-slate-500 flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-100 dark:border-slate-700/50"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> {{ $stat['siswa_laki_count'] }} L</span>
+                                    <span class="text-[10px] font-medium text-slate-500 flex items-center gap-1 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-100 dark:border-slate-700/50"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span> {{ $stat['siswa_perempuan_count'] }} P</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="h-3.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                             <div class="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500" style="width: {{ $percent }}%"></div>

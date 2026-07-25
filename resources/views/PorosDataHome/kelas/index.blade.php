@@ -150,7 +150,9 @@
                             <select name="user_id" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
                                 <option value="">-- Pilih Wali Kelas --</option>
                                 @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                    @if($teacher->classes->isEmpty())
+                                        <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -202,7 +204,7 @@
                             <select name="user_id" id="edit-user-id" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors">
                                 <option value="">-- Pilih Wali Kelas --</option>
                                 @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                    <option value="{{ $teacher->id }}" data-assigned="{{ $teacher->classes->isNotEmpty() ? '1' : '0' }}">{{ $teacher->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -320,7 +322,21 @@
     function bukaEditModal(id, namaKelas, userId, jurusanId) {
         document.getElementById('form-edit').action = '/porosdata/kelas/' + id;
         document.getElementById('edit-nama-kelas').value = namaKelas;
-        document.getElementById('edit-user-id').value = userId || '';
+        
+        const editUserId = document.getElementById('edit-user-id');
+        editUserId.value = userId || '';
+        
+        Array.from(editUserId.options).forEach(opt => {
+            const isAssigned = opt.getAttribute('data-assigned') === '1';
+            if (isAssigned && opt.value !== userId && opt.value !== '') {
+                opt.hidden = true;
+                opt.disabled = true;
+            } else {
+                opt.hidden = false;
+                opt.disabled = false;
+            }
+        });
+
         const editJurusan = document.getElementById('edit-jurusan-id');
         if (editJurusan) {
             editJurusan.value = jurusanId || '';

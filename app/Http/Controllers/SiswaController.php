@@ -9,6 +9,7 @@ use App\Models\Instansi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Models\PersetujuanPerubahan;
 use Illuminate\Validation\Rule;
 
 class SiswaController extends Controller
@@ -239,5 +240,137 @@ class SiswaController extends Controller
         });
 
         return redirect()->route('siswa.index')->with('success', 'Data Siswa berhasil dihapus.');
+    }
+
+    /**
+     * Display a listing of dropout history for Admin.
+     */
+    public function riwayatDropout(Request $request)
+    {
+        $sd = Instansi::where('tingkat', 'SD')->first();
+
+        $search = $request->input('search');
+        $alasan = $request->input('alasan');
+
+        $query = PersetujuanPerubahan::with(['siswa.user', 'siswa.kelas', 'user'])
+            ->where('status', 'disetujui')
+            ->where(function($q) {
+                $q->where('alasan', 'DropOut Siswa')
+                  ->orWhere('data_baru->status', 'drop_out');
+            });
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->whereHas('siswa.user', function($sq) use ($search) {
+                    $sq->where('name', 'like', "%{$search}%")
+                       ->orWhere('username', 'like', "%{$search}%");
+                })
+                ->orWhereHas('siswa', function($sq) use ($search) {
+                    $sq->where('nisn', 'like', "%{$search}%");
+                })
+                ->orWhere('data_lama->name', 'like', "%{$search}%")
+                ->orWhere('data_lama->nisn', 'like', "%{$search}%");
+            });
+        }
+
+        if ($alasan) {
+            $query->where('data_baru->alasan_dropout', 'like', "%{$alasan}%");
+        }
+
+        $riwayats = $query->orderBy('updated_at', 'desc')->paginate(10);
+
+        // Map class details
+        $allClasses = Kelas::all()->keyBy('id');
+
+        foreach ($riwayats as $r) {
+            $kelas = null;
+            if ($r->siswa && $r->siswa->kelas) {
+                $kelas = $r->siswa->kelas;
+            } else if (isset($r->data_lama['kelas_id'])) {
+                $kelas = $allClasses->get($r->data_lama['kelas_id']);
+            }
+            $r->nama_kelas = $kelas ? $kelas->nama_kelas : 'Tanpa Kelas';
+        }
+
+        // Get unique dropout reasons for filter dropdown
+        $dropoutReasons = PersetujuanPerubahan::where('status', 'disetujui')
+            ->where(function($q) {
+                $q->where('alasan', 'DropOut Siswa')
+                  ->orWhere('data_baru->status', 'drop_out');
+            })
+            ->get()
+            ->map(function($item) {
+                return $item->data_baru['alasan_dropout'] ?? null;
+            })
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('PorosDataHome.siswa.riwayat_dropout', compact('riwayats', 'dropoutReasons', 'search', 'alasan', 'sd'));
+    }
+    /**
+     * Tampilkan Halaman UI Migrasi Siswa
+     */
+    public function migrasiIndex(Request $request)
+    {
+        $sd = Instansi::where('tingkat', 'SD')->first();
+        $instansiId = $sd ? $sd->id : null;
+        
+        $classes = Kelas::with('jurusan')->when($instansiId, function($q) use ($instansiId) {
+                return $q->where('instansi_id', $instansiId);
+            })
+            ->orderBy('nama_kelas', 'asc')
+            ->get();
+            
+        return view('PorosDataHome.siswa.migrasi', compact('classes', 'sd'));
+    }
+
+    /**
+     * Ambil Data Siswa berdasarkan Kelas (AJAX)
+     */
+    public function migrasiGetSiswa(Request $request)
+    {
+        $kelasId = $request->query('kelas_id');
+        
+        if (!$kelasId) {
+            return response()->json([]);
+        }
+        
+        $siswas = Siswa::with('user')
+            ->where('kelas_id', $kelasId)
+            ->where('status', 'aktif')
+            ->get()
+            ->sortBy(function($siswa) {
+                return $siswa->user ? $siswa->user->name : '';
+            })->values();
+            
+        return response()->json($siswas);
+    }
+
+    /**
+     * Proses Update / Kenaikan Kelas & Kelulusan
+     */
+    public function migrasiProses(Request $request)
+    {
+        $request->validate([
+            'siswa_ids' => 'required|array',
+            'siswa_ids.*' => 'exists:siswa,id',
+            'jenis_migrasi' => 'required|in:naik_kelas,lulus',
+            'kelas_tujuan' => 'required_if:jenis_migrasi,naik_kelas',
+        ]);
+
+        $siswaIds = $request->input('siswa_ids');
+        $jenisMigrasi = $request->input('jenis_migrasi');
+
+        DB::transaction(function () use ($siswaIds, $jenisMigrasi, $request) {
+            if ($jenisMigrasi === 'lulus') {
+                Siswa::whereIn('id', $siswaIds)->update(['status' => 'lulus']);
+            } else {
+                $kelasTujuan = $request->input('kelas_tujuan');
+                Siswa::whereIn('id', $siswaIds)->update(['kelas_id' => $kelasTujuan]);
+            }
+        });
+
+        return redirect()->route('siswa.migrasi')->with('success', 'Migrasi data siswa berhasil diproses.');
     }
 }

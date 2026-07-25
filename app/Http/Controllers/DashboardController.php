@@ -21,11 +21,15 @@ class DashboardController extends Controller
         $instansiId = $instansi ? $instansi->id : null;
 
         // Count stats
-        $totalSiswa = Siswa::whereHas('user', function($q) use ($instansiId) {
+        $siswaQuery = Siswa::whereHas('user', function($q) use ($instansiId) {
             if ($instansiId) {
                 $q->where('instansi_id', $instansiId);
             }
-        })->count();
+        });
+
+        $totalSiswa = $siswaQuery->count();
+        $totalSiswaLaki = (clone $siswaQuery)->where('jenis_kelamin', 'Laki-laki')->count();
+        $totalSiswaPerempuan = (clone $siswaQuery)->where('jenis_kelamin', 'perempuan')->count();
 
         $totalGuru = User::whereIn('role', ['guru', 'wali_kelas'])
             ->when($instansiId, function($q) use ($instansiId) {
@@ -46,9 +50,13 @@ class DashboardController extends Controller
             return $q->where('instansi_id', $instansiId);
         })->withCount('wali_kelas')->get()->map(function($kelas) {
             $siswaCount = Siswa::where('kelas_id', $kelas->id)->count();
+            $siswaLakiCount = Siswa::where('kelas_id', $kelas->id)->where('jenis_kelamin', 'Laki-laki')->count();
+            $siswaPerempuanCount = Siswa::where('kelas_id', $kelas->id)->where('jenis_kelamin', 'perempuan')->count();
             return [
                 'nama' => $kelas->nama_kelas,
                 'siswa_count' => $siswaCount,
+                'siswa_laki_count' => $siswaLakiCount,
+                'siswa_perempuan_count' => $siswaPerempuanCount,
                 'wali_kelas' => $kelas->wali_kelas ? $kelas->wali_kelas->name : 'Belum ditentukan'
             ];
         });
@@ -56,6 +64,8 @@ class DashboardController extends Controller
         return view('PorosDataHome.index', compact(
             'instansi',
             'totalSiswa',
+            'totalSiswaLaki',
+            'totalSiswaPerempuan',
             'totalGuru',
             'totalKelas',
             'siswaAktif',

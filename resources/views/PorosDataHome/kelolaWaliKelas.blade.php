@@ -176,7 +176,9 @@
                             <select name="kelas_diampu" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white appearance-none cursor-pointer">
                                 <option value="">-- Pilih Kelas --</option>
                                 @foreach($kelas_tersedia as $kls)
-                                    <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                                    @if(!$kls->user_id)
+                                        <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -244,7 +246,7 @@
                             <select name="kelas_diampu" id="edit-kelas-diampu" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-colors dark:text-white appearance-none cursor-pointer">
                                 <option value="">-- Pilih Kelas --</option>
                                 @foreach($kelas_tersedia as $kls)
-                                    <option value="{{ $kls->id }}">{{ $kls->nama_kelas }}</option>
+                                    <option value="{{ $kls->id }}" data-userid="{{ $kls->user_id }}">{{ $kls->nama_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -348,7 +350,21 @@
         document.getElementById('form-edit').action = '/porosdata/walikelas/' + id;
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-duk').value = duk;
-        document.getElementById('edit-kelas-diampu').value = classesString;
+        
+        const editKelasDiampu = document.getElementById('edit-kelas-diampu');
+        editKelasDiampu.value = classesString;
+        
+        Array.from(editKelasDiampu.options).forEach(opt => {
+            const classUserId = opt.getAttribute('data-userid');
+            if (classUserId && classUserId !== id && opt.value !== '') {
+                opt.hidden = true;
+                opt.disabled = true;
+            } else {
+                opt.hidden = false;
+                opt.disabled = false;
+            }
+        });
+
         document.getElementById('edit-password').value = password;
         bukaModal('modal-edit');
     }

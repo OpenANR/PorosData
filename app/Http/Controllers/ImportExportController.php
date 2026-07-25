@@ -244,4 +244,90 @@ class ImportExportController extends Controller
                 ->with('error', 'Terjadi kesalahan saat menghapus data siswa: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Delete all Kelas data.
+     */
+    public function resetKelas(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+            \App\Models\Kelas::query()->delete();
+            \DB::commit();
+            return redirect()->route('import-export.index')->with('success', 'Seluruh data Kelas berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Kelas: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete all Wali Kelas data.
+     */
+    public function resetWaliKelas(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+            $waliIds = \App\Models\User::where('role', 'wali_kelas')->pluck('id');
+            \App\Models\Kelas::whereIn('user_id', $waliIds)->update(['user_id' => null]);
+            \App\Models\User::where('role', 'wali_kelas')->delete();
+            \DB::commit();
+            return redirect()->route('import-export.index')->with('success', 'Seluruh data Wali Kelas berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Wali Kelas: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete all Guru data.
+     */
+    public function resetGuru(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+            $guruIds = \App\Models\User::where('role', 'guru')->pluck('id');
+            \App\Models\Kelas::whereIn('user_id', $guruIds)->update(['user_id' => null]);
+            \DB::table('guru_kelas')->whereIn('user_id', $guruIds)->delete();
+            \DB::table('guru_mapel')->whereIn('user_id', $guruIds)->delete();
+            \App\Models\User::where('role', 'guru')->delete();
+            \DB::commit();
+            return redirect()->route('import-export.index')->with('success', 'Seluruh data Guru berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Guru: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete all Status Persetujuan data.
+     */
+    public function resetStatus(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+            \App\Models\PersetujuanPerubahan::query()->delete();
+            \DB::commit();
+            return redirect()->route('import-export.index')->with('success', 'Seluruh data Status Persetujuan berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Status Persetujuan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete all Mapel data.
+     */
+    public function resetMapel(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+            \App\Models\Mapel::query()->delete();
+            \DB::commit();
+            return redirect()->route('import-export.index')->with('success', 'Seluruh data Mapel berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Mapel: ' . $e->getMessage());
+        }
+    }
 }

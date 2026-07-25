@@ -8,8 +8,20 @@
         <div class="relative z-10">
             <h1 class="text-3xl font-extrabold tracking-tight mb-2">Selamat Datang di Portal Data Siswa</h1>
             <p class="text-indigo-100 text-sm md:text-base max-w-xl">
-                Halo, {{ $datasiswaUser->name ?? 'Pengguna' }}. Halaman ini merupakan pusat administrasi kesiswaan terpadu SD Negeri 01 Poros Data. Gunakan menu sidebar untuk navigasi.
+                Halo, {{ $datasiswaUser->name ?? 'Pengguna' }}. Halaman ini merupakan pusat administrasi kesiswaan terpadu {{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'SMK Teknologi Balung' }}. Gunakan menu sidebar untuk navigasi.
             </p>
+            @if(isset($datasiswaUser) && $datasiswaUser->role === 'wali_kelas' && $datasiswaUser->kelas)
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/20 text-white border border-white/30 backdrop-blur-md shadow-sm">
+                    {{ $datasiswaUser->kelas->nama_kelas }}
+                </span>
+                @if($datasiswaUser->kelas->jurusan)
+                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/20 text-white border border-white/30 backdrop-blur-md shadow-sm">
+                    {{ $datasiswaUser->kelas->jurusan->nama_jurusan }}
+                </span>
+                @endif
+            </div>
+            @endif
         </div>
         <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-72 h-72">
@@ -99,16 +111,16 @@
             </span>
         </a>
 
-        <!-- Riwayat Dropout Card -->
+        <!-- Riwayat DO Card -->
         <a href="{{ route('datasiswa.riwayat_dropout') }}" class="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 hover:border-rose-500/50 hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
             <div>
                 <div class="h-10 w-10 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
                 <h4 class="text-lg font-bold text-slate-800 dark:text-slate-200 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
-                    Riwayat Dropout Siswa
+                    Riwayat DO Siswa
                 </h4>
                 <p class="text-slate-500 dark:text-slate-400 text-xs mt-2 leading-relaxed">
                     Arsip log mutasi, siswa keluar, dan dropout beserta detail alasan pengeluaran untuk kebutuhan audit data.
