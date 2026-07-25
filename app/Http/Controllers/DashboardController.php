@@ -61,6 +61,22 @@ class DashboardController extends Controller
             ];
         });
 
+        $totalWaliKelas = User::where('role', 'wali_kelas')
+            ->when($instansiId, function($q) use ($instansiId) {
+                return $q->where('instansi_id', $instansiId);
+            })->count();
+
+        $totalPersetujuan = \App\Models\PersetujuanPerubahan::where('status', 'proses')
+            ->when($instansiId, function($q) use ($instansiId) {
+                return $q->whereHas('siswa.user', function($query) use ($instansiId) {
+                    $query->where('instansi_id', $instansiId);
+                });
+            })->count();
+
+        $totalMapel = \App\Models\Mapel::when($instansiId, function($q) use ($instansiId) {
+            return $q->where('instansi_id', $instansiId);
+        })->count();
+
         return view('PorosDataHome.index', compact(
             'instansi',
             'totalSiswa',
@@ -71,7 +87,10 @@ class DashboardController extends Controller
             'siswaAktif',
             'siswaDO',
             'siswaLulus',
-            'kelasStats'
+            'kelasStats',
+            'totalWaliKelas',
+            'totalPersetujuan',
+            'totalMapel'
         ));
     }
 }

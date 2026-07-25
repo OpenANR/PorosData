@@ -37,6 +37,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/porosdata/kelas', KelasController::class)->names('kelas');
     Route::resource('/porosdata/jurusan', JurusanController::class)->names('jurusan');
     Route::get('/porosdata/siswa/riwayat-dropout', [SiswaController::class, 'riwayatDropout'])->name('siswa.riwayat_dropout');
+    Route::get('/porosdata/siswa/riwayat-lulus', [SiswaController::class, 'riwayatLulus'])->name('siswa.riwayat_lulus');
     Route::get('/porosdata/siswa/migrasi', [SiswaController::class, 'migrasiIndex'])->name('siswa.migrasi');
     Route::get('/porosdata/siswa/migrasi/get-siswa', [SiswaController::class, 'migrasiGetSiswa'])->name('siswa.migrasi.get_siswa');
     Route::post('/porosdata/siswa/migrasi/proses', [SiswaController::class, 'migrasiProses'])->name('siswa.migrasi.proses');
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/porosdata/import-export/reset-guru', [ImportExportController::class, 'resetGuru'])->name('import-export.reset-guru');
     Route::delete('/porosdata/import-export/reset-status', [ImportExportController::class, 'resetStatus'])->name('import-export.reset-status');
     Route::delete('/porosdata/import-export/reset-mapel', [ImportExportController::class, 'resetMapel'])->name('import-export.reset-mapel');
+    Route::delete('/porosdata/import-export/reset-riwayat-kelulusan', [ImportExportController::class, 'resetRiwayatKelulusan'])->name('import-export.reset-riwayat-kelulusan');
     
     // Mapel and Category Routes
     Route::resource('/porosdata/mapel', App\Http\Controllers\MapelController::class)->names('mapel');

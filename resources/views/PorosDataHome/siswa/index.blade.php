@@ -131,10 +131,15 @@
             <select name="status" onchange="this.form.submit()" class="w-full sm:w-44 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
                 <option value="">Semua Status</option>
                 <option value="aktif" {{ $status === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="lulus" {{ $status === 'lulus' ? 'selected' : '' }}>Lulus</option>
                 <option value="drop_out" {{ $status === 'drop_out' ? 'selected' : '' }}>Drop Out</option>
             </select>
-            @if($search || $kelasId || $status)
+            <select name="angkatan" onchange="this.form.submit()" class="w-full sm:w-44 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                <option value="">Semua Angkatan</option>
+                @foreach($angkatans as $ang)
+                    <option value="{{ $ang }}" {{ $angkatan === $ang ? 'selected' : '' }}>{{ $ang }}</option>
+                @endforeach
+            </select>
+            @if($search || $kelasId || $status || $angkatan)
                 <a href="{{ route('siswa.index') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 whitespace-nowrap">Hapus Filter</a>
             @endif
         </form>
@@ -158,6 +163,7 @@
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">NISN</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Password</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Kelas</th>
+                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Angkatan</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center">Status</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-32 text-center">Aksi</th>
                     </tr>
@@ -176,6 +182,9 @@
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                                     {{ $siswa->kelas ? $siswa->kelas->nama_kelas : 'Tanpa Kelas' }}
                                 </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                {{ $siswa->angkatan ?? '-' }}
                             </td>
                             <td class="py-4 px-6 text-center">
                                 @if($siswa->status === 'aktif')
@@ -209,7 +218,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-16 text-center text-slate-400">
+                            <td colspan="8" class="py-16 text-center text-slate-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mx-auto mb-3 text-slate-300">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                                 </svg>
@@ -335,7 +344,6 @@
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Akademik <span class="text-rose-500">*</span></label>
                                             <select name="status" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
                                                 <option value="aktif">Aktif</option>
-                                                <option value="lulus">Lulus</option>
                                                 <option value="drop_out">Drop Out</option>
                                             </select>
                                         </div>
@@ -562,7 +570,6 @@
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Akademik <span class="text-rose-500">*</span></label>
                                             <select name="status" id="edit-status" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
                                                 <option value="aktif">Aktif</option>
-                                                <option value="lulus">Lulus</option>
                                                 <option value="drop_out">Drop Out</option>
                                             </select>
                                         </div>

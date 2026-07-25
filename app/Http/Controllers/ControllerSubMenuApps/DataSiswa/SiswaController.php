@@ -43,10 +43,10 @@ class SiswaController extends Controller
             
             // If they don't supervise any class, they see nothing
             if (empty($classIds)) {
-                $siswas = Siswa::whereRaw('1 = 0')->paginate(10);
+                $siswas = Siswa::whereRaw('1 = 0')->paginate(10)->withQueryString();
             } else {
                 $siswas = Siswa::whereIn('kelas_id', $classIds)
-                    ->where('status', '!=', 'drop_out')
+                    ->whereNotIn('status', ['drop_out', 'lulus'])
                     ->when($search, function($q) use ($search) {
                         return $q->where(function($sq) use ($search) {
                             $sq->where('nisn', 'like', "%{$search}%")
@@ -67,7 +67,7 @@ class SiswaController extends Controller
                         return $q->where('status', $status);
                     })
                     ->with(['user', 'kelas'])
-                    ->paginate(10);
+                    ->paginate(10)->withQueryString();
             }
         } else {
             // Admin or Superadmin sees all classes/students
@@ -82,7 +82,7 @@ class SiswaController extends Controller
                         $q->where('instansi_id', $instansiId);
                     }
                 })
-                ->where('status', '!=', 'drop_out')
+                ->whereNotIn('status', ['drop_out', 'lulus'])
                 ->when($search, function($q) use ($search) {
                     return $q->where(function($sq) use ($search) {
                         $sq->where('nisn', 'like', "%{$search}%")
@@ -99,7 +99,7 @@ class SiswaController extends Controller
                     return $q->where('status', $status);
                 })
                 ->with(['user', 'kelas'])
-                ->paginate(10);
+                ->paginate(10)->withQueryString();
         }
 
         return view('PorosDataHome.SubMenuApplication.DataSiswa.kelola_siswa', compact('siswas', 'classes', 'search', 'kelasId', 'status', 'sd', 'user'));
@@ -434,7 +434,7 @@ class SiswaController extends Controller
             $query->where('status', $statusFilter);
         }
 
-        $persetujuans = $query->orderBy('created_at', 'desc')->paginate(10);
+        $persetujuans = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
 
         // Fetch all classes to map class details easily
         $allClasses = Kelas::all()->keyBy('id');
@@ -530,7 +530,7 @@ class SiswaController extends Controller
             $query->where('data_baru->alasan_dropout', 'like', "%{$alasan}%");
         }
 
-        $riwayats = $query->orderBy('updated_at', 'desc')->paginate(10);
+        $riwayats = $query->orderBy('updated_at', 'desc')->paginate(10)->withQueryString();
 
         // Map class details
         $allClasses = Kelas::all()->keyBy('id');

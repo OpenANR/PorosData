@@ -144,7 +144,6 @@
             <select name="status" onchange="this.form.submit()" class="w-full sm:w-44 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
                 <option value="">Semua Status</option>
                 <option value="aktif" {{ $status === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="lulus" {{ $status === 'lulus' ? 'selected' : '' }}>Lulus</option>
             </select>
             @if($search || $kelasId || $status)
                 <a href="{{ route('datasiswa.kelola_siswa') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 whitespace-nowrap">Hapus Filter</a>
@@ -353,7 +352,6 @@
                                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status Akademik <span class="text-rose-500">*</span></label>
                                             <select name="status" id="edit-status" required class="w-full bg-[#070b13] border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 text-sm rounded-lg px-4 py-2.5 transition-colors focus:outline-none">
                                                 <option value="aktif">Aktif</option>
-                                                <option value="lulus">Lulus</option>
                                                 <option value="drop_out">Drop Out</option>
                                             </select>
                                         </div>

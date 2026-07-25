@@ -25,12 +25,14 @@ class SiswaController extends Controller
         $search = $request->input('search');
         $kelasId = $request->input('kelas_id');
         $status = $request->input('status');
+        $angkatan = $request->input('angkatan');
 
         $siswas = Siswa::whereHas('user', function($q) use ($instansiId) {
                 if ($instansiId) {
                     $q->where('instansi_id', $instansiId);
                 }
             })
+            ->where('status', '!=', 'lulus')
             ->when($search, function($q) use ($search) {
                 return $q->where(function($sq) use ($search) {
                     $sq->where('nisn', 'like', "%{$search}%")
@@ -46,8 +48,11 @@ class SiswaController extends Controller
             ->when($status, function($q) use ($status) {
                 return $q->where('status', $status);
             })
+            ->when($angkatan, function($q) use ($angkatan) {
+                return $q->where('angkatan', $angkatan);
+            })
             ->with(['user', 'kelas'])
-            ->paginate(10);
+            ->paginate(10)->withQueryString();
 
         // Get all classrooms for filter dropdown
         $classes = Kelas::with('jurusan')->when($instansiId, function($q) use ($instansiId) {
@@ -56,7 +61,14 @@ class SiswaController extends Controller
             ->orderBy('nama_kelas', 'asc')
             ->get();
 
-        return view('PorosDataHome.siswa.index', compact('siswas', 'classes', 'search', 'kelasId', 'status', 'sd'));
+        $angkatans = Siswa::select('angkatan')
+            ->whereNotNull('angkatan')
+            ->where('angkatan', '!=', '')
+            ->distinct()
+            ->orderBy('angkatan', 'desc')
+            ->pluck('angkatan');
+
+        return view('PorosDataHome.siswa.index', compact('siswas', 'classes', 'search', 'kelasId', 'status', 'angkatan', 'angkatans', 'sd'));
     }
 
     /**
@@ -243,6 +255,66 @@ class SiswaController extends Controller
     }
 
     /**
+     * Display a listing of graduated students for Admin.
+     */
+    public function riwayatLulus(Request $request)
+    {
+        $sd = Instansi::where('tingkat', 'SD')->first();
+        $instansiId = $sd ? $sd->id : null;
+
+        $search = $request->input('search');
+        $kelasId = $request->input('kelas_id');
+        $angkatan = $request->input('angkatan');
+
+        $siswas = Siswa::where('status', 'lulus')
+            ->whereHas('user', function($q) use ($instansiId) {
+                if ($instansiId) {
+                    $q->where('instansi_id', $instansiId);
+                }
+            })
+            ->when($search, function($q) use ($search) {
+                return $q->where(function($sq) use ($search) {
+                    $sq->where('nisn', 'like', "%{$search}%")
+                       ->orWhereHas('user', function($uq) use ($search) {
+                           $uq->where('name', 'like', "%{$search}%")
+                              ->orWhere('username', 'like', "%{$search}%");
+                       });
+                });
+            })
+            ->when($kelasId, function($q) use ($kelasId) {
+                return $q->where('kelas_id', $kelasId);
+            })
+            ->when($angkatan, function($q) use ($angkatan) {
+                return $q->where('angkatan', $angkatan);
+            })
+            ->with(['user', 'kelas'])
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Get all classrooms for filter dropdown
+        $classes = Kelas::with('jurusan')
+            ->whereHas('siswa', function($q) {
+                $q->where('status', 'lulus');
+            })
+            ->when($instansiId, function($q) use ($instansiId) {
+                return $q->where('instansi_id', $instansiId);
+            })
+            ->orderBy('nama_kelas', 'asc')
+            ->get();
+
+        $angkatans = Siswa::select('angkatan')
+            ->where('status', 'lulus')
+            ->whereNotNull('angkatan')
+            ->where('angkatan', '!=', '')
+            ->distinct()
+            ->orderBy('angkatan', 'desc')
+            ->pluck('angkatan');
+
+        return view('PorosDataHome.siswa.riwayat_lulus', compact('siswas', 'search', 'kelasId', 'angkatan', 'classes', 'angkatans', 'sd'));
+    }
+
+    /**
      * Display a listing of dropout history for Admin.
      */
     public function riwayatDropout(Request $request)
@@ -277,7 +349,7 @@ class SiswaController extends Controller
             $query->where('data_baru->alasan_dropout', 'like', "%{$alasan}%");
         }
 
-        $riwayats = $query->orderBy('updated_at', 'desc')->paginate(10);
+        $riwayats = $query->orderBy('updated_at', 'desc')->paginate(10)->withQueryString();
 
         // Map class details
         $allClasses = Kelas::all()->keyBy('id');
@@ -316,7 +388,11 @@ class SiswaController extends Controller
         $sd = Instansi::where('tingkat', 'SD')->first();
         $instansiId = $sd ? $sd->id : null;
         
-        $classes = Kelas::with('jurusan')->when($instansiId, function($q) use ($instansiId) {
+        $classes = Kelas::with('jurusan')
+            ->withCount(['siswa' => function($q) {
+                $q->where('status', 'aktif');
+            }])
+            ->when($instansiId, function($q) use ($instansiId) {
                 return $q->where('instansi_id', $instansiId);
             })
             ->orderBy('nama_kelas', 'asc')

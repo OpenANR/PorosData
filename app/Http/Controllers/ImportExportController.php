@@ -330,4 +330,32 @@ class ImportExportController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Mapel: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Delete all Riwayat Kelulusan data.
+     */
+    public function resetRiwayatKelulusan(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+            
+            // Ambil id user dari siswa yang lulus
+            $userIds = \App\Models\Siswa::where('status', 'lulus')->pluck('user_id');
+            
+            // Hapus data siswa yang lulus
+            \App\Models\Siswa::where('status', 'lulus')->delete();
+            
+            // Hapus akun user yang terkait
+            if($userIds->count() > 0) {
+                \App\Models\User::whereIn('id', $userIds)->delete();
+            }
+            
+            \DB::commit();
+            
+            return redirect()->route('import-export.index')->with('success', 'Seluruh data Riwayat Kelulusan berhasil dihapus secara permanen.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data Riwayat Kelulusan: ' . $e->getMessage());
+        }
+    }
 }
