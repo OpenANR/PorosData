@@ -35,7 +35,13 @@ class EnsurePortalNilaiAuthenticated
             $user = User::find($userId);
             if (!$user) {
                 session()->forget('portalnilai_user_id');
+                session()->forget('portalnilai_role');
                 return redirect()->route('portalnilai.login');
+            }
+
+            // Override role dynamically based on selection at login
+            if (session()->has('portalnilai_role')) {
+                $user->role = session('portalnilai_role');
             }
         }
 

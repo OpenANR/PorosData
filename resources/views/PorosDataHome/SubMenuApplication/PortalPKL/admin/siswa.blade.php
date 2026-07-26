@@ -9,18 +9,55 @@
         <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar siswa peserta PKL, penempatan industri, dan pembimbing pendamping</p>
     </div>
 
-    <!-- Actions Bar & Search -->
-    <div class="mb-6">
-        <form method="GET" action="{{ route('portalpkl.admin.siswa.index') }}" class="w-full sm:w-80 relative">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama, username, atau NISN..."
-                class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all">
-            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+    <!-- Actions Bar & Filters -->
+    <div class="mb-6 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+        <form method="GET" action="{{ route('portalpkl.admin.siswa.index') }}" class="w-full flex flex-col sm:flex-row items-center gap-3">
+            <!-- Search -->
+            <div class="w-full sm:w-72 relative">
+                <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama, username, atau NISN..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </div>
+                <!-- Hidden button for Enter key submit -->
+                <button type="submit" class="hidden"></button>
             </div>
-            @if($search)
-                <a href="{{ route('portalpkl.admin.siswa.index') }}" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </a>
+
+            <!-- Filter Kelas -->
+            <div class="w-full sm:w-44 relative">
+                <select name="kelas" onchange="this.form.submit()"
+                    class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all appearance-none cursor-pointer font-medium">
+                    <option value="">Semua Kelas</option>
+                    @foreach($allKelas as $kelas)
+                        <option value="{{ $kelas->id }}" {{ $kelasFilter == $kelas->id ? 'selected' : '' }}>
+                            {{ $kelas->nama_kelas }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Filter Tempat PKL -->
+            <div class="w-full sm:w-44 relative">
+                <select name="mitra" onchange="this.form.submit()"
+                    class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all appearance-none cursor-pointer font-medium">
+                    <option value="">Semua Tempat PKL</option>
+                    <option value="belum_ditentukan" {{ $mitraFilter === 'belum_ditentukan' ? 'selected' : '' }}>Belum ditentukan</option>
+                    @foreach($allMitras as $mitra)
+                        <option value="{{ $mitra->id }}" {{ $mitraFilter == $mitra->id ? 'selected' : '' }}>
+                            {{ Str::limit($mitra->nama_perusahaan, 25) }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                </div>
+            </div>
+
+            @if($search || $kelasFilter || $mitraFilter)
+                <a href="{{ route('portalpkl.admin.siswa.index') }}" class="text-xs font-semibold text-orange-600 hover:text-orange-700 dark:text-orange-400 whitespace-nowrap ml-1">Hapus Filter</a>
             @endif
         </form>
     </div>

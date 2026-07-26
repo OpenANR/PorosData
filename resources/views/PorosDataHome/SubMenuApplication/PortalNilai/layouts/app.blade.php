@@ -172,8 +172,8 @@
                         </div>
                     @endif
                     <div>
-                        <span class="font-bold text-base leading-tight block bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-300">Portal Nilai</span>
-                        <span class="text-xs text-slate-400 font-medium block truncate max-w-[150px]" id="sidebar-sekolah-nama">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
+                        <span class="font-bold text-lg leading-tight block mb-1 bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-300">Portal Nilai</span>
+                        <span class="text-xs text-slate-400 font-medium" id="sidebar-sekolah-nama">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
                     </div>
                 </div>
 

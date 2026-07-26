@@ -22,7 +22,7 @@ class GuruController extends Controller
 
         $search = $request->input('search');
 
-        $gurus = User::where('role', 'guru')
+        $gurus = User::whereIn('role', ['guru', 'wali_kelas'])
             ->with(['guru_kelas', 'guru_mapel'])
             ->when($instansiId, function($q) use ($instansiId) {
                 return $q->where('instansi_id', $instansiId);
@@ -63,7 +63,6 @@ class GuruController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
             'duk' => 'nullable|string|max:255|unique:users,duk',
-            'role' => ['required', Rule::in(['guru'])],
             'password' => 'required|string|min:6',
             'kelas_ids' => 'nullable|array',
             'kelas_ids.*' => 'exists:kelas,id',
@@ -75,7 +74,7 @@ class GuruController extends Controller
             'name' => $request->name,
             'username' => $request->username,
             'duk' => $request->duk,
-            'role' => 'guru',
+            'role' => 'guru', // For newly created user in Guru page, role is always guru
             'password' => Hash::make($request->password),
             'password_plain' => $request->password,
             'instansi_id' => $instansiId,
@@ -102,7 +101,6 @@ class GuruController extends Controller
             'name' => 'required|string|max:255',
             'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($guru->id)],
             'duk' => ['nullable', 'string', 'max:255', Rule::unique('users', 'duk')->ignore($guru->id)],
-            'role' => ['required', Rule::in(['guru'])],
             'password' => 'nullable|string|min:6',
             'kelas_ids' => 'nullable|array',
             'kelas_ids.*' => 'exists:kelas,id',
@@ -114,7 +112,7 @@ class GuruController extends Controller
             'name' => $request->name,
             'username' => $request->username,
             'duk' => $request->duk,
-            'role' => 'guru',
+            // Do not override role to preserve 'wali_kelas' if they are a class advisor
         ];
 
         if ($request->filled('password')) {

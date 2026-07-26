@@ -10,9 +10,18 @@
         <div class="relative z-10 max-w-xl">
             <h2 class="text-3xl font-extrabold tracking-tight mb-2">Selamat Datang di Portal Penilaian!</h2>
             <p class="text-indigo-100 text-sm md:text-base leading-relaxed mb-4">Gunakan menu di sidebar kiri untuk mengakses fitur penginputan nilai siswa dan pengaturan jadwal akses pengisian nilai akhir.</p>
+            @php
+                $userRole = $portalnilaiUser->role ?? 'wali_kelas';
+                $roleLabel = match (strtolower($userRole)) {
+                    'admin', 'superadmin', 'administrator' => 'ADMIN',
+                    'wali_kelas' => 'WALI KELAS',
+                    'guru' => 'GURU',
+                    default => strtoupper(str_replace('_', ' ', $userRole)),
+                };
+            @endphp
             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-xs font-semibold backdrop-blur-sm">
                 <i class="fa-solid fa-circle-user"></i>
-                <span>Peran: {{ str_replace('_', ' ', $portalnilaiUser->role ?? 'Wali Kelas') }}</span>
+                <span>Peran: {{ $roleLabel }}</span>
             </div>
         </div>
         <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">

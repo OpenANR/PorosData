@@ -131,6 +131,40 @@
                 <form action="{{ url('/porosdata/portalnilai/login') }}" method="POST" class="space-y-5">
                     @csrf
 
+                    <!-- Hak Akses Field -->
+                    <div class="space-y-1.5">
+                        <label for="role" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                            Hak Akses
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                </svg>
+                            </div>
+                            <select name="role" id="role" required
+                                class="block w-full pl-10 pr-10 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 rounded-xl text-sm font-medium transition-all text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none appearance-none cursor-pointer @error('role') border-rose-500 focus:border-rose-500 focus:ring-rose-500/20 @enderror">
+                                <option value="" disabled selected>Pilih Hak Akses</option>
+                                <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
+                                <option value="wali_kelas" {{ old('role') == 'wali_kelas' ? 'selected' : '' }}>Wali Kelas</option>
+                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400 dark:text-slate-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </div>
+                        </div>
+                        @error('role')
+                            <p class="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 mt-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5 shrink-0">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
                     <!-- Username Field -->
                     <div class="space-y-1.5">
                         <label for="username" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">

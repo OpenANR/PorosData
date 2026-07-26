@@ -26,16 +26,19 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
+            'role' => ['required', 'string'],
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
+        $role = $request->input('role');
         $username = $request->input('username');
         $password = $request->input('password');
 
         // Check if Administrator and matches dummy credentials
         if ($username === 'admin_nilai' && $password === 'admin123') {
             session(['portalnilai_user_id' => 'dummy_admin']);
+            session(['portalnilai_role' => $role]);
             return redirect()->route('portalnilai.dashboard')
                 ->with('success', 'Selamat datang di Portal Nilai (Administrator Dummy)!');
         }
@@ -62,9 +65,10 @@ class LoginController extends Controller
 
         // Allow password check using either actual hashed password or DUK code matching plain password
         if ($user && $passwordIsValid) {
-            // Verify if the role is allowed to access Portal Nilai
+            // Verify if the original role is allowed to access Portal Nilai
             if (in_array($user->role, ['superadmin', 'admin', 'guru', 'wali_kelas'])) {
                 session(['portalnilai_user_id' => $user->id]);
+                session(['portalnilai_role' => $role]);
                 return redirect()->route('portalnilai.dashboard')
                     ->with('success', 'Selamat datang di Portal Nilai, ' . $user->name . '!');
             }
@@ -85,6 +89,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         session()->forget('portalnilai_user_id');
+        session()->forget('portalnilai_role');
         
         return redirect()->route('portalnilai.login')
             ->with('success', 'Anda telah berhasil keluar dari Portal Nilai.');

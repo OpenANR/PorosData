@@ -76,7 +76,7 @@
                         </div>
                     @endif
                     <div>
-                        <span class="font-bold text-lg leading-tight block bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-300">E-Journal</span>
+                        <span class="font-bold text-lg leading-tight block mb-1 bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-300">E-Journal</span>
                         <span class="text-xs text-slate-400 font-medium">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
                     </div>
                 </div>

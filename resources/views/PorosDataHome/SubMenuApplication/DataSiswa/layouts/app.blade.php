@@ -132,7 +132,7 @@
                         </div>
                     @endif
                     <div>
-                        <span class="font-bold text-lg leading-tight block bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-300">Data Siswa</span>
+                        <span class="font-bold text-lg leading-tight block mb-1 bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:to-violet-300">Data Siswa</span>
                         <span class="text-xs text-slate-400 font-medium">{{ isset($instansi_app) && $instansi_app->nama_sekolah ? $instansi_app->nama_sekolah : 'School Name' }}</span>
                     </div>
                 </div>
