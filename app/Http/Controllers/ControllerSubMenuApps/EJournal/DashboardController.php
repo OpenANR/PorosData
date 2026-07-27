@@ -14,7 +14,7 @@ class DashboardController extends Controller
     {
         $user = User::find(session('ejournal_user_id'));
         
-        if ($user && in_array($user->role, ['guru', 'wali_kelas'])) {
+        if ($user && in_array($user->role, ['guru', 'wali_kelas', 'pembimbing'])) {
             return redirect()->route('ejournal.guru.isi');
         }
         

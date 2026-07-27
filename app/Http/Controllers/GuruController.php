@@ -22,7 +22,7 @@ class GuruController extends Controller
 
         $search = $request->input('search');
 
-        $gurus = User::whereIn('role', ['guru', 'wali_kelas'])
+        $gurus = User::whereIn('role', ['guru', 'wali_kelas', 'pembimbing'])
             ->with(['guru_kelas', 'guru_mapel'])
             ->when($instansiId, function($q) use ($instansiId) {
                 return $q->where('instansi_id', $instansiId);

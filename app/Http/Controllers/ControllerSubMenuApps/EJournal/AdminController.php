@@ -44,7 +44,7 @@ class AdminController extends Controller
         }
 
         // Fetch all teachers in the database
-        $teachers = User::whereIn('role', ['guru', 'wali_kelas'])->get();
+        $teachers = User::whereIn('role', ['guru', 'wali_kelas', 'pembimbing'])->get();
 
         return view('PorosDataHome.SubMenuApplication.E-Journal.admin.guru', compact('teachers', 'user'));
     }

@@ -34,7 +34,6 @@
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-16 text-center">No</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Siswa</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Username</th>
-                        <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Password</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Kelas</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Tempat PKL</th>
                         <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Pembimbing</th>
@@ -55,9 +54,6 @@
                             </td>
                             <td class="py-4 px-6 text-sm text-slate-600 dark:text-slate-300">
                                 {{ $siswa->user->username }}
-                            </td>
-                            <td class="py-4 px-6 text-sm text-slate-400 font-mono">
-                                ••••••••
                             </td>
                             <td class="py-4 px-6 text-sm text-slate-600 dark:text-slate-300 font-semibold">
                                 {{ $siswa->kelas->nama_kelas ?? '-' }}
@@ -88,7 +84,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-16 text-center text-slate-400">
+                            <td colspan="6" class="py-16 text-center text-slate-400">
                                 <i class="fa-solid fa-user-graduate text-3xl mb-3 text-slate-300 dark:text-slate-700"></i>
                                 <p class="text-sm font-semibold">Belum ada data Siswa PKL bimbingan Anda</p>
                                 <p class="text-xs text-slate-400 mt-1">Siswa akan muncul setelah ditempatkan pada Mitra DUDI bimbingan Anda.</p>

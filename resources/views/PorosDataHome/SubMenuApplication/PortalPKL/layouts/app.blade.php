@@ -141,10 +141,6 @@
 
                 <!-- Navigation Links based on role -->
                 <nav class="space-y-1.5 flex-1">
-                    <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">
-                        Menu Utama
-                    </div>
-
                     @if($portalpklUser->role === 'superadmin')
                         <!-- Superadmin Links -->
                         <a href="{{ route('portalpkl.superadmin') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('portalpkl.superadmin') ? 'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200' }}">

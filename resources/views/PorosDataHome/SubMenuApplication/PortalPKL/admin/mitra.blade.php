@@ -4,21 +4,13 @@
 
 @section('content')
     <!-- Page Heading -->
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Mitra DUDI</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar Dunia Usaha & Dunia Industri (DUDI) mitra Praktik Kerja Lapangan (PKL)</p>
-        </div>
-        <div>
-            <button id="btn-buka-create" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-sm shadow-md shadow-orange-100 dark:shadow-none transition-colors flex items-center justify-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-plus text-xs"></i>
-                Tambah Mitra
-            </button>
-        </div>
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Mitra DUDI</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar Dunia Usaha & Dunia Industri (DUDI) mitra Praktik Kerja Lapangan (PKL)</p>
     </div>
 
     <!-- Actions Bar & Search -->
-    <div class="mb-6">
+    <div class="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <form method="GET" action="{{ route('portalpkl.admin.mitra.index') }}" class="w-full sm:w-80 relative">
             <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama mitra atau alamat..."
                 class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all">
@@ -31,6 +23,11 @@
                 </a>
             @endif
         </form>
+
+        <button id="btn-buka-create" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-sm shadow-md shadow-orange-100 dark:shadow-none transition-colors flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-plus text-xs"></i>
+            Tambah Mitra
+        </button>
     </div>
 
     <!-- Table of Mitra DUDI -->

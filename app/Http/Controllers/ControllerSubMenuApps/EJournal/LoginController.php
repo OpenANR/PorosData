@@ -54,7 +54,7 @@ class LoginController extends Controller
 
         if ($user && $passwordIsValid) {
             // Verify if the role is allowed to access e-journal
-            if (in_array($user->role, ['superadmin', 'admin', 'guru', 'wali_kelas'])) {
+            if (in_array($user->role, ['superadmin', 'admin', 'guru', 'wali_kelas', 'pembimbing'])) {
                 session(['ejournal_user_id' => $user->id]);
                 
                 return redirect()->route('ejournal.index')

@@ -4,21 +4,13 @@
 
 @section('content')
     <!-- Page Heading -->
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Data Pembimbing</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar Pembimbing PKL sekolah dan Mitra DUDI yang dipegang</p>
-        </div>
-        <div>
-            <button id="btn-buka-create" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-sm shadow-md shadow-orange-100 dark:shadow-none transition-colors flex items-center justify-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-plus text-xs"></i>
-                Tambah Pembimbing
-            </button>
-        </div>
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Kelola Data Pembimbing</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Daftar Pembimbing PKL sekolah dan Mitra DUDI yang dipegang</p>
     </div>
 
     <!-- Actions Bar & Search -->
-    <div class="mb-6">
+    <div class="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <form method="GET" action="{{ route('portalpkl.admin.pembimbing.index') }}" class="w-full sm:w-80 relative">
             <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama, username, atau ID..."
                 class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all">
@@ -31,6 +23,11 @@
                 </a>
             @endif
         </form>
+
+        <button id="btn-buka-create" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-sm shadow-md shadow-orange-100 dark:shadow-none transition-colors flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-plus text-xs"></i>
+            Tambah Pembimbing
+        </button>
     </div>
 
     <!-- Table of Pembimbing -->
@@ -127,56 +124,41 @@
                         </button>
                     </div>
                     <div class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">ID Pembimbing</label>
-                                <input type="text" name="id_pembimbing" required placeholder="Contoh: P001"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Pembimbing</label>
-                                <input type="text" name="name" required placeholder="Contoh: Budi Santoso, S.Pd."
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
-                                <input type="text" name="username" required placeholder="Contoh: budi_pembimbing"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Password</label>
-                                <input type="password" name="password" required placeholder="Minimal 6 karakter..."
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
-                            </div>
-                        </div>
-
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pilih Mitra DU/DI (Industri)</label>
-                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mb-2">Pilih industri yang akan didampingi oleh pembimbing ini:</p>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pilih Guru</label>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 mb-2">Ceklis guru yang ingin ditugaskan sebagai pembimbing PKL.</p>
                             
-                            <div class="border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 max-h-48 overflow-y-auto bg-slate-50 dark:bg-slate-800/50 space-y-2">
-                                @php
-                                    $unassignedMitrasCount = $allMitras->filter(fn($m) => $m->pembimbings->isEmpty())->count();
-                                @endphp
-                                @if($unassignedMitrasCount > 0)
-                                    @foreach($allMitras as $mitra)
-                                        @if($mitra->pembimbings->isEmpty())
-                                            <label class="flex items-start gap-2.5 py-1 px-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer transition-colors">
-                                                <input type="checkbox" name="mitra_ids[]" value="{{ $mitra->id }}"
-                                                    class="mt-1 rounded text-orange-600 focus:ring-orange-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">
-                                                <div class="text-xs">
-                                                    <span class="font-bold text-slate-800 dark:text-slate-200 block">{{ $mitra->nama_perusahaan }}</span>
-                                                    <span class="text-slate-400 dark:text-slate-500 block truncate max-w-[360px]">{{ $mitra->alamat }}</span>
-                                                </div>
-                                            </label>
-                                        @endif
-                                    @endforeach
-                                @else
-                                    <p class="text-xs text-slate-400 italic text-center py-4">Semua Mitra DUDI sudah ditugaskan ke pembimbing lain atau belum ada data Mitra.</p>
-                                @endif
+                            <!-- Search box for Guru -->
+                            <div class="mb-3 relative">
+                                <input type="text" id="search-guru-create" placeholder="Cari nama guru..."
+                                    class="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Select All / Deselect All -->
+                            <div class="flex items-center gap-4 mb-2 px-1">
+                                <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                                    <input type="checkbox" id="check-all-guru" class="rounded text-orange-600 focus:ring-orange-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-pointer">
+                                    <span>Pilih Semua yang Ditampilkan</span>
+                                </label>
+                            </div>
+
+                            <div class="border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 overflow-y-auto bg-slate-50 dark:bg-slate-800/50 space-y-2" style="max-height: 250px;" id="guru-list-container">
+                                @forelse($allGurus as $guru)
+                                    <label class="guru-checkbox-item flex items-start gap-2.5 py-1.5 px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer transition-colors">
+                                        <input type="checkbox" name="guru_ids[]" value="{{ $guru->id }}"
+                                            class="guru-checkbox mt-1 rounded text-orange-600 focus:ring-orange-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-pointer">
+                                        <div class="text-sm">
+                                            <span class="font-bold text-slate-800 dark:text-slate-200 block guru-name">{{ $guru->name }}</span>
+                                            <span class="text-slate-400 dark:text-slate-500 block text-xs">Username/NIP: {{ $guru->username }}</span>
+                                        </div>
+                                    </label>
+                                @empty
+                                    <p class="text-xs text-slate-400 italic text-center py-4">Belum ada data Guru.</p>
+                                @endforelse
+                                <p id="guru-empty-search" class="text-xs text-slate-400 italic text-center py-4 hidden">Guru tidak ditemukan.</p>
                             </div>
                         </div>
                     </div>
@@ -204,37 +186,34 @@
                         </button>
                     </div>
                     <div class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">ID Pembimbing</label>
-                                <input type="text" name="id_pembimbing" id="edit-id_pembimbing" required placeholder="Contoh: P001"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Username Akun</label>
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                    Dikelola Poros Data
+                                </span>
                             </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Pembimbing</label>
-                                <input type="text" name="name" id="edit-name" required placeholder="Contoh: Budi Santoso, S.Pd."
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
+                            <div class="relative">
+                                <input type="text" id="display-username" disabled
+                                    class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-100/70 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 font-bold text-sm cursor-not-allowed select-none focus:outline-none">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                                    <i class="fa-solid fa-user-lock text-xs"></i>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
-                                <input type="text" name="username" id="edit-username" required placeholder="Contoh: budi_pembimbing"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Password Baru</label>
-                                <input type="text" name="password" id="edit-password" placeholder="Kosongkan jika tidak diubah..."
-                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-950 dark:text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
-                            </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Nama Pembimbing</label>
+                            <input type="text" id="edit-name" disabled
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-100/70 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 font-bold text-sm cursor-not-allowed select-none focus:outline-none">
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pilih Mitra DU/DI (Industri)</label>
                             <p class="text-[10px] text-slate-400 dark:text-slate-500 mb-2">Pilih industri yang akan didampingi oleh pembimbing ini:</p>
                             
-                            <div class="border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 max-h-48 overflow-y-auto bg-slate-50 dark:bg-slate-800/50 space-y-2">
+                            <div id="edit-mitra-container" class="border border-slate-200 dark:border-slate-700/80 rounded-xl p-3 overflow-y-auto bg-slate-50 dark:bg-slate-800/50 space-y-2" style="max-height: 200px;">
                                 @forelse($allMitras as $mitra)
                                     <label class="mitra-checkbox-item flex items-start gap-2.5 py-1 px-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer transition-colors"
                                         data-pembimbing-id="{{ $mitra->pembimbings->first()->id ?? '' }}">
@@ -306,20 +285,78 @@
             if (btnBatalCreate) btnBatalCreate.addEventListener('click', closeCreateModal);
             if (backdropCreate) backdropCreate.addEventListener('click', closeCreateModal);
 
+            // Guru Search and Select All logic
+            const searchGuruInput = document.getElementById('search-guru-create');
+            const checkAllGuru = document.getElementById('check-all-guru');
+            const guruItems = document.querySelectorAll('.guru-checkbox-item');
+            const guruEmptySearch = document.getElementById('guru-empty-search');
+
+            const updateCheckAllState = () => {
+                if (!checkAllGuru) return;
+                const visibleCheckboxes = Array.from(guruItems)
+                    .filter(item => item.style.display !== 'none')
+                    .map(item => item.querySelector('.guru-checkbox'));
+                
+                if (visibleCheckboxes.length === 0) {
+                    checkAllGuru.checked = false;
+                    return;
+                }
+                
+                const allChecked = visibleCheckboxes.every(cb => cb.checked);
+                checkAllGuru.checked = allChecked;
+            };
+
+            if (searchGuruInput) {
+                searchGuruInput.addEventListener('input', function() {
+                    const term = this.value.toLowerCase();
+                    let visibleCount = 0;
+                    guruItems.forEach(item => {
+                        const name = item.querySelector('.guru-name').textContent.toLowerCase();
+                        if (name.includes(term)) {
+                            item.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    if (guruEmptySearch) {
+                        guruEmptySearch.style.display = visibleCount === 0 ? 'block' : 'none';
+                    }
+                    
+                    updateCheckAllState();
+                });
+            }
+
+            if (checkAllGuru) {
+                checkAllGuru.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    guruItems.forEach(item => {
+                        if (item.style.display !== 'none') {
+                            const cb = item.querySelector('.guru-checkbox');
+                            if (cb) cb.checked = isChecked;
+                        }
+                    });
+                });
+            }
+
+            guruItems.forEach(item => {
+                const cb = item.querySelector('.guru-checkbox');
+                if (cb) {
+                    cb.addEventListener('change', updateCheckAllState);
+                }
+            });
+
             // Open Edit Modal via globally accessible function
             window.bukaEditModal = (id, idPembimbing, name, username, password, checkedMitraIds) => {
                 const formEdit = document.getElementById('form-edit');
-                const editIdPembimbing = document.getElementById('edit-id_pembimbing');
                 const editName = document.getElementById('edit-name');
-                const editUsername = document.getElementById('edit-username');
-                const editPassword = document.getElementById('edit-password');
+                const displayUsername = document.getElementById('display-username');
 
                 formEdit.action = `/porosdata/portal-pkl/admin/pembimbing/${id}`;
-                editIdPembimbing.value = idPembimbing;
                 editName.value = name;
-                editUsername.value = username;
-                if (editPassword) {
-                    editPassword.value = password;
+                if (displayUsername) {
+                    displayUsername.value = username;
                 }
 
                 // Filter and check checkboxes in Edit Modal
@@ -349,7 +386,7 @@
                     emptyPlaceholder.id = 'edit-mitra-empty-placeholder';
                     emptyPlaceholder.className = 'text-xs text-slate-400 italic text-center py-4 hidden';
                     emptyPlaceholder.textContent = 'Semua Mitra DUDI sudah ditugaskan ke pembimbing lain.';
-                    modalEdit.querySelector('.max-h-48').appendChild(emptyPlaceholder);
+                    document.getElementById('edit-mitra-container').appendChild(emptyPlaceholder);
                 }
                 
                 if (visibleCount === 0) {

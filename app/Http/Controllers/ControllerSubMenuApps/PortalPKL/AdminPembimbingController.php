@@ -36,10 +36,13 @@ class AdminPembimbingController extends Controller
         // Paginate and load mitras relation
         $pembimbings = $query->with('mitras')->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         
-        // Fetch all Mitra DUDI for checkboxes in creation/edit modals
+        // Fetch all Mitra DUDI for checkboxes in edit modal
         $allMitras = MitraDudi::with('pembimbings')->orderBy('nama_perusahaan', 'asc')->get();
+        
+        // Fetch all users with role 'guru' or 'wali_kelas' for creation modal
+        $allGurus = User::whereIn('role', ['guru', 'wali_kelas'])->orderBy('name', 'asc')->get();
 
-        return view('PorosDataHome.SubMenuApplication.PortalPKL.admin.pembimbing', compact('pembimbings', 'allMitras', 'search', 'user'));
+        return view('PorosDataHome.SubMenuApplication.PortalPKL.admin.pembimbing', compact('pembimbings', 'allMitras', 'allGurus', 'search', 'user'));
     }
 
     /**
@@ -53,40 +56,27 @@ class AdminPembimbingController extends Controller
         }
 
         $request->validate([
-            'id_pembimbing' => ['required', 'string', 'max:255', 'unique:users,id_pembimbing'],
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
-            'password' => ['required', 'string', 'min:6'],
-            'mitra_ids' => ['nullable', 'array'],
-            'mitra_ids.*' => [
-                'exists:mitra_dudi,id',
-                function ($attribute, $value, $fail) {
-                    $isAssigned = \DB::table('pembimbing_mitra_dudi')->where('mitra_dudi_id', $value)->exists();
-                    if ($isAssigned) {
-                        $fail('Salah satu Industri/Mitra DU/DI yang dipilih sudah didelegasikan ke pembimbing lain.');
-                    }
-                }
-            ],
+            'guru_ids' => ['required', 'array'],
+            'guru_ids.*' => ['exists:users,id'],
         ]);
 
-        // Create user with role pembimbing
-        $pembimbing = User::create([
-            'instansi_id' => $user->instansi_id,
-            'id_pembimbing' => $request->input('id_pembimbing'),
-            'name' => $request->input('name'),
-            'username' => $request->input('username'),
-            'password' => Hash::make($request->input('password')),
-            'password_plain' => $request->input('password'),
-            'role' => 'pembimbing',
-        ]);
-
-        // Sync Mitra DUDI relations
-        if ($request->has('mitra_ids')) {
-            $pembimbing->mitras()->sync($request->input('mitra_ids'));
+        $gurus = User::whereIn('id', $request->input('guru_ids'))->whereIn('role', ['guru', 'wali_kelas'])->get();
+        
+        $count = 0;
+        foreach ($gurus as $guru) {
+            $updateData = ['role' => 'pembimbing'];
+            
+            if (empty($guru->id_pembimbing)) {
+                // Generate simple ID Pembimbing based on user ID
+                $updateData['id_pembimbing'] = 'PEM-' . str_pad($guru->id, 4, '0', STR_PAD_LEFT);
+            }
+            
+            $guru->update($updateData);
+            $count++;
         }
 
         return redirect()->route('portalpkl.admin.pembimbing.index')
-            ->with('success', 'Data Pembimbing berhasil ditambahkan.');
+            ->with('success', $count . ' Guru berhasil ditugaskan sebagai Pembimbing.');
     }
 
     /**
@@ -102,10 +92,6 @@ class AdminPembimbingController extends Controller
         $pembimbing = User::where('role', 'pembimbing')->findOrFail($id);
 
         $request->validate([
-            'id_pembimbing' => ['required', 'string', 'max:255', Rule::unique('users', 'id_pembimbing')->ignore($pembimbing->id)],
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($pembimbing->id)],
-            'password' => ['nullable', 'string', 'min:6'],
             'mitra_ids' => ['nullable', 'array'],
             'mitra_ids.*' => [
                 'exists:mitra_dudi,id',
@@ -120,19 +106,6 @@ class AdminPembimbingController extends Controller
                 }
             ],
         ]);
-
-        $updateData = [
-            'id_pembimbing' => $request->input('id_pembimbing'),
-            'name' => $request->input('name'),
-            'username' => $request->input('username'),
-        ];
-
-        if ($request->filled('password')) {
-            $updateData['password'] = Hash::make($request->input('password'));
-            $updateData['password_plain'] = $request->input('password');
-        }
-
-        $pembimbing->update($updateData);
 
         // Sync Mitra DUDI relations
         $pembimbing->mitras()->sync($request->input('mitra_ids', []));
@@ -156,10 +129,13 @@ class AdminPembimbingController extends Controller
         // Detach mitras relationship
         $pembimbing->mitras()->detach();
         
-        // Delete the user
-        $pembimbing->delete();
+        // Revert role to guru and clear id_pembimbing instead of deleting the user
+        $pembimbing->update([
+            'role' => 'guru',
+            'id_pembimbing' => null,
+        ]);
 
         return redirect()->route('portalpkl.admin.pembimbing.index')
-            ->with('success', 'Data Pembimbing berhasil dihapus.');
+            ->with('success', 'Data Pembimbing berhasil dihapus dan dikembalikan sebagai Guru.');
     }
 }

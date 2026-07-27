@@ -31,7 +31,7 @@ class DashboardController extends Controller
         $totalSiswaLaki = (clone $siswaQuery)->where('jenis_kelamin', 'Laki-laki')->count();
         $totalSiswaPerempuan = (clone $siswaQuery)->where('jenis_kelamin', 'perempuan')->count();
 
-        $totalGuru = User::whereIn('role', ['guru', 'wali_kelas'])
+        $totalGuru = User::whereIn('role', ['guru', 'wali_kelas', 'pembimbing'])
             ->when($instansiId, function($q) use ($instansiId) {
                 return $q->where('instansi_id', $instansiId);
             })->count();

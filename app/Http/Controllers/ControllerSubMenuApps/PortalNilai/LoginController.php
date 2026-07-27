@@ -66,7 +66,7 @@ class LoginController extends Controller
         // Allow password check using either actual hashed password or DUK code matching plain password
         if ($user && $passwordIsValid) {
             // Verify if the original role is allowed to access Portal Nilai
-            if (in_array($user->role, ['superadmin', 'admin', 'guru', 'wali_kelas'])) {
+            if (in_array($user->role, ['superadmin', 'admin', 'guru', 'wali_kelas', 'pembimbing'])) {
                 session(['portalnilai_user_id' => $user->id]);
                 session(['portalnilai_role' => $role]);
                 return redirect()->route('portalnilai.dashboard')
