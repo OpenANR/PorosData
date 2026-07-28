@@ -14,13 +14,15 @@ class SiswaController extends Controller
             return redirect()->route('portalpkl.index');
         }
 
+        $user->load(['siswa.mitra.pembimbings', 'siswa.kelas', 'instansi']);
+
         // Get total statistics for the dashboard
-        $totalHadir = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id)->where('status', 'Hadir')->count();
-        $totalSakit = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id)->where('status', 'Sakit')->count();
-        $totalIzin = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id)->where('status', 'Izin')->count();
+        $totalHadir = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id ?? null)->where('status', 'Hadir')->count();
+        $totalSakit = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id ?? null)->where('status', 'Sakit')->count();
+        $totalIzin = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id ?? null)->where('status', 'Izin')->count();
         $totalPresensi = $totalHadir + $totalSakit + $totalIzin;
         
-        $todayAttendance = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id)
+        $todayAttendance = \App\Models\PklAttendance::where('siswa_id', $user->siswa->id ?? null)
             ->whereDate('tanggal', today())
             ->first();
 
@@ -34,6 +36,7 @@ class SiswaController extends Controller
             return redirect()->route('portalpkl.index');
         }
 
+        $user->load(['siswa.mitra.pembimbings']);
         $siswa = $user->siswa;
         if (!$siswa || !$siswa->mitra_dudi_id) {
             return view('PorosDataHome.SubMenuApplication.PortalPKL.siswa.kehadiran', [

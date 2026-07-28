@@ -291,7 +291,7 @@
                             <li><strong>kode_duk</strong>: Kode DUK (digunakan sebagai username login).</li>
                             <li><strong>password</strong>: Isi password baru (kosongkan jika akun lama dan tidak ingin diubah).</li>
                             <li><strong>nama</strong>: Nama lengkap & gelar wali kelas.</li>
-                            <li><strong>kelas_ditugaskan</strong>: Nama kelas, gunakan koma jika lebih dari 1 kelas (Cth: 11-RPL 2, 12-TPM).</li>
+                            <li><strong>kelas_ditugaskan</strong>: Nama kelas <b>harus sama persis</b> dengan data di sistem (termasuk spasi dan strip). Gunakan koma jika lebih dari 1 kelas (Cth: X - TOKR 1, XI - RPL).</li>
                         </ul>
                     </div>
 

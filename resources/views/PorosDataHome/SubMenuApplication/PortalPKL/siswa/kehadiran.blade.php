@@ -18,7 +18,7 @@
                 <div class="flex flex-wrap items-center gap-3">
                     <span class="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
                         <i class="fa-solid fa-calendar-day mr-1 text-orange-600 dark:text-orange-400"></i> 
-                        {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}
+                        {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                     </span>
                 </div>
             </div>
@@ -301,6 +301,17 @@
                                 <span class="text-slate-800 dark:text-slate-200 text-sm font-semibold">{{ $siswa->mitra->nama_perusahaan }}</span>
                                 <p class="text-slate-400 dark:text-slate-500 text-[11px] font-medium leading-tight mt-0.5">{{ $siswa->mitra->alamat }}</p>
                             </div>
+                            <!-- Pembimbing PKL -->
+                            <div>
+                                <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-bold uppercase tracking-wider">Pembimbing PKL</span>
+                                <span class="text-slate-800 dark:text-slate-200 text-sm font-semibold">
+                                    @if($siswa->mitra?->pembimbings && $siswa->mitra->pembimbings->count() > 0)
+                                        {{ $siswa->mitra->pembimbings->pluck('name')->join(', ') }}
+                                    @else
+                                        <span class="text-slate-400 font-normal italic">Belum Ada Pembimbing</span>
+                                    @endif
+                                </span>
+                            </div>
                             <!-- Target Koordinat PKL -->
                             <div>
                                 <span class="text-slate-400 dark:text-slate-500 text-[10px] block font-bold uppercase tracking-wider">Target Koordinat PKL</span>
@@ -340,7 +351,7 @@
                                         <li class="py-2.5 flex items-center justify-between gap-4">
                                             <div>
                                                 <span class="block text-sm font-bold text-slate-800 dark:text-slate-200">
-                                                    {{ \Carbon\Carbon::parse($hist->tanggal)->isoFormat('dddd, D MMM YYYY') }}
+                                                    {{ \Carbon\Carbon::parse($hist->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                                                 </span>
                                                 <span class="block text-[10px] text-slate-400 mt-0.5">
                                                     Dikirim jam {{ $hist->created_at->format('H:i') }} WIB

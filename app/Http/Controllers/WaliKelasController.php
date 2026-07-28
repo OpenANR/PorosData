@@ -213,6 +213,9 @@ class WaliKelasController extends Controller
             return redirect()->back()->with('error', 'Gagal membuka file CSV.');
         }
 
+        // Enable auto detect line endings for Mac CSVs (\r)
+        ini_set('auto_detect_line_endings', true);
+
         // Read header row
         $header = fgetcsv($handle, 1000, ',');
         

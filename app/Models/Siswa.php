@@ -15,6 +15,7 @@ class Siswa extends Model
         'user_id',
         'kelas_id',
         'mitra_dudi_id',
+        'is_pkl',
         'nisn',
         'status',
         'angkatan',

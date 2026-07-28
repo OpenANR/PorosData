@@ -53,6 +53,31 @@ class LoginController extends Controller
         if ($user && $passwordIsValid) {
             // Verify if the role is allowed to access Portal PKL
             if (in_array($user->role, ['superadmin', 'admin', 'pembimbing', 'siswa'])) {
+                
+                if ($user->role === 'siswa') {
+                    $siswa = $user->siswa;
+                    
+                    if (!$siswa) {
+                        return back()->withErrors([
+                            'username' => 'Akses ditolak. Data siswa tidak ditemukan.',
+                        ])->onlyInput('username');
+                    }
+
+                    $namaKelas = $siswa->kelas->nama_kelas ?? '';
+                    
+                    if (!str_starts_with(strtoupper($namaKelas), 'XII') && !str_starts_with(strtoupper($namaKelas), '12')) {
+                        return back()->withErrors([
+                            'username' => 'Akses ditolak. Hanya siswa kelas XII yang diizinkan mengakses Portal PKL.',
+                        ])->onlyInput('username');
+                    }
+                    
+                    if (!$siswa->is_pkl) {
+                        return back()->withErrors([
+                            'username' => 'Akses ditolak. Anda belum terdaftar sebagai peserta PKL. Silakan hubungi Admin.',
+                        ])->onlyInput('username');
+                    }
+                }
+
                 session(['portalpkl_user_id' => $user->id]);
                 
                 return redirect()->route('portalpkl.index')

@@ -159,6 +159,7 @@ Route::prefix('/porosdata/portal-pkl')->group(function () {
 
         // Siswa PKL CRUD Routes
         Route::get('/admin/siswa-pkl', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'index'])->name('portalpkl.admin.siswa.index');
+        Route::post('/admin/siswa-pkl', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'store'])->name('portalpkl.admin.siswa.store');
         Route::put('/admin/siswa-pkl/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'update'])->name('portalpkl.admin.siswa.update');
         Route::delete('/admin/siswa-pkl/{id}', [App\Http\Controllers\ControllerSubMenuApps\PortalPKL\AdminSiswaController::class, 'destroy'])->name('portalpkl.admin.siswa.destroy');
 

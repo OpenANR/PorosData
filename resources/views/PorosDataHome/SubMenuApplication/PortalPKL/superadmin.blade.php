@@ -15,7 +15,11 @@
                         Anda masuk sebagai <span class="font-semibold text-orange-600 dark:text-orange-400">Super Administrator</span> pada Portal PKL.
                     </p>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
+                        <i class="fa-solid fa-calendar-day mr-1 text-orange-600 dark:text-orange-400"></i>
+                        {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+                    </span>
                     <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 border border-orange-200/50 dark:border-orange-900/30">
                         <i class="fa-solid fa-shield-halved mr-1"></i> Superadmin Access
                     </span>

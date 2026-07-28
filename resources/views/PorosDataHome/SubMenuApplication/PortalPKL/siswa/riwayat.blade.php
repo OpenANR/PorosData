@@ -58,7 +58,7 @@
                             <tr class="hover:bg-slate-50/40 dark:hover:bg-slate-900/20 transition-all">
                                 <td class="px-6 py-4">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-slate-800 dark:text-slate-200">{{ \Carbon\Carbon::parse($att->tanggal)->isoFormat('dddd, D MMMM YYYY') }}</span>
+                                        <span class="font-bold text-slate-800 dark:text-slate-200">{{ \Carbon\Carbon::parse($att->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</span>
                                         <span class="text-xs text-slate-400 mt-0.5">{{ $att->created_at->format('H:i') }} WIB</span>
                                     </div>
                                 </td>
@@ -123,9 +123,13 @@
             <!-- Modal Content -->
             <div class="px-6 py-6 space-y-5 max-h-[70vh] overflow-y-auto text-slate-600 dark:text-slate-400">
                 <!-- Info Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                     <div>
-                        <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block">Tanggal & Jam</span>
+                        <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block">Tanggal</span>
+                        <span id="modal-date" class="text-slate-700 dark:text-slate-300 font-semibold text-sm">-</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block">Jam</span>
                         <span id="modal-time" class="text-slate-700 dark:text-slate-300 font-semibold text-sm">-</span>
                     </div>
                     <div>
@@ -245,10 +249,12 @@
         const modalCard = document.getElementById('detail-modal-card');
 
         function showDetailModal(attendance) {
-            // Populate DateTime & Status
+            // Populate Date, Time & Status
             const dateObj = new Date(attendance.created_at);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            document.getElementById('modal-time').innerText = dateObj.toLocaleDateString('id-ID', options) + ' WIB';
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            document.getElementById('modal-date').innerText = dateObj.toLocaleDateString('id-ID', dateOptions);
+            document.getElementById('modal-time').innerText = dateObj.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, ':') + ' WIB';
 
             const statusEl = document.getElementById('modal-status');
             statusEl.innerText = attendance.status;
